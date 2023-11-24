@@ -5,8 +5,8 @@ const DATA = {
     ADMIN: {
         HEADER_LINKS: [
             { name: 'dashboard', link: '/admin/dashboard' },
-            { name: 'properties', link: '/admin/properties' },
-            { name: 'categories', link: '/admin/categories' },
+            // { name: 'properties', link: '/admin/properties' },
+            // { name: 'categories', link: '/admin/categories' },
             { name: 'products', link: '/admin/products' },
             { name: 'orders', link: '/admin/orders' },
             { name: 'users', link: '/admin/users' },
@@ -52,33 +52,6 @@ const DATA = {
                 { name: 'TikTok', link: '/about' },
             ]
     },
-    FEATURED_PROJECT: [
-        {
-            title: "Death Bed",
-            image: "./images/featured-products/FP (1).jpg",
-            price: 499
-        },
-        {
-            title: "Blinding Lights",
-            image: "./images/featured-products/FP (2).jpg",
-            price: 599
-        },
-        {
-            title: "Peaches",
-            image: "./images/featured-products/FP (3).jpg",
-            price: 699
-        },
-        {
-            title: "Butter",
-            image: "./images/featured-products/FP (4).jpg",
-            price: 399
-        },
-        {
-            title: "Easy On Me",
-            image: "./images/featured-products/FP (5).jpg",
-            price: 699
-        }
-    ],
     ABOUT: [
         {
             role: "Artist",
@@ -122,21 +95,26 @@ const DATA = {
         USERS: [
             { label: "Name", name: "name" },
             { label: "Email", name: "email" },
+            { label: "Contact no.", name: "contact_no" },
             { label: "Type", name: "role" },
+
             { label: "Date Added", name: "created_at" }],
         CATEGORIES: [
+            { label: "Category ID", name: "_id" },
             { label: "Categories", name: "category" },
             { label: "Date Added", name: "created_at" }],
         ORDERS: [
             { label: "Order ID", name: "_id" },
-            { label: "Name", name: "name" },
+            { label: "Receiver Name", name: "name" },
             { label: "Contact No.", name: "contact_no" },
             { label: "Address", name: "address" },
-            { label: "Total Price", name: "total_price" },
+            { label: "Total Amount Due", name: "total_price" },
             { label: "Paid", name: "is_paid" },
             { label: "Status", name: "status" },
+            { label: "Date Ordered", name: "created_at" }
         ],
         PRODUCTS: [
+            { label: "Prdouct ID", name: "_id" },
             { label: "Name", name: "product_name" },
             { label: "Featured", name: "is_featured" },
             { label: "Archived", name: "is_archived" },
@@ -370,6 +348,23 @@ const DATA = {
 
                 return (
                     `Dear ${name},\n\nWe hope this message finds you well. Thank you for your purchase! Here are the details of your order:\n\nOrder Number: ${order_number}\nDate of Purchase: ${moment(date).format("MMMM DD, YYYY")}\nItems Ordered:\n${items}\n\nPayment Details:\nTotal Amount: ${amount}\nPayment Method: ${payment_method}\n\nYou may send your payment to:\nGcash: [Gcash of Tofu Ink], K*** S****\nDebit/Credit: [Card of Tofu Ink]\n\nPlease review the information above and ensure that all details are accurate. If you have any questions or concerns, feel free to reply to this email, and our customer support team will be happy to assist you.\n\nWe appreciate your business and look forward to serving you again.\n\nBest regards,\nTintArt Customer Support Team`
+                )
+            }
+        },
+        CANCELATION: {
+            SUBJECT: "Order Cancellation Notification",
+            BODY: ({ admin, order_id, customer_name, item, reason }) => {
+                const items = `${item?.map((i) => `\nName: ${i?.product_id?.product_name} \nQuantity: ${i?.quantity} \nPrice: ${i?.product_id?.price}`).join('\n\n') || ''}`;
+                return (
+                    `Dear ${admin},\n\nWe regret to inform you that an order has been canceled by customer. Below are the details of the canceled order:\n\n- Order ID: ${order_id}\n- Customer Name: ${customer_name}\n- Product(s): ${items}\n- Reason for Cancellation: ${reason}\n\nPlease take the necessary steps to update the inventory accordingly, and if there are any issues or questions regarding this cancellation, feel free to reach out to the customer or our customer support team.\n\nThank you for your prompt attention to this matter.\n\nBest regards,\nTintArt`
+                )
+            }
+        },
+        INQUIRY: {
+            SUBJECT: "Acknowledgment of Your Inquiry",
+            BODY: ({ customer_name }) => {
+                return (
+                    `Dear ${customer_name},\n\nThank you for reaching out to us! We wanted to inform you that we have received your recent concern submitted through our website.\n\nOur team is dedicated to providing excellent customer service, and we will be reviewing your message shortly. Please allow us some time to thoroughly investigate your concern and provide you with a comprehensive response.\n\nIn the meantime, if you have any additional information to add or if you think of anything else that may assist us in addressing your inquiry, feel free to reply to this email.\n\nWe appreciate your patience and look forward to assisting you.\n\nBest regards,\n\nTintArt Customer Support Team`
                 )
             }
         }

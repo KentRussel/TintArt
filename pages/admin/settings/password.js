@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { AdminLayout, SettingHeader, SettingLayout, TextInput } from '../../../components'
+import { AdminLayout, PasswordInput, SettingHeader, SettingLayout, TextInput } from '../../../components'
 import { Button, FileInput, Label } from 'flowbite-react'
-import { filterObjectWithEmptyProperties, hasBlankValue } from '../../../services/tools'
+import { filterObjectWithEmptyProperties, hasBlankValue, isValidPassword } from '../../../services/tools'
 import { changePassword } from '../../../services/user.services'
 import { toastOptions } from '../../../styles/modalOption'
 import toast from 'react-hot-toast'
@@ -43,6 +43,9 @@ const ChangePassword = () => {
     const hasBlank = hasBlankValue(
       Object.values(passwordData).slice(0, -1)
     )
+    const passwordValidation = isValidPassword(passwordData?.newPassword)
+    if (!passwordValidation)
+      return toast.error('Password must be 8-16 characters, containing at least one letter/number and one special character.', toastOptions)
     if (hasBlank)
       return toast.error('Please fill up the form!', toastOptions)
 
@@ -64,11 +67,10 @@ const ChangePassword = () => {
           {inputFieldsPassword.map((input, key) => (
             <div key={'newPassword-' + key}>
               <Label className='capitalize mb-2 block'>{input.label}</Label>
-              <TextInput
-                disabled={isLoading?.newPassword}
+              <PasswordInput
+                isLoading={isLoading?.newPassword}
                 value={input?.value}
-                onChange={e => input?.setValue(e)}
-                type='password'
+                setValue={input?.setValue}
               />
             </div>
           ))}

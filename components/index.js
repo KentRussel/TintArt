@@ -13,7 +13,9 @@ export { default as CustomerWrapper } from './layout-components/customer-wrapper
 export { default as TextInput } from './input-components/text-input'
 export { default as DropdownInput } from './input-components/dropdown-input'
 export { default as CheckboxInput } from './input-components/checkbox-input'
+export { default as PasswordInput } from './input-components/password-input'
 
+export { default as BackLayout } from './layout-components/back-layout'
 export { default as TableLayout } from './layout-components/table-layout'
 export { default as GraphLayout } from './layout-components/graph-layout'
 export { default as DynamicFetchLayout } from './layout-components/dynamic-fetch-layout'
@@ -24,5 +26,3 @@ export { default as ModalLayout } from './layout-components/modal-layout'
 export { default as StarLayout } from './layout-components/star-layout'
 export { default as LiveProductLayout } from './layout-components/live-product-layout'
 export { default as ViewGalleryModal } from './modal-components/view-gallery-modal'
-
-

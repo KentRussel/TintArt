@@ -13,6 +13,10 @@ const Categories = () => {
 
   const categoryFieldInputs = [
     {
+      label: 'Category ID',
+      name: '_id',
+    },
+    {
       label: 'Category',
       name: 'category',
       value: categoryData?.category,
