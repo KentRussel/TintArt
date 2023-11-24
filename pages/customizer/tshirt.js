@@ -163,8 +163,6 @@ const SaveComponent = ({ title, setTitle, submitHandler, closeHandler }) => {
   )
 }
 
-
-
 const Customizer = () => {
   const [merchandise, setMerchandise] = useState("T-Shirt")
   const [modal, setModal] = useState({
@@ -214,8 +212,6 @@ const Customizer = () => {
     if (state?.user?._id)
       loadHandler()
   }, [state?.isAuth])
-
-
 
   const captureDivContent = () => {
     const node = document.getElementById('contentToCapture');
