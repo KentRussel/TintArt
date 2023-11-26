@@ -44,6 +44,25 @@ const ModalComponent = ({ children, closeHandler }) => {
 }
 
 const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
+  const uploadImage = useRef(null);
+
+  const handleImageUpload = (e, canvasLocation) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      setCanvas({ ...canvas, [canvasLocation]: imageDataUrl });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const clearImage = (canvasLocation) => {
+    setCanvas({ ...canvas, [canvasLocation]: '' });
+  };
+
   return (
     <ModalComponent closeHandler={closeHandler}>
       <div className='flex gap-4'>
@@ -179,7 +198,32 @@ const Customizer = () => {
   const [images, setImages] = useState([
   ])
   const ICONSIZE = 25
+
+  const [uploadImage, setUploadImage] = useState(null);
+  const [canvas, setCanvas] = useState({
+    front: "", // initial state for front canvas
+    back: "",  // initial state for back canvas
+  });
+
+  const handleImageUpload = (e, canvasLocation) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      setCanvas({ ...canvas, [canvasLocation]: imageDataUrl });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const clearImage = (canvasLocation) => {
+    setCanvas({ ...canvas, [canvasLocation]: '' });
+  };
+
   const { state, dispatch } = useAppContext()
+  const [selectedImage, setSelectedImage] = useState(null);
   const loadHandler = async () => {
     const result = await getUserCanvas(state?.user?._id)
     if (result?.success) {
@@ -313,23 +357,32 @@ const Customizer = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
   };
+
   return (
     <>
       {/* MODALS  */}
-
-      {modal.picture && <PictureComponent
-        images={images}
-        setCanvas={setCanvasImage}
-        canvas={canvasImage}
-        location={imageLocation}
-        setLocation={setImageLocation}
-        closeHandler={LEFT_BUTTON[0].setModal} />}
-      {modal.text && <TextComponent
-        setCanvas={setCanvasText}
-        canvas={canvasText}
-        location={textLocation}
-        setLocation={setTextLocation}
-        closeHandler={LEFT_BUTTON[1].setModal} />}
+      {modal.picture && (
+        <PictureComponent
+          images={images}
+          setCanvas={setCanvas}
+          canvas={canvas}
+          location={imageLocation}
+          setLocation={setImageLocation}
+          closeHandler={LEFT_BUTTON[0].setModal}
+          uploadImage={uploadImage}
+          handleImageUpload={handleImageUpload}
+          clearImage={clearImage}
+        />
+      )}
+      {modal.text && (
+        <TextComponent
+          setCanvas={setCanvasText}
+          canvas={canvasText}
+          location={textLocation}
+          setLocation={setTextLocation}
+          closeHandler={() => setModal({ ...modal, text: !modal.text })}
+        />
+      )}
       {modal.save && (
         <SaveComponent
           title={title}
@@ -337,11 +390,15 @@ const Customizer = () => {
           submitHandler={submitHandler}
           closeHandler={() => setModal({ ...modal, save: !modal.save })}
           showSaveButton={false}
-        />)}
-      {modal.artwork && <ArtworkComponent
-        data={artWorkData}
-        deleteHandler={deleteHandler}
-        closeHandler={RIGHT_BUTTON[0].setModal} />}
+        />
+      )}
+      {modal.artwork && (
+        <ArtworkComponent
+          data={artWorkData}
+          deleteHandler={deleteHandler}
+          closeHandler={() => setModal({ ...modal, artwork: !modal.artwork })}
+        />
+      )}
 
       {/* END OF MODALS  */}
       <div className='overflow-hidden h-screen relative'>
