@@ -8,7 +8,6 @@ import { IoChevronBack } from "react-icons/io5";
 import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
 
-
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
 import { useAppContext } from '../../context/AppContext';
@@ -43,7 +42,6 @@ const ModalComponent = ({ children, closeHandler }) => {
     </div>
   )
 }
-
 
 const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
   return (
@@ -339,9 +337,7 @@ const Customizer = () => {
           submitHandler={submitHandler}
           closeHandler={() => setModal({ ...modal, save: !modal.save })}
           showSaveButton={false}
-        />
-      )}
-
+        />)}
       {modal.artwork && <ArtworkComponent
         data={artWorkData}
         deleteHandler={deleteHandler}
@@ -407,7 +403,7 @@ const Customizer = () => {
                     <div className="m-4 flex items-center justify-center">
                       <p
                         style={{ fontSize: 20 * (scale / 100) }}
-                        className="py-1 px-2 rounded-md bg-white font-bold z-10"
+                        className="py-1 px-2 rounded-md font-light z-10"
                       >
                         {canvasText["front"]}
                       </p>
@@ -443,7 +439,7 @@ const Customizer = () => {
                           style={{
                             fontSize: 20 * (scale / 100),
                           }}
-                          className="py-1 px-2 rounded-md bg-white font-semibold z-10"
+                          className="py-1 px-2 rounded-md font-light z-10"
                         >
                           {canvasText["back"]}
                         </p>
