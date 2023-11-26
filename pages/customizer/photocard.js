@@ -285,10 +285,10 @@ const Customizer = () => {
 
   const RIGHT_BUTTON = [
     {
-      name: "Download",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
-      modalComponent: <span>Download</span>
+      name: "Artwork",
+      icon: <FiArchive size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
+      modalComponent: <span>Custom Prints</span>
     },
     {
       name: "Save",
@@ -297,11 +297,11 @@ const Customizer = () => {
       modalComponent: <span>Save</span>
     },
     {
-      name: "Artwork",
-      icon: <FiArchive size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
-      modalComponent: <span>Custom Prints</span>
-    }
+      name: "Download",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
+      modalComponent: <span>Download</span>
+    },
   ];
 
   const ButtonComponent = ({ data }) => {

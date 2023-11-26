@@ -8,7 +8,6 @@ import { IoChevronBack } from "react-icons/io5";
 import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
 
-
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
 import { useAppContext } from '../../context/AppContext';
@@ -18,10 +17,11 @@ import { toastOptions } from '../../styles/modalOption';
 import { useRouter } from 'next/router';
 import { addArtwork, deleteArtwork, getUserArtwork } from '../../services/artwork.services';
 import moment from 'moment';
+
 const TextComponent = ({ setCanvas, canvas, closeHandler }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
-      <TextInput placeholder='Enter text here...' className="mt-4 w-full" value={canvas} onChange={(e) => { console.log(e.target.value); setCanvas(e.target.value) }} />
+      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas} onChange={(e) => { console.log(e.target.value); setCanvas(e.target.value) }} />
     </ModalComponent >
   )
 }
@@ -37,7 +37,6 @@ const ModalComponent = ({ children, closeHandler }) => {
     </div>
   )
 }
-
 
 const PictureComponent = ({ images, setCanvas, canvas, closeHandler }) => {
   return (
@@ -59,8 +58,8 @@ const PictureComponent = ({ images, setCanvas, canvas, closeHandler }) => {
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
-  const scaledHeight = 400 * (scale / 100);
-  const scaledWidth = 700 * (scale / 100);
+  const scaledHeight = 900 * (scale / 100);
+  const scaledWidth = 1300 * (scale / 100);
   const fs = 20
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -125,8 +124,6 @@ const SaveComponent = ({ title, setTitle, submitHandler, closeHandler }) => {
   )
 }
 
-
-
 const Customizer = () => {
   const [modal, setModal] = useState({
     picture: false,
@@ -173,16 +170,14 @@ const Customizer = () => {
       loadHandler()
   }, [state?.isAuth])
 
-
-
   const captureDivContent = () => {
     const node = document.getElementById('contentToCapture');
     domtoimage.toPng(node)
       .then((dataUrl) => {
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = 'customize.png'; // Set the desired filename for the downloaded image
-        link.click(); // Simulate a click on the anchor to initiate download
+        link.download = 'Sintraboard.png'; 
+        link.click(); 
         toast.success("Image has been downloaded", toastOptions)
 
       })
@@ -196,11 +191,13 @@ const Customizer = () => {
       name: "Picture",
       icon: <FiImage size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, picture: !modal.picture }),
+      modalComponent: <span>Image</span>
     },
     {
       name: "Text",
       icon: <FiType size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, text: !modal.text }),
+      modalComponent: <span>Text</span>
     }
   ]
 
@@ -209,24 +206,33 @@ const Customizer = () => {
       name: "Artwork",
       icon: <FiArchive size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
+      modalComponent: <span>Custom Prints</span>
+    },
+    {
+      name: "Save",
+      icon: <LuSave size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, save: !modal.save }),
+      modalComponent: <span>Save</span>
     },
     {
       name: "Download ",
       icon: <FiDownload size={ICONSIZE} />,
       setModal: () => captureDivContent(),
+      modalComponent: <span>Download</span>
     }
-  ]
+  ];
 
   const ButtonComponent = ({ data }) => {
     return (
-      <>
-        <div onClick={data?.setModal} className='cursor-pointer rounded-full hover:bg-purple-200 p-1'>
+      <div className="flex flex-col items-center">
+        <div onClick={data?.setModal} className='cursor-pointer rounded-full hover:bg-black-200 p-1'>
           {data?.icon}
         </div>
         {data?.modalComponent}
-      </>
-    )
-  }
+      </div>
+    );
+  };
+
   const router = useRouter()
   const deleteHandler = async (id) => {
     const result = await deleteArtwork(id)
@@ -258,8 +264,8 @@ const Customizer = () => {
 
   }
 
-  const scaledHeight = 400 * (scale / 100);
-  const scaledWidth = 700 * (scale / 100);
+  const scaledHeight = 900 * (scale / 100);
+  const scaledWidth = 1300 * (scale / 100);
   // Styles for centering the fixed div
   const centerDivStyle = {
     position: 'fixed',
@@ -270,7 +276,6 @@ const Customizer = () => {
   return (
     <>
       {/* MODALS  */}
-
       {modal.picture && <PictureComponent
         images={images}
         setCanvas={setCanvasImage}
@@ -282,37 +287,38 @@ const Customizer = () => {
         setCanvas={setCanvasText}
         canvas={canvasText}
         closeHandler={LEFT_BUTTON[1].setModal} />}
-      {modal.save && <SaveComponent
+      {modal.save && (<SaveComponent
         title={title}
         setTitle={setTitle}
         submitHandler={submitHandler}
-        closeHandler={() => setModal({ ...modal, save: !modal.save })} />}
+        closeHandler={() => setModal({ ...modal, save: !modal.save })}
+        showSaveButton={false}
+        />
+        )}
 
       {modal.artwork && <ArtworkComponent
         data={artWorkData}
         deleteHandler={deleteHandler}
         closeHandler={RIGHT_BUTTON[0].setModal} />}
 
-
-
       {/* END OF MODALS  */}
       <div className='overflow-hidden h-screen relative'>
 
         <Button size="xs" color="light" className='fixed top-1 left-1 z-10'>
           <Link href="/">
+            <span className='flex items-center'>
             <IoChevronBack size={ICONSIZE} />
+            <span className='ml-1'>Back to Homepage</span>
+            </span>
           </Link>
         </Button>
-        <Button size="xs" onClick={() => setModal({ ...modal, save: true })} className='bg-violet-600 fixed top-1 right-1 z-10 hover:bg-violet-700'>
-          <LuSave size={ICONSIZE} />
-        </Button>
 
-        <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
+        <div className='fixed left-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
+        <div className='fixed right-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
@@ -321,7 +327,7 @@ const Customizer = () => {
         <div className='fixed bottom-5 w-full z-10'>
           <div className='mx-auto max-w-[10rem]'>
             <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
-            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-500 rounded-lg appearance-none cursor-pointer dark:bg-gray-1000" />
           </div>
         </div>
         {/* end of control */}
@@ -329,7 +335,7 @@ const Customizer = () => {
           <div id="contentToCapture" className='flex gap-4' >
 
             {/* front canvas  */}
-            <div className={`bg-white relative border shadow-lg bg-white-600 overflow-hidden`}
+            <div className={`bg-gray-300 relative border rounded-xl shadow-2xl overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -347,7 +353,7 @@ const Customizer = () => {
                   <div className='m-4 flex items-center justify-center'>
                     <p
                       style={{ fontSize: 20 * (scale / 100) }}
-                      className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
+                      className=' py-1 px-2 rounded-md font-light z-10'
                     >{canvasText}</p>
                   </div>
                 </div>}
