@@ -368,7 +368,7 @@ const Customizer = () => {
         {/* bottom control  */}
         <div className='fixed bottom-5 w-full z-10'>
           <div className='mx-auto max-w-[10rem]'>
-            <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">View Scale</label>
+            <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
             <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-500 rounded-lg appearance-none cursor-pointer dark:bg-gray-1000" />
           </div>
         </div>
