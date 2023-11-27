@@ -36,9 +36,9 @@ const DATA = {
     ],
     FOOTER:
     {
-        ADDRESS: "37 Magiliw St.Lena Subdivision, Dalandanan, Valenzuela City",
-        CONTACT: "(+63) 9123456789",
-        EMAIL: "sample@gmail.com",
+        ADDRESS: "37 Magiliw St. Lena Subdivision, Dalandanan, Valenzuela City",
+        CONTACT: "(+63) 9682190203",
+        EMAIL: "tintartofficial@gmail.com",
         LINKS: [
             { name: 'home', link: '/' },
             { name: 'shop', link: '/shop' },
@@ -50,6 +50,7 @@ const DATA = {
             [
                 { name: 'Facebook', link: '/about' },
                 { name: 'TikTok', link: '/about' },
+                { name: 'Instagram', link: '/about'}
             ]
     },
     ABOUT: [

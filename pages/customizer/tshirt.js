@@ -1,4 +1,4 @@
-import { Button, TextInput } from 'flowbite-react'
+import { Button, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { AiFillCloseCircle, AiOutlineClose } from 'react-icons/ai'
@@ -7,7 +7,6 @@ import { FiImage } from "react-icons/fi";
 import { IoChevronBack } from "react-icons/io5";
 import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
-
 
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
@@ -18,13 +17,16 @@ import { toastOptions } from '../../styles/modalOption';
 import { useRouter } from 'next/router';
 import { addArtwork, deleteArtwork, getUserArtwork } from '../../services/artwork.services';
 import moment from 'moment';
-const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler }) => {
+
+const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler, setFontSizes, fontSizes }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
       <div className='flex gap-4'>
         <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
         <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
       </div >
+      <Label>Font Size:</Label>
+      <TextInput type='number' value={fontSizes[location]} onChange={(e) => setFontSizes({ ...fontSizes, [location]: e.target.value })} />
       <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
     </ModalComponent >
   )
@@ -42,7 +44,6 @@ const ModalComponent = ({ children, closeHandler }) => {
     </div>
   )
 }
-
 
 const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
   return (
@@ -67,8 +68,8 @@ const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, cl
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
-  const scaledWidth = 600 * (scale / 100);
-  const scaledHeight = 800 * (scale / 100);
+  const scaledWidth = 900 * (scale / 100);
+  const scaledHeight = 1100 * (scale / 100);
   const fs = 20
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -111,7 +112,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
                   </div>}
               </div>
               {/* back canvas  */}
-              < div className={`back-shirt bg-white relative border rounded-xl shadow-lg bg-white-600  overflow-hidden`}
+              < div className={`back-shirt bg-gray-300 relative border rounded-xl shadow-lg bg-white-60  overflow-hidden`}
                 style={{
                   height: scaledHeight,
                   width: scaledWidth,
@@ -127,9 +128,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
                 }
                 {item?.back_text?.length > 0 &&
                   <div className=' mx-auto absolute w-full ' style={{ bottom: 150 * (scale / 100) }}>
-
                     <div className='m-4 flex items-center justify-center' style={{ bottom: 150 * (scale / 100) }}>
-
                       <p style={{
                         fontSize: fs * (scale / 100),
                       }}
@@ -137,7 +136,6 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
                       >{item?.back_text}</p>
                     </div>
                   </div>}
-
               </div>
             </div>
           </div>
@@ -178,11 +176,12 @@ const Customizer = () => {
 
   const MY_CORS = 'https://marvs-cors.onrender.com/proxy?url='
   const [canvasImage, setCanvasImage] = useState({ front: "", back: "" })
+  const [fontSizes, setFontSizes] = useState({ front: 20, back: 20 })
   const [scale, setScale] = useState(50)
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
-  const ICONSIZE = 25
+  const ICONSIZE = 30
   const { state, dispatch } = useAppContext()
   const loadHandler = async () => {
     const result = await getUserCanvas(state?.user?._id)
@@ -219,7 +218,7 @@ const Customizer = () => {
       .then((dataUrl) => {
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = 'tshirt.png'; // Set the desired filename for the downloaded image
+        link.download = 'Customized Tshirt.png'; // Set the desired filename for the downloaded image
         link.click(); // Simulate a click on the anchor to initiate download
         toast.success("Image has been downloaded", toastOptions)
 
@@ -231,48 +230,45 @@ const Customizer = () => {
   };
   const LEFT_BUTTON = [
     {
-      name: "Picture",
+      name: "Image",
       icon: <FiImage size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, picture: !modal.picture }),
-      modalComponent: <span>Image</span>
     },
     {
       name: "Text",
       icon: <FiType size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, text: !modal.text }),
-      modalComponent: <span>Text</span>
     }
   ]
 
   const RIGHT_BUTTON = [
     {
-      name: "Artwork",
+      name: "Custom Prints",
       icon: <FiArchive size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
-      modalComponent: <span>Custom Prints</span>
     },
     {
       name: "Save",
       icon: <LuSave size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, save: !modal.save }),
-      modalComponent: <span>Save</span>
+      setModal: () => setModal({ ...modal, save: true }),
     },
     {
       name: "Download ",
       icon: <FiDownload size={ICONSIZE} />,
       setModal: () => captureDivContent(),
-      modalComponent: <span>Download</span>
-    }
+    },
   ]
 
   const ButtonComponent = ({ data }) => {
     return (
-      <div className="flex flex-col items-center">
-        <div onClick={data?.setModal} className='cursor-pointer rounded-full hover:bg-purple-200 p-1'>
+      <>
+        <div onClick={data?.setModal} className='flex items-center flex-col cursor-pointer rounded-full hover:bg-purple-200 p-1'>
           {data?.icon}
+          <p className='text-center text-xs'>{data?.name}</p>
         </div>
+
         {data?.modalComponent}
-      </div>
+      </>
     )
   }
   const router = useRouter()
@@ -280,7 +276,7 @@ const Customizer = () => {
     const result = await deleteArtwork(id)
     if (result.success) {
       await refetchArtworkHandler()
-      return toast.success("Artwork Deleted", toastOptions)
+      return toast.success("Custom print Deleted", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
@@ -302,14 +298,14 @@ const Customizer = () => {
       setModal({ ...modal, save: false })
       setTitle("")
       await refetchArtworkHandler()
-      return toast.success("Artwork Saved", toastOptions)
+      return toast.success("Custom print Saved", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
 
-  const scaledWidth = 800 * (scale / 100);
-  const scaledHeight = 1000 * (scale / 100);
+  const scaledWidth = 900 * (scale / 100);
+  const scaledHeight = 1100 * (scale / 100);
   // Styles for centering the fixed div
   const centerDivStyle = {
     position: 'fixed',
@@ -334,39 +330,41 @@ const Customizer = () => {
         setCanvas={setCanvasText}
         canvas={canvasText}
         location={textLocation}
+        fontSizes={fontSizes}
+        setFontSizes={setFontSizes}
         setLocation={setTextLocation}
         closeHandler={LEFT_BUTTON[1].setModal} />}
       {modal.save && <SaveComponent
         title={title}
         setTitle={setTitle}
         submitHandler={submitHandler}
-        closeHandler={() => setModal({ ...modal, save: !modal.save })}
-        showSaveButton={false}
-      />}
+        closeHandler={() => setModal({ ...modal, save: !modal.save })} />}
 
       {modal.artwork && <ArtworkComponent
         data={artWorkData}
         deleteHandler={deleteHandler}
-        closeHandler={RIGHT_BUTTON[0].setModal} />}
+        closeHandler={RIGHT_BUTTON[2].setModal} />}
 
       {/* END OF MODALS  */}
       <div className='overflow-hidden h-screen relative'>
 
         <Button size="xs" color="light" className='fixed top-1 left-1 z-10'>
           <Link href="/">
-            <span className="flex items-center">
-              <IoChevronBack size={ICONSIZE} />
-              <span className="ml-1">Back to Homepage</span>
-            </span>
+            <div className='flex gap-2 items-center'>
+              <IoChevronBack size={ICONSIZE} /> Back to Homepage
+            </div>
           </Link>
         </Button>
+        {/* <Button size="xs" onClick={() => setModal({ ...modal, save: true })} className='bg-violet-600 fixed top-1 right-1 z-10 hover:bg-violet-700'>
+          <LuSave size={ICONSIZE} />
+        </Button> */}
 
-        <div className='fixed left-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed left-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed right-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
@@ -380,76 +378,67 @@ const Customizer = () => {
         </div>
         {/* end of control */}
         <div style={centerDivStyle} className='mx-auto fixed flex items-center justify-center gap-4'>
-          <div id="contentToCapture" className='flex gap-4 '>
-            <div className="flex justify-center gap-8">
-              {/* front canvas  */}
-              <div className="relative">
-                <p className="absolute top-0 left-1/2 transform -translate-x-1/2 text-black font-light">Front</p>
-                <div
-                  className={`back-shirt relative border rounded-xl shadow-2xl overflow-hidden`}
+          <div id="contentToCapture" className='relative flex gap-4 ' >
+            <p className="absolute -left-14 top-12">Front</p>
+
+            {/* front canvas  */}
+            <div
+              className={`front-shirt bg-gray-300 relative border rounded-xl shadow-2xl overflow-hidden`}
+              style={{
+                height: scaledHeight,
+                width: scaledWidth,
+              }}
+            >
+              {canvasImage.front.length > 0 &&
+                <img
                   style={{
-                    filter: 'brightness(85%)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
-                    height: scaledHeight,
-                    width: scaledWidth,
-                  }}
-                >
-                </div>
-                {canvasImage.front.length > 0 &&
-                  <img
-                    style={{
-                      objectFit: "contain",
-                      height: scaledHeight * .3,
-                      width: scaledWidth * .3,
-                    }} src={MY_CORS + canvasImage.front} className='h-full w-full object-cover' />
-                }
-                {canvasText.front.length > 0 &&
-                  <div className={` mx-auto absolute  w-full`} style={{ bottom: 300 * (scale / 100) }}>
-                    <div className='m-4 flex items-center justify-center'>
-                      <p
-                        style={{ fontSize: 20 * (scale / 100) }}
-                        className=' py-1 px-2 rounded-md font-light z-10'
-                      >{canvasText["front"]}</p>
-                    </div>
-                  </div>}
-              </div>
-              {/* back canvas  */}
-              <div className="relative">
-                <p className="absolute top-0 left-1/2 transform -translate-x-1/2 text-black font-light">Back</p>
-                <div
-                  className={`back-shirt relative border rounded-xl shadow-2xl overflow-hidden`}
+                    objectFit: "contain",
+                    height: scaledHeight * .3,
+                    width: scaledWidth * .3,
+                  }} src={MY_CORS + canvasImage.front} className='h-full w-full object-cover' />
+              }
+              {canvasText.front.length > 0 &&
+                < div className={` mx-auto absolute  w-full`} style={{ bottom: 150 * (scale / 100) }}>
+                  <div className='m-4 flex items-center justify-center'>
+                    <p
+                      style={{ fontSize: fontSizes["front"] * (scale / 100) }}
+                      className='rounded-md  font-semibold z-10'
+                    >{canvasText["front"]}</p>
+                  </div>
+                </div>}
+            </div>
+            {/* back canvas  */}
+            <p className="absolute -right-14 top-12">Back</p>
+
+            <div className={`back-shirt bg-gray-300 relative rounded-xl shadow-2xl overflow-hidden`}
+              style={{
+                height: scaledHeight,
+                width: scaledWidth,
+              }}
+            >
+              {canvasImage?.back.length > 0 &&
+                <img src={MY_CORS + canvasImage.back} className='h-full w-full object-cover'
                   style={{
-                    filter: 'brightness(85%)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
-                    height: scaledHeight,
-                    width: scaledWidth,
-                  }}
-                >
-                  {canvasImage?.back.length > 0 &&
-                    <img src={MY_CORS + canvasImage.back} className='h-full w-full object-cover'
-                      style={{
-                        objectFit: "contain",
-                        height: scaledHeight * .3,
-                        width: scaledWidth * .3,
-                      }} />
-                  }
-                  {canvasText?.back?.length > 0 &&
-                    <div className={` mx-auto absolute  w-full`} style={{ bottom: 300 * (scale / 100) }}>
-                      <div className='m-4 flex items-center justify-center'>
+                    objectFit: "contain",
+                    height: scaledHeight * .3,
+                    width: scaledWidth * .3,
+                  }} />
+              }
+              {canvasText?.back?.length > 0 &&
+                <div className={` mx-auto absolute  w-full`} style={{ bottom: 150 * (scale / 100) }}>
+                  <div className='m-4 flex items-center justify-center'>
 
-                        <p style={{
-                          fontSize: 20 * (scale / 100),
-                        }}
-                          className=' py-1 px-2 rounded-md font-light z-10'
-                        >{canvasText["back"]}</p>
-                      </div>
-                    </div>}
-
-                </div>
-              </div>
-
+                    <p style={{
+                      fontSize: fontSizes["back"] * (scale / 100),
+                    }}
+                      className='rounded-md font-semibold z-10'
+                    >{canvasText["back"]}</p>
+                  </div>
+                </div>}
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }
