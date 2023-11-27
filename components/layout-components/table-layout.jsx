@@ -43,8 +43,10 @@ const TableLayout = ({
   const searchFilter = searchHandler(fetchData)
 
   useEffect(() => {
-    loadHandler()
-  }, [])
+    loadHandler();
+    const updatedSearchFilter = searchHandler(fetchData);
+    setNewSlice(updatedSearchFilter.slice(0, MAX));
+  }, [search, fetchData]); 
 
   const pillDataRef = useRef()
   // HANDLERS
