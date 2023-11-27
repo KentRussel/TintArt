@@ -252,7 +252,7 @@ const Customizer = () => {
       modalComponent: <span>Custom Prints</span>
     },
     {
-      name: "Save", 
+      name: "Save",
       icon: <LuSave size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, save: !modal.save }),
       modalComponent: <span>Save</span>
@@ -340,9 +340,9 @@ const Customizer = () => {
         title={title}
         setTitle={setTitle}
         submitHandler={submitHandler}
-        closeHandler={() => setModal({ ...modal, save: !modal.save })} 
+        closeHandler={() => setModal({ ...modal, save: !modal.save })}
         showSaveButton={false}
-        />}
+      />}
 
       {modal.artwork && <ArtworkComponent
         data={artWorkData}
@@ -354,9 +354,9 @@ const Customizer = () => {
 
         <Button size="xs" color="light" className='fixed top-1 left-1 z-10'>
           <Link href="/">
-            <span className= "flex items-center">
-            <IoChevronBack size={ICONSIZE} />
-            <span className="ml-1">Back to Homepage</span>
+            <span className="flex items-center">
+              <IoChevronBack size={ICONSIZE} />
+              <span className="ml-1">Back to Homepage</span>
             </span>
           </Link>
         </Button>
@@ -381,73 +381,75 @@ const Customizer = () => {
         {/* end of control */}
         <div style={centerDivStyle} className='mx-auto fixed flex items-center justify-center gap-4'>
           <div id="contentToCapture" className='flex gap-4 '>
-            <div className = "flex justify-center gap-8">
-            {/* front canvas  */}
-            <div className="relative">
+            <div className="flex justify-center gap-8">
+              {/* front canvas  */}
+              <div className="relative">
                 <p className="absolute top-0 left-1/2 transform -translate-x-1/2 text-black font-light">Front</p>
                 <div
-className={`back-shirt relative border rounded-xl shadow-2xl overflow-hidden`}
-style={{ filter: 'brightness(85%)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
-                height: scaledHeight,
-                width: scaledWidth,
-              }}
-            >
-            </div>
-              {canvasImage.front.length > 0 &&
-                <img
+                  className={`back-shirt relative border rounded-xl shadow-2xl overflow-hidden`}
                   style={{
-                    objectFit: "contain",
-                    height: scaledHeight * .3,
-                    width: scaledWidth * .3,
-                  }} src={MY_CORS + canvasImage.front} className='h-full w-full object-cover' />
-              }
-              {canvasText.front.length > 0 &&
-                <div className={` mx-auto absolute  w-full`} style={{ bottom: 300 * (scale / 100) }}>
-                  <div className='m-4 flex items-center justify-center'>
-                    <p
-                      style={{ fontSize: 20 * (scale / 100) }}
-                      className=' py-1 px-2 rounded-md font-light z-10'
-                    >{canvasText["front"]}</p>
-                  </div>
-                </div>}
-            </div>
-            {/* back canvas  */}
-            <div className="relative">
+                    filter: 'brightness(85%)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
+                    height: scaledHeight,
+                    width: scaledWidth,
+                  }}
+                >
+                </div>
+                {canvasImage.front.length > 0 &&
+                  <img
+                    style={{
+                      objectFit: "contain",
+                      height: scaledHeight * .3,
+                      width: scaledWidth * .3,
+                    }} src={MY_CORS + canvasImage.front} className='h-full w-full object-cover' />
+                }
+                {canvasText.front.length > 0 &&
+                  <div className={` mx-auto absolute  w-full`} style={{ bottom: 300 * (scale / 100) }}>
+                    <div className='m-4 flex items-center justify-center'>
+                      <p
+                        style={{ fontSize: 20 * (scale / 100) }}
+                        className=' py-1 px-2 rounded-md font-light z-10'
+                      >{canvasText["front"]}</p>
+                    </div>
+                  </div>}
+              </div>
+              {/* back canvas  */}
+              <div className="relative">
                 <p className="absolute top-0 left-1/2 transform -translate-x-1/2 text-black font-light">Back</p>
                 <div
-className={`back-shirt relative border rounded-xl shadow-2xl overflow-hidden`}
-style={{ filter: 'brightness(85%)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
-                height: scaledHeight,
-                width: scaledWidth,
-              }}
-            >
-              {canvasImage?.back.length > 0 &&
-                <img src={MY_CORS + canvasImage.back} className='h-full w-full object-cover'
+                  className={`back-shirt relative border rounded-xl shadow-2xl overflow-hidden`}
                   style={{
-                    objectFit: "contain",
-                    height: scaledHeight * .3,
-                    width: scaledWidth * .3,
-                  }} />
-              }
-              {canvasText?.back?.length > 0 &&
-                <div className={` mx-auto absolute  w-full`} style={{ bottom: 300 * (scale / 100) }}>
-                  <div className='m-4 flex items-center justify-center'>
+                    filter: 'brightness(85%)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
+                    height: scaledHeight,
+                    width: scaledWidth,
+                  }}
+                >
+                  {canvasImage?.back.length > 0 &&
+                    <img src={MY_CORS + canvasImage.back} className='h-full w-full object-cover'
+                      style={{
+                        objectFit: "contain",
+                        height: scaledHeight * .3,
+                        width: scaledWidth * .3,
+                      }} />
+                  }
+                  {canvasText?.back?.length > 0 &&
+                    <div className={` mx-auto absolute  w-full`} style={{ bottom: 300 * (scale / 100) }}>
+                      <div className='m-4 flex items-center justify-center'>
 
-                    <p style={{
-                      fontSize: 20 * (scale / 100),
-                    }}
-                      className=' py-1 px-2 rounded-md font-light z-10'
-                    >{canvasText["back"]}</p>
-                  </div>
-                </div>}
+                        <p style={{
+                          fontSize: 20 * (scale / 100),
+                        }}
+                          className=' py-1 px-2 rounded-md font-light z-10'
+                        >{canvasText["back"]}</p>
+                      </div>
+                    </div>}
+
+                </div>
+              </div>
 
             </div>
           </div>
-
         </div>
       </div>
-    </div>
-  </div>
     </>
   )
 }
