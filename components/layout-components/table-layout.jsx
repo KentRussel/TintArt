@@ -24,6 +24,7 @@ const TableLayout = ({
   deleteRequest,
   fieldInputs,
 }) => {
+
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [modal, setModal] = useState(false)
@@ -55,7 +56,7 @@ const TableLayout = ({
     let temp_data = result?.data
     pillDataRef.current = temp_data
     let filtered = temp_data
-    if (['Colors', 'Sizes'].indexOf(title) > -1) {
+    if (['Colors', 'Sizes', 'Products',].indexOf(title) > -1) {
       filtered = temp_data?.filter(t => t.merchandise == selectedMerch)
     }
     setNewSlice(filtered?.slice(0, MAX))
