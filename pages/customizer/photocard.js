@@ -9,6 +9,7 @@ import { LuSave, LuUpload } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
 import uploadImage from '../../services/image.services.js';
 import ImageController from './ImageController.js';
+
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
 import { useAppContext } from '../../context/AppContext';
@@ -252,33 +253,58 @@ const Customizer = () => {
       loadHandler()
   }, [state?.isAuth])
 
-  const handleImageMove = (direction) => {
-    const step = 0.1; // You can adjust the step size as needed
-    const currentTransform = canvasImage[imageLocation] || '';
-    const transformValues = currentTransform.match(/translate\((-?\d+)px,\s*(-?\d+)px\)/);
+  const captureDivContent = () => {
+    const node = document.getElementById('contentToCapture');
+    domtoimage.toPng(node)
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'Customized Tshirt.png'; // Set the desired filename for the downloaded image
+        link.click(); // Simulate a click on the anchor to initiate download
+        toast.success("Image has been downloaded", toastOptions)
 
-    let [x, y] = transformValues ? transformValues.slice(0.1) : [0, 0];
-
-    switch (direction) {
-      case 'left':
-        x -= step;
-        break;
-      case 'right':
-        x += step;
-        break;
-      case 'up':
-        y -= step;
-        break;
-      case 'down':
-        y += step;
-        break;
-      default:
-        break;
-    }
-
-    const existingTransform = transformValues ? `translate(${x}px, ${y}px)` : '';
-    setCanvasImage({ ...canvasImage, [imageLocation]: existingTransform });
+      })
+      .catch((error) => {
+        toast.error("Something went wrong!", toastOptions)
+        console.error('Error capturing content:', error);
+      });
   };
+
+  const LEFT_BUTTON = [
+    {
+      name: "Logos",
+      icon: <FiImage size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, picture: !modal.picture }),
+    },
+    {
+      name: "Text",
+      icon: <FiType size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, text: !modal.text }),
+    },
+    {
+      name: "Upload Image",
+      icon: <LuUpload size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, picture: !modal.picture }),
+    }
+  ]
+
+  const RIGHT_BUTTON = [
+    {
+      name: "Custom Prints",
+      icon: <FiArchive size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
+    },
+    {
+      name: "Save",
+      icon: <LuSave size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, save: true }),
+    },
+    {
+      name: "Download ",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
+    },
+  ]
 
   const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
     
@@ -323,58 +349,6 @@ const Customizer = () => {
       </ModalComponent>
     );
   };
-
-  const captureDivContent = () => {
-    const node = document.getElementById('contentToCapture');
-    domtoimage.toPng(node)
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = 'Customized Photocard.png'; // Set the desired filename for the downloaded image
-        link.click(); // Simulate a click on the anchor to initiate download
-        toast.success("Image has been downloaded", toastOptions)
-
-      })
-      .catch((error) => {
-        toast.error("Something went wrong!", toastOptions)
-        console.error('Error capturing content:', error);
-      });
-  };
-  const LEFT_BUTTON = [
-    {
-      name: "Logos",
-      icon: <FiImage size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, picture: !modal.picture }),
-    },
-    {
-      name: "Text",
-      icon: <FiType size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, text: !modal.text }),
-    },
-    {
-      name: "Upload Image",
-      icon: <LuUpload size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, picture: !modal.picture }),
-    }
-  ]
-
-  const RIGHT_BUTTON = [
-    {
-      name: "Custom Prints",
-      icon: <FiArchive size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
-    },
-    {
-      name: "Save",
-      icon: <LuSave size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, save: true }),
-    },
-    {
-      name: "Download ",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
-    },
-  ]
 
   const ButtonComponent = ({ data }) => {
     return (
@@ -473,8 +447,6 @@ const Customizer = () => {
             </div>
           </Link>
         </Button>
-        {/* <Button size="xs" onClick={() => setModal({ ...modal, save: true })} className='bg-violet-600 fixed top-1 right-1 z-10 hover:bg-violet-700'>
-        </Button> */}
 
         <div className='fixed left-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {LEFT_BUTTON.map((item, key) => (

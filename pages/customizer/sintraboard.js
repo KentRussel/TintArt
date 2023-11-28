@@ -1,12 +1,13 @@
-import { Button, TextInput } from 'flowbite-react'
+import { Button, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { AiFillCloseCircle, AiOutlineClose } from 'react-icons/ai'
 import { FiArchive, FiDownload, FiType } from "react-icons/fi";
 import { FiImage } from "react-icons/fi";
 import { IoChevronBack } from "react-icons/io5";
-import { LuSave } from "react-icons/lu";
+import { LuSave, LuUpload } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
+import uploadImage from '../../services/image.services.js';
 
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
@@ -18,13 +19,71 @@ import { useRouter } from 'next/router';
 import { addArtwork, deleteArtwork, getUserArtwork } from '../../services/artwork.services';
 import moment from 'moment';
 
-const TextComponent = ({ setCanvas, canvas, closeHandler }) => {
+const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler, setFontSizes, fontSizes, textColor, setTextColor }) => {
+  
+  const handleTextMove = (direction) => {
+    const step = 0.1; // You can adjust the step size as needed
+    const currentTransform = canvas[location] || '';
+    const transformValues = currentTransform.match(/translate\((-?\d+)px,\s*(-?\d+)px\)/);
+  
+    let [x, y] = transformValues ? transformValues.slice(0.1) : [0, 0];
+  
+    switch (direction) {
+      case 'left':
+        x -= step;
+        break;
+      case 'right':
+        x += step;
+        break;
+      case 'up':
+        y -= step;
+        break;
+      case 'down':
+        y += step;
+        break;
+      default:
+        break;
+    }
+  
+    const existingTransform = transformValues ? `translate(${x}px, ${y}px)` : '';
+    setCanvas({ ...canvas, [location]: existingTransform });
+  };     
+  
   return (
     <ModalComponent closeHandler={closeHandler}>
-      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas} onChange={(e) => { console.log(e.target.value); setCanvas(e.target.value) }} />
-    </ModalComponent >
-  )
-}
+      <div className='flex gap-4'>
+      </div>
+      <Label>Font Size:</Label>
+      <TextInput
+        type='number'
+        value={fontSizes && fontSizes[location] ? fontSizes[location] : ''}
+        onChange={(e) => {
+          const newValue = e.target.value;
+          setFontSizes((prevSizes) => ({ ...prevSizes, [location]: newValue }));
+        }}
+      />
+      <TextInput
+        name='Enter color here...'
+        className="mt-4 w-full"
+        type='color'
+        value={textColor}
+        onChange={(e) => {
+          console.log(e.target.value); // Log the color value
+          typeof setTextColor === 'function' && setTextColor(e.target.value);
+        }}
+      />
+      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
+      
+      {/* Text control buttons */}
+      <div className="mt-4 flex gap-2">
+        <Button onClick={() => handleTextMove('left')}>Move Left</Button>
+        <Button onClick={() => handleTextMove('right')}>Move Right</Button>
+        <Button onClick={() => handleTextMove('up')}>Move Up</Button>
+        <Button onClick={() => handleTextMove('down')}>Move Down</Button>
+      </div>
+    </ModalComponent>
+  );
+};
 
 const ModalComponent = ({ children, closeHandler }) => {
   return (
@@ -32,29 +91,56 @@ const ModalComponent = ({ children, closeHandler }) => {
       <div className='m-auto max-w-[40rem] w-full'>
         <div className='relative bg-white w-full rounded-lg shadow dark:bg-gray-700 p-4'>
           <span onClick={closeHandler} className='absolute top-4 right-4 cursor-pointer'><AiOutlineClose /></span>
+
           {children}</div>
       </div>
     </div>
   )
 }
 
-const PictureComponent = ({ images, setCanvas, canvas, closeHandler }) => {
+const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
+    
+  const handleUpload = async () => {
+    if (!selectedImage) {
+      toast.error("Please select an image to upload", toastOptions);
+      return;
+    }
+    const imageUrl = await uploadImage(selectedImage);
+    setCanvas({ ...canvas, [location]: imageUrl });
+    closeHandler();
+  };
   return (
     <ModalComponent closeHandler={closeHandler}>
-
+      <div className='flex gap-4'>
+        <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
+        <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
+      </div >
       <div className='mt-4 grid lg:grid-cols-3 grid-cols-2 gap-4'>
         <div
-          onClick={() => setCanvas("")}
+          onClick={() => setCanvas({ ...canvas, [location]: "" })}
           className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
-          <MdDoNotDisturbAlt size={50} />
+          <MdDoNotDisturbAlt size={50} onClick={() => setCanvas({ ...canvas, [location]: "" })} />
         </div>
+        <label htmlFor="imageUpload" className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
+          <FiImage size={50} />
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageUpload}
+          />
+        </label>
         {images?.map((item, key) => (
-          <img onClick={() => setCanvas(item)} src={item} className='hover:border-violet-600 border cursor-pointer rounded-md aspect-square w-full object-cover' key={key + "images"} />
+          <img onClick={() => setCanvas({ ...canvas, [location]: item })} src={item} className='hover:border-violet-600 border cursor-pointer rounded-md aspect-square w-full object-cover' key={key + "images"} />
         ))}
       </div>
-    </ModalComponent >
-  )
-}
+      <Button onClick={handleUpload} className="mt-4 w-full bg-green-500 hover:bg-green-600">
+        Submit
+      </Button>
+    </ModalComponent>
+  );
+};
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
@@ -140,6 +226,13 @@ const Customizer = () => {
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+  };
+
   const ICONSIZE = 30
   const { state, dispatch } = useAppContext()
   const loadHandler = async () => {
@@ -198,7 +291,12 @@ const Customizer = () => {
       name: "Text",
       icon: <FiType size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, text: !modal.text }),
-    }
+    },
+    {
+      name: "Upload Image",
+      icon: <LuUpload size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, picture: !modal.picture }),
+    },
   ]
 
   const RIGHT_BUTTON = [
