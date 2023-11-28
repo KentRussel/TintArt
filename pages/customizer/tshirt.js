@@ -27,7 +27,7 @@ const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler,
       </div >
       <Label>Font Size:</Label>
       <TextInput type='number' value={fontSizes[location]} onChange={(e) => setFontSizes({ ...fontSizes, [location]: e.target.value })} />
-      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
+      <TextInput placeholder='Enter text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
     </ModalComponent >
   )
 }
@@ -44,6 +44,7 @@ const ModalComponent = ({ children, closeHandler }) => {
     </div>
   )
 }
+
 
 const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
   return (
@@ -68,8 +69,8 @@ const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, cl
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
-  const scaledWidth = 900 * (scale / 100);
-  const scaledHeight = 1100 * (scale / 100);
+  const scaledWidth = 400 * (scale / 100);
+  const scaledHeight = 600 * (scale / 100);
   const fs = 20
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -112,7 +113,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
                   </div>}
               </div>
               {/* back canvas  */}
-              < div className={`back-shirt bg-gray-300 relative border rounded-xl shadow-lg bg-white-60  overflow-hidden`}
+              < div className={`back-shirt bg-white relative border rounded-xl shadow-lg bg-white-600  overflow-hidden`}
                 style={{
                   height: scaledHeight,
                   width: scaledWidth,
@@ -161,6 +162,8 @@ const SaveComponent = ({ title, setTitle, submitHandler, closeHandler }) => {
   )
 }
 
+
+
 const Customizer = () => {
   const [merchandise, setMerchandise] = useState("T-Shirt")
   const [modal, setModal] = useState({
@@ -181,7 +184,7 @@ const Customizer = () => {
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
-  const ICONSIZE = 30
+  const ICONSIZE = 25
   const { state, dispatch } = useAppContext()
   const loadHandler = async () => {
     const result = await getUserCanvas(state?.user?._id)
@@ -212,13 +215,15 @@ const Customizer = () => {
       loadHandler()
   }, [state?.isAuth])
 
+
+
   const captureDivContent = () => {
     const node = document.getElementById('contentToCapture');
     domtoimage.toPng(node)
       .then((dataUrl) => {
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = 'Customized Tshirt.png'; // Set the desired filename for the downloaded image
+        link.download = 'customize.png'; // Set the desired filename for the downloaded image
         link.click(); // Simulate a click on the anchor to initiate download
         toast.success("Image has been downloaded", toastOptions)
 
@@ -230,7 +235,7 @@ const Customizer = () => {
   };
   const LEFT_BUTTON = [
     {
-      name: "Image",
+      name: "Picture",
       icon: <FiImage size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, picture: !modal.picture }),
     },
@@ -243,9 +248,9 @@ const Customizer = () => {
 
   const RIGHT_BUTTON = [
     {
-      name: "Custom Prints",
-      icon: <FiArchive size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
+      name: "Download ",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
     },
     {
       name: "Save",
@@ -253,9 +258,9 @@ const Customizer = () => {
       setModal: () => setModal({ ...modal, save: true }),
     },
     {
-      name: "Download ",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
+      name: "Custom Prints",
+      icon: <FiArchive size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
     },
   ]
 
@@ -276,7 +281,7 @@ const Customizer = () => {
     const result = await deleteArtwork(id)
     if (result.success) {
       await refetchArtworkHandler()
-      return toast.success("Custom print Deleted", toastOptions)
+      return toast.success("Artwork Deleted", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
@@ -298,14 +303,14 @@ const Customizer = () => {
       setModal({ ...modal, save: false })
       setTitle("")
       await refetchArtworkHandler()
-      return toast.success("Custom print Saved", toastOptions)
+      return toast.success("Artwork Saved", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
 
-  const scaledWidth = 900 * (scale / 100);
-  const scaledHeight = 1100 * (scale / 100);
+  const scaledWidth = 400 * (scale / 100);
+  const scaledHeight = 600 * (scale / 100);
   // Styles for centering the fixed div
   const centerDivStyle = {
     position: 'fixed',
@@ -359,12 +364,12 @@ const Customizer = () => {
           <LuSave size={ICONSIZE} />
         </Button> */}
 
-        <div className='fixed left-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed right-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
@@ -373,7 +378,7 @@ const Customizer = () => {
         <div className='fixed bottom-5 w-full z-10'>
           <div className='mx-auto max-w-[10rem]'>
             <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
-            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-500 rounded-lg appearance-none cursor-pointer dark:bg-gray-1000" />
+            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
           </div>
         </div>
         {/* end of control */}
@@ -383,7 +388,8 @@ const Customizer = () => {
 
             {/* front canvas  */}
             <div
-              className={`front-shirt bg-gray-300 relative border rounded-xl shadow-2xl overflow-hidden`}
+              className='front-shirt'
+              // className={`front-shirt relative border rounded-xl shadow-lg bg-white-600 overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -410,7 +416,7 @@ const Customizer = () => {
             {/* back canvas  */}
             <p className="absolute -right-14 top-12">Back</p>
 
-            <div className={`back-shirt bg-gray-300 relative rounded-xl shadow-2xl overflow-hidden`}
+            <div className={`back-shirt bg-white relative rounded-xl shadow-lg bg-white-600  overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -435,8 +441,10 @@ const Customizer = () => {
                     >{canvasText["back"]}</p>
                   </div>
                 </div>}
+
             </div>
           </div>
+
         </div>
       </div >
     </>

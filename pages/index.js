@@ -107,7 +107,7 @@ const Home = () => {
           </div>
           <div className='flex w-full items-center justify-center'>
             <div className='lg:flex-shrink-0 aspect-square lg:max-h-[20rem] lg:min-h-[20rem]'>
-              <img src="/images/about1.png" className='object-cover w-full h-full rounded-xl' />
+              <img src="/images/about1.png" className='object-cover w-full h-full rounded-xl shadow-2xl' />
             </div>
           </div>
         </div>

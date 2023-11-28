@@ -1,14 +1,13 @@
-import { Button, Label, TextInput } from 'flowbite-react';
-import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
-import { AiFillCloseCircle, AiOutlineClose } from 'react-icons/ai';
+import { Button, TextInput } from 'flowbite-react'
+import Link from 'next/link'
+import React, { useEffect, useRef, useState } from 'react'
+import { AiFillCloseCircle, AiOutlineClose } from 'react-icons/ai'
 import { FiArchive, FiDownload, FiType } from "react-icons/fi";
 import { FiImage } from "react-icons/fi";
 import { IoChevronBack } from "react-icons/io5";
-import { LuSave, LuUpload } from "react-icons/lu";
+import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
-import uploadImage from '../../services/image.services.js';
-import ImageController from './ImageController.js';
+
 
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
@@ -19,74 +18,17 @@ import { toastOptions } from '../../styles/modalOption';
 import { useRouter } from 'next/router';
 import { addArtwork, deleteArtwork, getUserArtwork } from '../../services/artwork.services';
 import moment from 'moment';
-
-const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler, setFontSizes, fontSizes, textColor, setTextColor }) => {
-  
-  const handleTextMove = (direction) => {
-    const step = 0.1; // You can adjust the step size as needed
-    const currentTransform = canvas[location] || '';
-    const transformValues = currentTransform.match(/translate\((-?\d+)px,\s*(-?\d+)px\)/);
-  
-    let [x, y] = transformValues ? transformValues.slice(0.1) : [0, 0];
-  
-    switch (direction) {
-      case 'left':
-        x -= step;
-        break;
-      case 'right':
-        x += step;
-        break;
-      case 'up':
-        y -= step;
-        break;
-      case 'down':
-        y += step;
-        break;
-      default:
-        break;
-    }
-  
-    const existingTransform = transformValues ? `translate(${x}px, ${y}px)` : '';
-    setCanvas({ ...canvas, [location]: existingTransform });
-  };     
-  
+const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
       <div className='flex gap-4'>
-        <Button pill onClick={() => setLocation("front")} color={location !== "front" ? "white" : "purple"}>Front</Button>
-        <Button pill onClick={() => setLocation("back")} color={location !== "back" ? "white" : "purple"}>Back</Button>
-      </div>
-      <Label>Font Sizes:</Label>
-      <TextInput
-        type='number'
-        value={fontSizes && fontSizes[location] ? fontSizes[location] : ''}
-        onChange={(e) => {
-          const newValue = e.target.value;
-          setFontSizes((prevSizes) => ({ ...prevSizes, [location]: newValue }));
-        }}
-      />
-      <TextInput
-        name='Enter color here...'
-        className="mt-4 w-full"
-        type='color'
-        value={textColor}
-        onChange={(e) => {
-          console.log(e.target.value); // Log the color value
-          typeof setTextColor === 'function' && setTextColor(e.target.value);
-        }}
-      />
-      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
-      
-      {/* Text control buttons */}
-      <div className="mt-4 flex gap-2">
-        <Button onClick={() => handleTextMove('left')}>Move Left</Button>
-        <Button onClick={() => handleTextMove('right')}>Move Right</Button>
-        <Button onClick={() => handleTextMove('up')}>Move Up</Button>
-        <Button onClick={() => handleTextMove('down')}>Move Down</Button>
-      </div>
-    </ModalComponent>
-  );
-};
+        <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
+        <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
+      </div >
+      <TextInput placeholder='Enter text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
+    </ModalComponent >
+  )
+}
 
 const ModalComponent = ({ children, closeHandler }) => {
   return (
@@ -101,10 +43,32 @@ const ModalComponent = ({ children, closeHandler }) => {
   )
 }
 
+
+const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
+  return (
+    <ModalComponent closeHandler={closeHandler}>
+      <div className='flex gap-4'>
+        <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
+        <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
+      </div >
+      <div className='mt-4 grid lg:grid-cols-3 grid-cols-2 gap-4'>
+        <div
+          onClick={() => setCanvas({ ...canvas, [location]: "" })}
+          className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
+          <MdDoNotDisturbAlt size={50} />
+        </div>
+        {images?.map((item, key) => (
+          <img onClick={() => setCanvas({ ...canvas, [location]: item })} src={item} className='hover:border-violet-600 border cursor-pointer rounded-md aspect-square w-full object-cover' key={key + "images"} />
+        ))}
+      </div>
+    </ModalComponent >
+  )
+}
+
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
-  const scaledWidth = 600 * (scale / 100);
-  const scaledHeight = 900 * (scale / 100);
+  const scaledWidth = 400 * (scale / 100);
+  const scaledHeight = 600 * (scale / 100);
   const fs = 20
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -118,7 +82,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
                 onClick={() =>
                   deleteHandler(item?._id)
                 }
-                className='cursor-pointer absolute rounded-full  top-2 right-2 bg-white z-10'
+                className='cursor-pointer absolute  rounded-full  top-2 right-2 bg-white z-10'
               >
                 <AiFillCloseCircle size={20} className='text-red-600' />
               </span>
@@ -164,18 +128,19 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
                     <div className='m-4 flex items-center justify-center'>
 
                       <p style={{
-                        fontSize: fs * (scale / 100)
+                        fontSize: fs * (scale / 100),
                       }}
                         className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
                       >{item?.back_text}</p>
                     </div>
                   </div>}
+
               </div>
             </div>
           </div>
         ))}
       </div>
-      {data?.length == 0 && <p className='text-center'>There's no custom print saved.</p>}
+      {data?.length == 0 && <p className='text-center'>There's no artwork saved.</p>}
     </ModalComponent >
   )
 }
@@ -195,6 +160,8 @@ const SaveComponent = ({ title, setTitle, submitHandler, closeHandler }) => {
   )
 }
 
+
+
 const Customizer = () => {
   const [merchandise, setMerchandise] = useState("Photocard")
   const [modal, setModal] = useState({
@@ -204,26 +171,17 @@ const Customizer = () => {
     download: false,
     save: false
   })
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setSelectedImage(file);
-  };
-
-  const [textColor, setTextColor] = useState("#000000"); // Default color is black
   const [imageLocation, setImageLocation] = useState("front")
   const [textLocation, setTextLocation] = useState("front")
   const [canvasText, setCanvasText] = useState({ front: "", back: "" })
 
   const MY_CORS = 'https://marvs-cors.onrender.com/proxy?url='
   const [canvasImage, setCanvasImage] = useState({ front: "", back: "" })
-  const [fontSizes, setFontSizes] = useState({ front: 20, back: 20 });
   const [scale, setScale] = useState(50)
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
-  const ICONSIZE = 30
+  const ICONSIZE = 25
   const { state, dispatch } = useAppContext()
   const loadHandler = async () => {
     const result = await getUserCanvas(state?.user?._id)
@@ -253,13 +211,15 @@ const Customizer = () => {
       loadHandler()
   }, [state?.isAuth])
 
+
+
   const captureDivContent = () => {
     const node = document.getElementById('contentToCapture');
     domtoimage.toPng(node)
       .then((dataUrl) => {
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = 'Customized Tshirt.png'; // Set the desired filename for the downloaded image
+        link.download = 'customize.png'; // Set the desired filename for the downloaded image
         link.click(); // Simulate a click on the anchor to initiate download
         toast.success("Image has been downloaded", toastOptions)
 
@@ -269,10 +229,9 @@ const Customizer = () => {
         console.error('Error capturing content:', error);
       });
   };
-
   const LEFT_BUTTON = [
     {
-      name: "Logos",
+      name: "Picture",
       icon: <FiImage size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, picture: !modal.picture }),
     },
@@ -280,19 +239,14 @@ const Customizer = () => {
       name: "Text",
       icon: <FiType size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, text: !modal.text }),
-    },
-    {
-      name: "Upload Image",
-      icon: <LuUpload size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, picture: !modal.picture }),
     }
   ]
 
   const RIGHT_BUTTON = [
     {
-      name: "Custom Prints",
-      icon: <FiArchive size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
+      name: "Download ",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
     },
     {
       name: "Save",
@@ -300,55 +254,11 @@ const Customizer = () => {
       setModal: () => setModal({ ...modal, save: true }),
     },
     {
-      name: "Download ",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
+      name: "Custom Prints",
+      icon: <FiArchive size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
     },
   ]
-
-  const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
-    
-    const handleUpload = async () => {
-      if (!selectedImage) {
-        toast.error("Please select an image to upload", toastOptions);
-        return;
-      }
-      const imageUrl = await uploadImage(selectedImage);
-      setCanvas({ ...canvas, [location]: imageUrl });
-      closeHandler();
-    };
-    return (
-      <ModalComponent closeHandler={closeHandler}>
-        <div className='flex gap-4'>
-          <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
-          <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
-        </div >
-        <div className='mt-4 grid lg:grid-cols-3 grid-cols-2 gap-4'>
-          <div
-            onClick={() => setCanvas({ ...canvas, [location]: "" })}
-            className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
-            <MdDoNotDisturbAlt size={50} onClick={() => setCanvas({ ...canvas, [location]: "" })} />
-          </div>
-          <label htmlFor="imageUpload" className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
-            <FiImage size={50} />
-            <input
-              type="file"
-              id="imageUpload"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageUpload}
-            />
-          </label>
-          {images?.map((item, key) => (
-            <img onClick={() => setCanvas({ ...canvas, [location]: item })} src={item} className='hover:border-violet-600 border cursor-pointer rounded-md aspect-square w-full object-cover' key={key + "images"} />
-          ))}
-        </div>
-        <Button onClick={handleUpload} className="mt-4 w-full bg-green-500 hover:bg-green-600">
-          Submit
-        </Button>
-      </ModalComponent>
-    );
-  };
 
   const ButtonComponent = ({ data }) => {
     return (
@@ -367,7 +277,7 @@ const Customizer = () => {
     const result = await deleteArtwork(id)
     if (result.success) {
       await refetchArtworkHandler()
-      return toast.success("Custom print deleted", toastOptions)
+      return toast.success("Artwork Deleted", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
@@ -389,14 +299,14 @@ const Customizer = () => {
       setModal({ ...modal, save: false })
       setTitle("")
       await refetchArtworkHandler()
-      return toast.success("Custom print saved", toastOptions)
+      return toast.success("Artwork Saved", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
 
-  const scaledWidth = 600 * (scale / 100);
-  const scaledHeight = 900 * (scale / 100);
+  const scaledWidth = 400 * (scale / 100);
+  const scaledHeight = 600 * (scale / 100);
   // Styles for centering the fixed div
   const centerDivStyle = {
     position: 'fixed',
@@ -415,17 +325,14 @@ const Customizer = () => {
         location={imageLocation}
         setLocation={setImageLocation}
         closeHandler={LEFT_BUTTON[0].setModal}
+
       />}
       {modal.text && <TextComponent
         setCanvas={setCanvasText}
         canvas={canvasText}
         location={textLocation}
-        fontSizes={fontSizes}
-        setFontSizes={setFontSizes}
         setLocation={setTextLocation}
-        closeHandler={LEFT_BUTTON[1].setModal}
-        textColor={textColor}
-      />}
+        closeHandler={LEFT_BUTTON[1].setModal} />}
       {modal.save && <SaveComponent
         title={title}
         setTitle={setTitle}
@@ -437,40 +344,44 @@ const Customizer = () => {
         deleteHandler={deleteHandler}
         closeHandler={RIGHT_BUTTON[2].setModal} />}
 
+
+
       {/* END OF MODALS  */}
       <div className='overflow-hidden h-screen relative'>
 
         <Button size="xs" color="light" className='fixed top-1 left-1 z-10'>
           <Link href="/">
-            <div className='flex items-center'>
+            <div className='flex gap-2 items-center'>
               <IoChevronBack size={ICONSIZE} /> Back to Homepage
             </div>
           </Link>
         </Button>
+        {/* <Button size="xs" onClick={() => setModal({ ...modal, save: true })} className='bg-violet-600 fixed top-1 right-1 z-10 hover:bg-violet-700'>
+        </Button> */}
 
-        <div className='fixed left-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed right-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
         </div>
-      {/* bottom control */}
-      <div className='fixed bottom-5 w-full z-10'>
-        <div className='mx-auto max-w-[10rem]'>
-          <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
-          <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-500 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+        {/* bottom control  */}
+        <div className='fixed bottom-5 w-full z-10'>
+          <div className='mx-auto max-w-[10rem]'>
+            <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
+            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+          </div>
         </div>
-      </div>
         {/* end of control */}
         <div style={centerDivStyle} className='mx-auto fixed flex items-center justify-center gap-4'>
           <div id="contentToCapture" className='flex gap-4 relative' >
-            <p className="absolute -left-14 top-0">Front</p>
+            <p className="absolute -left-14 top-12">Front</p>
             {/* front canvas  */}
-            <div className={`bg-gray-300 relative border rounded-xl shadow-2xl overflow-hidden`}
+            <div className={`bg-white relative border rounded-xl shadow-lg bg-white-600 overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -481,34 +392,29 @@ const Customizer = () => {
                   style={{
                     minHeight: scaledHeight,
                     minWidth: scaledWidth,
-                  }} src={canvasImage.front} className='h-full w-full object-cover' />
+                  }} src={MY_CORS + canvasImage.front} className='h-full w-full object-cover' />
               }
               {canvasText.front.length > 0 &&
                 <div className=' mx-auto absolute bottom-1 w-full '>
                   <div className='m-4 flex items-center justify-center'>
                     <p
-                      style={{
-                        fontSize: '${fontSizes["front"]}px',
-                        color: '${textColor}'
-                      }}
-                      className='py-1 px-2 rounded-md font-semibold z-10'
-                    >
-                      {canvasText["front"]}
-                    </p>
+                      style={{ fontSize: 20 * (scale / 100) }}
+                      className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
+                    >{canvasText["front"]}</p>
                   </div>
                 </div>}
             </div>
             {/* back canvas  */}
-            <p className="absolute -right-14 top-0">Back</p>
+            <p className="absolute -right-14 top-12">Back</p>
 
-            <div className={`bg-gray-300 relative border rounded-xl shadow-2xl overflow-hidden`}
+            <div className={`bg-white relative border rounded-xl shadow-lg bg-white-600  overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
               }}
             >
               {canvasImage?.back.length > 0 &&
-                <img src={canvasImage.back} className='h-full w-full object-cover'
+                <img src={MY_CORS + canvasImage.back} className='h-full w-full object-cover'
                   style={{
                     height: scaledHeight,
                     width: scaledWidth,
@@ -517,19 +423,18 @@ const Customizer = () => {
               {canvasText?.back?.length > 0 &&
                 <div className=' mx-auto absolute bottom-1 w-full'>
                   <div className='m-4 flex items-center justify-center'>
-                    <p
-                      style={{
-                        fontSize: '${fontSizes["back"]}px',
-                        color: '${textColor}'
-                      }}
-                      className='py-1 px-2 rounded-md font-semibold z-10'
-                    >
-                      {canvasText["back"]}
-                    </p>
+
+                    <p style={{
+                      fontSize: 20 * (scale / 100),
+                    }}
+                      className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
+                    >{canvasText["back"]}</p>
                   </div>
                 </div>}
+
             </div>
           </div>
+
         </div>
       </div>
     </>

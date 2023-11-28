@@ -1,13 +1,13 @@
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Button, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { AiFillCloseCircle, AiOutlineClose } from 'react-icons/ai'
 import { FiArchive, FiDownload, FiType } from "react-icons/fi";
 import { FiImage } from "react-icons/fi";
 import { IoChevronBack } from "react-icons/io5";
-import { LuSave, LuUpload } from "react-icons/lu";
+import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
-import uploadImage from '../../services/image.services.js';
+
 
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
@@ -18,72 +18,13 @@ import { toastOptions } from '../../styles/modalOption';
 import { useRouter } from 'next/router';
 import { addArtwork, deleteArtwork, getUserArtwork } from '../../services/artwork.services';
 import moment from 'moment';
-
-const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler, setFontSizes, fontSizes, textColor, setTextColor }) => {
-  
-  const handleTextMove = (direction) => {
-    const step = 0.1; // You can adjust the step size as needed
-    const currentTransform = canvas[location] || '';
-    const transformValues = currentTransform.match(/translate\((-?\d+)px,\s*(-?\d+)px\)/);
-  
-    let [x, y] = transformValues ? transformValues.slice(0.1) : [0, 0];
-  
-    switch (direction) {
-      case 'left':
-        x -= step;
-        break;
-      case 'right':
-        x += step;
-        break;
-      case 'up':
-        y -= step;
-        break;
-      case 'down':
-        y += step;
-        break;
-      default:
-        break;
-    }
-  
-    const existingTransform = transformValues ? `translate(${x}px, ${y}px)` : '';
-    setCanvas({ ...canvas, [location]: existingTransform });
-  };     
-  
+const TextComponent = ({ setCanvas, canvas, closeHandler }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
-      <div className='flex gap-4'>
-      </div>
-      <Label>Font Size:</Label>
-      <TextInput
-        type='number'
-        value={fontSizes && fontSizes[location] ? fontSizes[location] : ''}
-        onChange={(e) => {
-          const newValue = e.target.value;
-          setFontSizes((prevSizes) => ({ ...prevSizes, [location]: newValue }));
-        }}
-      />
-      <TextInput
-        name='Enter color here...'
-        className="mt-4 w-full"
-        type='color'
-        value={textColor}
-        onChange={(e) => {
-          console.log(e.target.value); // Log the color value
-          typeof setTextColor === 'function' && setTextColor(e.target.value);
-        }}
-      />
-      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
-      
-      {/* Text control buttons */}
-      <div className="mt-4 flex gap-2">
-        <Button onClick={() => handleTextMove('left')}>Move Left</Button>
-        <Button onClick={() => handleTextMove('right')}>Move Right</Button>
-        <Button onClick={() => handleTextMove('up')}>Move Up</Button>
-        <Button onClick={() => handleTextMove('down')}>Move Down</Button>
-      </div>
-    </ModalComponent>
-  );
-};
+      <TextInput placeholder='Enter text here...' className="mt-4 w-full" value={canvas} onChange={(e) => { console.log(e.target.value); setCanvas(e.target.value) }} />
+    </ModalComponent >
+  )
+}
 
 const ModalComponent = ({ children, closeHandler }) => {
   return (
@@ -91,61 +32,35 @@ const ModalComponent = ({ children, closeHandler }) => {
       <div className='m-auto max-w-[40rem] w-full'>
         <div className='relative bg-white w-full rounded-lg shadow dark:bg-gray-700 p-4'>
           <span onClick={closeHandler} className='absolute top-4 right-4 cursor-pointer'><AiOutlineClose /></span>
-
           {children}</div>
       </div>
     </div>
   )
 }
 
-const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
-    
-  const handleUpload = async () => {
-    if (!selectedImage) {
-      toast.error("Please select an image to upload", toastOptions);
-      return;
-    }
-    const imageUrl = await uploadImage(selectedImage);
-    setCanvas({ ...canvas, [location]: imageUrl });
-    closeHandler();
-  };
+
+const PictureComponent = ({ images, setCanvas, canvas, closeHandler }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
-      <div className='flex gap-4'>
-        <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
-        <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
-      </div >
+
       <div className='mt-4 grid lg:grid-cols-3 grid-cols-2 gap-4'>
         <div
-          onClick={() => setCanvas({ ...canvas, [location]: "" })}
+          onClick={() => setCanvas("")}
           className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
-          <MdDoNotDisturbAlt size={50} onClick={() => setCanvas({ ...canvas, [location]: "" })} />
+          <MdDoNotDisturbAlt size={50} />
         </div>
-        <label htmlFor="imageUpload" className='aspect-square hover:border-violet-600 cursor-pointer border rounded-md flex items-center justify-center'>
-          <FiImage size={50} />
-          <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageUpload}
-          />
-        </label>
         {images?.map((item, key) => (
-          <img onClick={() => setCanvas({ ...canvas, [location]: item })} src={item} className='hover:border-violet-600 border cursor-pointer rounded-md aspect-square w-full object-cover' key={key + "images"} />
+          <img onClick={() => setCanvas(item)} src={item} className='hover:border-violet-600 border cursor-pointer rounded-md aspect-square w-full object-cover' key={key + "images"} />
         ))}
       </div>
-      <Button onClick={handleUpload} className="mt-4 w-full bg-green-500 hover:bg-green-600">
-        Submit
-      </Button>
-    </ModalComponent>
-  );
-};
+    </ModalComponent >
+  )
+}
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
-  const scaledHeight = 900 * (scale / 100);
-  const scaledWidth = 1300 * (scale / 100);
+  const scaledHeight = 400 * (scale / 100);
+  const scaledWidth = 700 * (scale / 100);
   const fs = 20
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -190,7 +105,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
           </div>
         ))}
       </div>
-      {data?.length == 0 && <p className='text-center'>There's no custom print saved.</p>}
+      {data?.length == 0 && <p className='text-center'>There's no artwork saved.</p>}
     </ModalComponent >
   )
 }
@@ -210,6 +125,8 @@ const SaveComponent = ({ title, setTitle, submitHandler, closeHandler }) => {
   )
 }
 
+
+
 const Customizer = () => {
   const [modal, setModal] = useState({
     picture: false,
@@ -226,14 +143,7 @@ const Customizer = () => {
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setSelectedImage(file);
-  };
-
-  const ICONSIZE = 30
+  const ICONSIZE = 25
   const { state, dispatch } = useAppContext()
   const loadHandler = async () => {
     const result = await getUserCanvas(state?.user?._id)
@@ -271,7 +181,7 @@ const Customizer = () => {
       .then((dataUrl) => {
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = 'Customized Sintraboard.png'; // Set the desired filename for the downloaded image
+        link.download = 'customize.png'; // Set the desired filename for the downloaded image
         link.click(); // Simulate a click on the anchor to initiate download
         toast.success("Image has been downloaded", toastOptions)
 
@@ -283,7 +193,7 @@ const Customizer = () => {
   };
   const LEFT_BUTTON = [
     {
-      name: "Image",
+      name: "Picture",
       icon: <FiImage size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, picture: !modal.picture }),
     },
@@ -291,19 +201,14 @@ const Customizer = () => {
       name: "Text",
       icon: <FiType size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, text: !modal.text }),
-    },
-    {
-      name: "Upload Image",
-      icon: <LuUpload size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, picture: !modal.picture }),
-    },
+    }
   ]
 
   const RIGHT_BUTTON = [
     {
-      name: "Custom Prints",
-      icon: <FiArchive size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
+      name: "Download ",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
     },
     {
       name: "Save",
@@ -311,9 +216,9 @@ const Customizer = () => {
       setModal: () => setModal({ ...modal, save: true }),
     },
     {
-      name: "Download ",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
+      name: "Custom Prints",
+      icon: <FiArchive size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
     },
   ]
 
@@ -324,6 +229,7 @@ const Customizer = () => {
           {data?.icon}
           <p className='text-center text-xs'>{data?.name}</p>
         </div>
+
         {data?.modalComponent}
       </>
     )
@@ -333,7 +239,7 @@ const Customizer = () => {
     const result = await deleteArtwork(id)
     if (result.success) {
       await refetchArtworkHandler()
-      return toast.success("Custom print Deleted", toastOptions)
+      return toast.success("Artwork Deleted", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
@@ -353,14 +259,14 @@ const Customizer = () => {
       setModal({ ...modal, save: false })
       setTitle("")
       await refetchArtworkHandler()
-      return toast.success("Custom print Saved", toastOptions)
+      return toast.success("Artwork Saved", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
 
-  const scaledHeight = 900 * (scale / 100);
-  const scaledWidth = 1300 * (scale / 100);
+  const scaledHeight = 400 * (scale / 100);
+  const scaledWidth = 700 * (scale / 100);
   // Styles for centering the fixed div
   const centerDivStyle = {
     position: 'fixed',
@@ -410,12 +316,12 @@ const Customizer = () => {
           <LuSave size={ICONSIZE} />
         </Button> */}
 
-        <div className='fixed left-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed right-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
@@ -424,7 +330,7 @@ const Customizer = () => {
         <div className='fixed bottom-5 w-full z-10'>
           <div className='mx-auto max-w-[10rem]'>
             <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
-            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-500 rounded-lg appearance-none cursor-pointer dark:bg-gray-1000" />
+            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
           </div>
         </div>
         {/* end of control */}
@@ -432,7 +338,7 @@ const Customizer = () => {
           <div id="contentToCapture" className='flex gap-4' >
 
             {/* front canvas  */}
-            <div className={`bg-gray-300 relative border shadow-2xl overflow-hidden`}
+            <div className={`bg-white relative border shadow-lg bg-white-600 overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -450,7 +356,7 @@ const Customizer = () => {
                   <div className='m-4 flex items-center justify-center'>
                     <p
                       style={{ fontSize: 20 * (scale / 100) }}
-                      className=' py-1 px-2 rounded-md font-light z-10'
+                      className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
                     >{canvasText}</p>
                   </div>
                 </div>}

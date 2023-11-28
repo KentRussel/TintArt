@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
-import CustomerWrapper from './customer-wrapper'
-import { getAllShop } from '../../services/shop.services'
-import DATA from '../../utils/DATA'
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import CustomerWrapper from './customer-wrapper';
+import { getAllShop } from '../../services/shop.services';
+import DATA from '../../utils/DATA';
 
 const FooterLayout = () => {
-  const [shopData, setShopData] = useState(null)
+  const [shopData, setShopData] = useState(null);
+  const [isPrivacyPolicyModalVisible, setPrivacyPolicyModalVisible] = useState(false); // Define the state here
+
   const loadHandler = async () => {
     // fetch shop
-    const shop_result = await getAllShop()
-    if (shop_result.success) if (shop_result?.data?.length > 0) setShopData(shop_result?.data[0])
-  }
+    const shop_result = await getAllShop();
+    if (shop_result.success && shop_result?.data?.length > 0) {
+      setShopData(shop_result?.data[0]);
+    }
+  };
 
   useEffect(() => {
-    loadHandler()
-  }, [])
+    loadHandler();
+  }, []);
+
   const FooterLinks = ({ data, headings }) => {
     return (
       <div className='w-full flex flex-col gap-4'>
@@ -29,16 +34,55 @@ const FooterLayout = () => {
           </div>
         ))}
       </div>
-    )
-  }
+    );
+  };
+
+  const PrivacyPolicyModal = ({ isVisible, onClose, privacyPolicyText }) => {
+    if (!isVisible) return null;
+  
+    const closeModal = () => {
+      onClose && onClose(); // Close the modal if onClose is provided
+    };
+  
+    return (
+      <div
+        className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 overflow-y-auto'
+        onClick={closeModal} // Close modal when clicking outside
+      >
+        <div className='bg-white p-8 max-w-md' onClick={(e) => e.stopPropagation()}>
+          {/* Close button */}
+          {onClose && (
+            <button className='absolute top-2 right-2' onClick={onClose}>
+              Close
+            </button>
+          )}
+          {/* Privacy policy content */}
+          <div style={{ maxHeight: '50vh', overflowY: 'auto' }}>{privacyPolicyText}</div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <CustomerWrapper containerClass='bg-zinc-900 p-4'>
-      <div className='text-zinc-100  bg-zinc-900'>
-        <div className=' flex justify-between flex-col gap-10 lg:flex-row py-10'>
+      <div className='text-zinc-100 bg-zinc-900'>
+        <div className='flex justify-between flex-col gap-10 lg:flex-row py-10'>
           <div className='flex flex-col gap-4 w-full'>
-            <img alt='logo' src='/images/logo.png' className='w-[20rem]  object-cover' />
+            <img alt='logo' src='/images/logo.png' className='w-[20rem] object-cover' />
             <p>{DATA?.FOOTER.ADDRESS}</p>
-            <p>Call Us: {DATA.FOOTER.CONTACT}</p>
+            {/* Open modal when "Privacy Policy" link is clicked */}
+            <p>
+              <a
+                href="#"
+                className='text-blue-500 underline'
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPrivacyPolicyModalVisible(true);
+                }}
+              >
+                Privacy Policy
+              </a>
+            </p>
             {shopData && <p>E-Mail: {shopData.email}</p>}
           </div>
           <div className='flex gap-10 lg:flex-row flex-col w-full'>
@@ -56,8 +100,15 @@ const FooterLayout = () => {
         </div>
         <p className='w-full text-center p-10'>Copyright © 2023 TintArt. All Rights Reserved.</p>
       </div>
-    </CustomerWrapper>
-  )
-}
 
-export default FooterLayout
+      {/* Render the modal component */}
+      <PrivacyPolicyModal
+        isVisible={isPrivacyPolicyModalVisible}
+        onClose={() => setPrivacyPolicyModalVisible(false)}
+        privacyPolicyText={DATA.PRIVACY_POLICY}
+      />
+    </CustomerWrapper>
+  );
+};
+
+export default FooterLayout;

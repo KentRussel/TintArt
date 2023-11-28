@@ -68,7 +68,7 @@ const About = () => {
                             Merchandise</p>
                     </div>
                     <div className='w-full'>
-                        <img src="./images/about1.png" className='w-full flex-shrink object-cover' />
+                        <img src="./images/about.png" className='w-full flex-shrink object-cover' />
                     </div>
                     <div className='w-full'>
                         <img src="./images/about2.png" className='w-full flex-shrink object-cover' />
@@ -103,9 +103,7 @@ const About = () => {
                             </div>
                         </LoadingLayout>
                         <ContactLayout title="Contact Us" />
-
                 </div>
-
             </CustomerWrapper>
         </CustomerLayout>
     )
