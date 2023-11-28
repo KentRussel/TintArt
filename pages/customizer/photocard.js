@@ -281,6 +281,7 @@ const Customizer = () => {
   };
 
   const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, closeHandler }) => {
+    
     const handleUpload = async () => {
       if (!selectedImage) {
         toast.error("Please select an image to upload", toastOptions);
@@ -317,7 +318,7 @@ const Customizer = () => {
           ))}
         </div>
         <Button onClick={handleUpload} className="mt-4 w-full bg-green-500 hover:bg-green-600">
-          Upload
+          Submit
         </Button>
       </ModalComponent>
     );
