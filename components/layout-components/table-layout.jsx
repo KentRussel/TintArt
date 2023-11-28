@@ -32,15 +32,43 @@ const TableLayout = ({
   const [isLoading, setIsLoading] = useState(true)
   const [fetchData, setFetchData] = useState([])
   const headerArray = fieldInputs?.map(item => item.name)
+  const [sortOrder, setSortOrder] = useState({ field: '', order: 'asc' });
 
-  const searchHandler = array => {
-    return array.filter(item =>
-      Object.values(item).some(value =>
-        value?.toString().toLowerCase().includes(search.toLowerCase())
-      )
-    )
-  }
+  const toggleSortOrder = (field) => {
+    setSortOrder((prevSortOrder) => ({
+      field,
+      order: prevSortOrder.field === field && prevSortOrder.order === 'asc' ? 'desc' : 'asc',
+    }));
+  };
 
+  const searchHandler = (array) => {
+    return array
+      .slice()
+      .sort((a, b) => {
+        const fieldA = a[sortOrder.field];
+        const fieldB = b[sortOrder.field];
+  
+        // Handle null or undefined values
+        if (fieldA == null) return sortOrder.order === 'asc' ? -1 : 1;
+        if (fieldB == null) return sortOrder.order === 'asc' ? 1 : -1;
+  
+        // Handle non-string values
+        const valueA = typeof fieldA === 'string' ? fieldA : String(fieldA);
+        const valueB = typeof fieldB === 'string' ? fieldB : String(fieldB);
+  
+        if (sortOrder.order === 'asc') {
+          return valueA.localeCompare(valueB, undefined, { numeric: true });
+        } else {
+          return valueB.localeCompare(valueA, undefined, { numeric: true });
+        }
+      })
+      .filter((item) =>
+        Object.values(item).some((value) =>
+          value?.toString().toLowerCase().includes(search.toLowerCase())
+        )
+      );
+  };
+  
   const searchFilter = searchHandler(fetchData)
 
   useEffect(() => {
@@ -240,6 +268,13 @@ const TableLayout = ({
             {fieldInputs?.map((item, key) => (
               <Table.HeadCell key={`fieldInputs-${title.toLowerCase()}-${key}`}>
                 {item?.label}
+                {['product ID', 'Name', 'price'].indexOf(item?.name) > -1 && (
+              <div className="flex flex-col items-center">
+                <button onClick={() => toggleSortOrder(item?.name)}>
+                  {sortOrder.field === item?.name && sortOrder.order === 'asc' ? '▲' : '▼'}
+                </button>
+              </div>
+            )}
               </Table.HeadCell>
             ))}
             <Table.HeadCell />
