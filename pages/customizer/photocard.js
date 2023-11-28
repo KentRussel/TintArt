@@ -8,7 +8,6 @@ import { IoChevronBack } from "react-icons/io5";
 import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt } from "react-icons/md";
 
-
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
 import { useAppContext } from '../../context/AppContext';
@@ -25,7 +24,7 @@ const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler 
         <Button pill onClick={() => setLocation("front")} color={location != "front" ? "white" : "purple"}>Front</Button>
         <Button pill onClick={() => setLocation("back")} color={location != "back" ? "white" : "purple"}>Back</Button>
       </div >
-      <TextInput placeholder='Enter text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
+      <TextInput placeholder='Enter the text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
     </ModalComponent >
   )
 }
@@ -36,7 +35,6 @@ const ModalComponent = ({ children, closeHandler }) => {
       <div className='m-auto max-w-[40rem] w-full'>
         <div className='relative bg-white w-full rounded-lg shadow dark:bg-gray-700 p-4'>
           <span onClick={closeHandler} className='absolute top-4 right-4 cursor-pointer'><AiOutlineClose /></span>
-
           {children}</div>
       </div>
     </div>
@@ -67,8 +65,8 @@ const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, cl
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
   const scale = 50
-  const scaledWidth = 400 * (scale / 100);
-  const scaledHeight = 600 * (scale / 100);
+  const scaledWidth = 700 * (scale / 100);
+  const scaledHeight = 900 * (scale / 100);
   const fs = 20
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -140,7 +138,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler }) => {
           </div>
         ))}
       </div>
-      {data?.length == 0 && <p className='text-center'>There's no artwork saved.</p>}
+      {data?.length == 0 && <p className='text-center'>There's no custom print saved.</p>}
     </ModalComponent >
   )
 }
@@ -159,8 +157,6 @@ const SaveComponent = ({ title, setTitle, submitHandler, closeHandler }) => {
     </ModalComponent >
   )
 }
-
-
 
 const Customizer = () => {
   const [merchandise, setMerchandise] = useState("Photocard")
@@ -181,7 +177,7 @@ const Customizer = () => {
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
-  const ICONSIZE = 25
+  const ICONSIZE = 30
   const { state, dispatch } = useAppContext()
   const loadHandler = async () => {
     const result = await getUserCanvas(state?.user?._id)
@@ -211,8 +207,6 @@ const Customizer = () => {
       loadHandler()
   }, [state?.isAuth])
 
-
-
   const captureDivContent = () => {
     const node = document.getElementById('contentToCapture');
     domtoimage.toPng(node)
@@ -231,7 +225,7 @@ const Customizer = () => {
   };
   const LEFT_BUTTON = [
     {
-      name: "Picture",
+      name: "Image",
       icon: <FiImage size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, picture: !modal.picture }),
     },
@@ -244,9 +238,9 @@ const Customizer = () => {
 
   const RIGHT_BUTTON = [
     {
-      name: "Download ",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
+      name: "Custom Prints",
+      icon: <FiArchive size={ICONSIZE} />,
+      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
     },
     {
       name: "Save",
@@ -254,10 +248,10 @@ const Customizer = () => {
       setModal: () => setModal({ ...modal, save: true }),
     },
     {
-      name: "Custom Prints",
-      icon: <FiArchive size={ICONSIZE} />,
-      setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
-    },
+      name: "Download ",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
+    }
   ]
 
   const ButtonComponent = ({ data }) => {
@@ -277,14 +271,14 @@ const Customizer = () => {
     const result = await deleteArtwork(id)
     if (result.success) {
       await refetchArtworkHandler()
-      return toast.success("Artwork Deleted", toastOptions)
+      return toast.success("Custom print deleted", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
   const submitHandler = async () => {
     if (title.trim().length == 0)
-      return toast.error("Please enter title!", toastOptions)
+      return toast.error("Please enter the title!", toastOptions)
     const newData = {
       merchandise: router.pathname.split("/")[2],
       user_id: state?.user?._id,
@@ -299,14 +293,14 @@ const Customizer = () => {
       setModal({ ...modal, save: false })
       setTitle("")
       await refetchArtworkHandler()
-      return toast.success("Artwork Saved", toastOptions)
+      return toast.success("Custom print saved", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
 
-  const scaledWidth = 400 * (scale / 100);
-  const scaledHeight = 600 * (scale / 100);
+  const scaledWidth = 700 * (scale / 100);
+  const scaledHeight = 900 * (scale / 100);
   // Styles for centering the fixed div
   const centerDivStyle = {
     position: 'fixed',
@@ -359,12 +353,12 @@ const Customizer = () => {
         {/* <Button size="xs" onClick={() => setModal({ ...modal, save: true })} className='bg-violet-600 fixed top-1 right-1 z-10 hover:bg-violet-700'>
         </Button> */}
 
-        <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
+        <div className='fixed left-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
+        <div className='fixed right-1 top-[25%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
@@ -373,15 +367,15 @@ const Customizer = () => {
         <div className='fixed bottom-5 w-full z-10'>
           <div className='mx-auto max-w-[10rem]'>
             <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
-            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer dark:bg-gray-1000" />
           </div>
         </div>
         {/* end of control */}
         <div style={centerDivStyle} className='mx-auto fixed flex items-center justify-center gap-4'>
           <div id="contentToCapture" className='flex gap-4 relative' >
-            <p className="absolute -left-14 top-12">Front</p>
+            <p className="absolute -left-14 top-0">Front</p>
             {/* front canvas  */}
-            <div className={`bg-white relative border rounded-xl shadow-lg bg-white-600 overflow-hidden`}
+            <div className={`bg-gray-300 relative border rounded-xl shadow-2xl bg-white-600 overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -399,15 +393,15 @@ const Customizer = () => {
                   <div className='m-4 flex items-center justify-center'>
                     <p
                       style={{ fontSize: 20 * (scale / 100) }}
-                      className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
+                      className=' py-1 px-2 rounded-md font-light z-10'
                     >{canvasText["front"]}</p>
                   </div>
                 </div>}
             </div>
             {/* back canvas  */}
-            <p className="absolute -right-14 top-12">Back</p>
+            <p className="absolute -right-14 top-0">Back</p>
 
-            <div className={`bg-white relative border rounded-xl shadow-lg bg-white-600  overflow-hidden`}
+            <div className={`bg-gray-300 relative border rounded-xl shadow-2xl bg-white-600  overflow-hidden`}
               style={{
                 height: scaledHeight,
                 width: scaledWidth,
@@ -427,7 +421,7 @@ const Customizer = () => {
                     <p style={{
                       fontSize: 20 * (scale / 100),
                     }}
-                      className=' py-1 px-2 rounded-md bg-white font-semibold z-10'
+                      className=' py-1 px-2 rounded-md font-light z-10'
                     >{canvasText["back"]}</p>
                   </div>
                 </div>}
