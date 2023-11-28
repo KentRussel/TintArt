@@ -69,7 +69,7 @@ const FooterLayout = () => {
         <div className='flex justify-between flex-col gap-10 lg:flex-row py-10'>
           <div className='flex flex-col gap-4 w-full'>
             <img alt='logo' src='/images/logo.png' className='w-[20rem] object-cover' />
-            <p>{DATA?.FOOTER.ADDRESS}</p>
+            {shopData && <p>Email: {shopData.email}</p>}
             {/* Open modal when "Privacy Policy" link is clicked */}
             <p>
               <a
@@ -83,7 +83,6 @@ const FooterLayout = () => {
                 Privacy Policy
               </a>
             </p>
-            {shopData && <p>E-Mail: {shopData.email}</p>}
           </div>
           <div className='flex gap-10 lg:flex-row flex-col w-full'>
             <FooterLinks data={DATA.FOOTER.LINKS} headings='Links' />
