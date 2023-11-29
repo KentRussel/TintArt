@@ -406,7 +406,7 @@ const Cart = () => {
                                     </div>}
                                 <div className='flex items-center justify-between'>
                                     <p>Total</p>
-                                    <p className='text-red-700 font-semibold'>{DATA.PESO} {formatNumberWithCommas(total + (total ? 25 : 0))}</p>
+                                    <p className='text-red-700 font-semibold'>{DATA.PESO} {formatNumberWithCommas(total + (total ? 0 : 0))}</p>
                                 </div>
                                 {total != 0 &&
                                     <div className='flex items-center justify-between'>
