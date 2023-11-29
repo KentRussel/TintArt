@@ -91,8 +91,8 @@ const PictureComponent = ({ images, setCanvas, canvas, location, setLocation, cl
 
 const ArtworkComponent = ({ data, deleteHandler, closeHandler, artworkRef, customizerHandler }) => {
   const scale = 50
-  const canvasScaledWidth = 800 * (scale / 100);
-  const canvasScaledHeight = 1000 * (scale / 100);
+  const canvasScaledWidth = 400 * (scale / 100);
+  const canvasScaledHeight = 600 * (scale / 100);
   const fs = 20
   const [deleteSelected, setDeleteSelected] = useState(null)
 
