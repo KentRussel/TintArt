@@ -8,6 +8,7 @@ import { IoChevronBack } from "react-icons/io5";
 import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt, MdOutlineColorLens } from "react-icons/md";
 
+
 import domtoimage from 'dom-to-image';
 import { getUserCanvas } from '../../services/canvas.services';
 import { useAppContext } from '../../context/AppContext';
@@ -19,7 +20,6 @@ import { addArtwork, deleteArtwork, getUserArtwork, updateArtwork } from '../../
 import moment from 'moment';
 import { ChromePicker } from 'react-color';
 import { translateAliases } from '../../models/Artwork';
-
 const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler, setFontSizes, fontSizes, position, setPosition }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -95,6 +95,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler, artworkRef, custo
   const canvasScaledHeight = 600 * (scale / 100);
   const fs = 20
   const [deleteSelected, setDeleteSelected] = useState(null)
+
 
   const calculateTransform = (item, scale) => {
     if (item?.length > 0) {
@@ -220,7 +221,7 @@ const ArtworkComponent = ({ data, deleteHandler, closeHandler, artworkRef, custo
           </div>
         ))}
       </div>
-      {data?.length == 0 && <p className='text-center'>There's no custom print saved.</p>}
+      {data?.length == 0 && <p className='text-center'>There's no artwork saved.</p>}
     </ModalComponent >
   )
 }
@@ -262,6 +263,9 @@ const ColorComponent = ({ colors, setColors, closeHandler }) => {
   )
 }
 
+
+
+
 const Customizer = () => {
   const [merchandise, setMerchandise] = useState("T-Shirt")
   const [modal, setModal] = useState({
@@ -284,7 +288,7 @@ const Customizer = () => {
   const [title, setTitle] = useState("")
   const [images, setImages] = useState([
   ])
-  const ICONSIZE = 30
+  const ICONSIZE = 25
   const [imageSize, setImageSize] = useState({ front: 30, back: 30 })
   //positions
   const [imagePosition, setImagePosition] = useState({ front_x: 0, back_x: 0, front_y: 0, back_y: 0 })
@@ -360,6 +364,11 @@ const Customizer = () => {
 
   const RIGHT_BUTTON = [
     {
+      name: "Download ",
+      icon: <FiDownload size={ICONSIZE} />,
+      setModal: () => captureDivContent(),
+    },
+    {
       name: "Save",
       icon: <LuSave size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, save: true }),
@@ -368,11 +377,6 @@ const Customizer = () => {
       name: "Custom Prints",
       icon: <FiArchive size={ICONSIZE} />,
       setModal: () => setModal({ ...modal, artwork: !modal.artwork }),
-    },
-    {
-      name: "Download ",
-      icon: <FiDownload size={ICONSIZE} />,
-      setModal: () => captureDivContent(),
     },
   ]
 
@@ -393,14 +397,14 @@ const Customizer = () => {
     const result = await deleteArtwork(id)
     if (result.success) {
       await refetchArtworkHandler()
-      return toast.success("Custom print Deleted", toastOptions)
+      return toast.success("Artwork Deleted", toastOptions)
     }
     toast.error("Something went wrong!", toastOptions)
 
   }
   const submitHandler = async () => {
     if (title.trim().length == 0)
-      return toast.error("Please enter a title!", toastOptions)
+      return toast.error("Please enter title!", toastOptions)
     const newData = {
       merchandise: router.pathname.split("/")[2],
       user_id: state?.user?._id,
@@ -494,8 +498,8 @@ const Customizer = () => {
     }
   }
 
-  const canvasScaledWidth = 800 * (scale / 100);
-  const canvasScaledHeight = 1000 * (scale / 100);
+  const canvasScaledWidth = 400 * (scale / 100);
+  const canvasScaledHeight = 600 * (scale / 100);
 
 
   // Styles for centering the fixed div
@@ -565,12 +569,12 @@ const Customizer = () => {
 
 
 
-        <div className='fixed left-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
           ))}
         </div>
-        <div className='fixed right-1 top-[35%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-lg'>
+        <div className='fixed right-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {RIGHT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"right" + key} />
           ))}
@@ -580,7 +584,7 @@ const Customizer = () => {
           <div className='mx-auto max-w-[10rem]'>
             {artworkRef?.current?.title &&
               <>
-                <p className=" font-semibold w-full text-center">Edit Custom print Mode{"\n"}Title: {artworkRef?.current?.title}</p>
+                <p className=" font-semibold w-full text-center">Edit Artwork Mode{"\n"}Title: {artworkRef?.current?.title}</p>
                 <Button onClick={() => {
                   artworkRef.current = null
                   customizerHandler()
@@ -588,7 +592,7 @@ const Customizer = () => {
               </>
             }
             <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Camera Scale</label>
-            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+            <input id="default-range" min={20} max={100} type="range" onChange={(e) => setScale(e.target.value)} value={scale} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
           </div>
         </div>
         {/* end of control */}
