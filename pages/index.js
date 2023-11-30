@@ -1,18 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { CustomerWrapper, LoadingLayout, ModalLayout, ViewGalleryModal } from '../components'
-import { Button } from 'flowbite-react'
-import CustomerLayout from '../components/layout-components/customer-layout'
-import { FaArrowRight, FaEye, FaFacebook, FaInstagram } from 'react-icons/fa'
-import { getAllGallery } from '../services/gallery.services'
-import { getAllProduct } from '../services/product.services'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { useAppContext } from '../context/AppContext'
-import toast from 'react-hot-toast'
-import { toastOptions } from '../styles/modalOption'
-import { PiTShirt } from "react-icons/pi";
-import { IoIdCardOutline } from 'react-icons/io5'
-import { FaRectangleAd } from 'react-icons/fa6'
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  CustomerWrapper,
+  LoadingLayout,
+  ModalLayout,
+  ViewGalleryModal
+} from '../components';
+import { Button } from 'flowbite-react';
+import CustomerLayout from '../components/layout-components/customer-layout';
+import {
+  FaArrowRight,
+  FaEye,
+  FaFacebook,
+  FaInstagram
+} from 'react-icons/fa';
+import { getAllGallery } from '../services/gallery.services';
+import { getAllProduct } from '../services/product.services';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+import { toastOptions } from '../styles/modalOption';
+import { PiTShirt } from 'react-icons/pi';
+import { IoIdCardOutline } from 'react-icons/io5';
+import { FaRectangleAd } from 'react-icons/fa6';
+import MessengerChatPlugin from '../components/layout-components/messenger-chat-plugin';
 
 const Home = () => {
   const { state } = useAppContext()
@@ -33,11 +44,9 @@ const Home = () => {
     if (products_result.success)
       setProductData(products_result?.data.filter(d => d.is_featured && d.is_archived == false))
     setIsLoading(false)
-
+    
   }
-
-
-
+  
   const [hoverActive, setHoverActive] = useState();
   const getLinks = (id) => {
     setHoverActive(id);
@@ -189,6 +198,7 @@ const Home = () => {
                   </div>
                 </div>
               ))}
+              
           </div>
         </LoadingLayout>
         <div className='mx-auto'>
@@ -196,7 +206,7 @@ const Home = () => {
         </div>
       </CustomerWrapper>
     </CustomerLayout >
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

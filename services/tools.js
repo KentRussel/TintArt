@@ -78,6 +78,7 @@ export const imageUploader = async (images, handler) => {
             }
           })
           .catch((e) => {
+            console.log(e)
             return null;
           });
       });
@@ -100,16 +101,14 @@ export const filterObjectWithEmptyProperties = obj =>
       )
   );
 
-  export const isValidPassword = (password) => {
-    return /^(?=.*[a-zA-Z0-9])(?=.*[$&+,:;=?@#|'<>.^*()%!~_-]).{8,16}$/.test(password);
-  }
-  
+export const isValidPassword = (password) => {
+  return /^(?=.*[a-zA-Z0-9])(?=.*[$&+,:;=?@#|'<>.^*()%!-]).{8,16}$/.test(password);
+}
 export const isValidEmail = (email) => {
   // Regular expression for basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-
 export const isValidPhoneNumber = (number) => {
   // Regular expression for Philippine phone numbers in the format '0912345689'
   const phoneRegex = /^09\d{9}$/;

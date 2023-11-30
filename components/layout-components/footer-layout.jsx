@@ -6,7 +6,7 @@ import DATA from '../../utils/DATA';
 
 const FooterLayout = () => {
   const [shopData, setShopData] = useState(null);
-  const [isPrivacyPolicyModalVisible, setPrivacyPolicyModalVisible] = useState(false); // Define the state here
+  const [isPrivacyPolicyModalVisible, setPrivacyPolicyModalVisible] = useState(false);
 
   const loadHandler = async () => {
     // fetch shop
@@ -17,7 +17,24 @@ const FooterLayout = () => {
   };
 
   useEffect(() => {
+    // Load shop data
     loadHandler();
+
+    // Initialize Messenger Chat Plugin
+    window.fbAsyncInit = function () {
+      FB.init({
+        xfbml: true,
+        version: 'v18.0',
+      });
+    };
+
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
   }, []);
 
   const FooterLinks = ({ data, headings }) => {
@@ -39,11 +56,11 @@ const FooterLayout = () => {
 
   const PrivacyPolicyModal = ({ isVisible, onClose, privacyPolicyText }) => {
     if (!isVisible) return null;
-  
+
     const closeModal = () => {
       onClose && onClose(); // Close the modal if onClose is provided
     };
-  
+
     return (
       <div
         className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 overflow-y-auto'
@@ -106,6 +123,10 @@ const FooterLayout = () => {
         onClose={() => setPrivacyPolicyModalVisible(false)}
         privacyPolicyText={DATA.PRIVACY_POLICY}
       />
+
+      {/* Messenger Chat Plugin container */}
+      <div id="fb-root"></div>
+      <div className="fb-customer-chat" />
     </CustomerWrapper>
   );
 };
