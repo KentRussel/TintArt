@@ -22,8 +22,8 @@ import toast from 'react-hot-toast';
 import { toastOptions } from '../styles/modalOption';
 import { PiTShirt } from 'react-icons/pi';
 import { IoIdCardOutline } from 'react-icons/io5';
-import { FaRectangleAd } from 'react-icons/fa6';
-import MessengerChatPlugin from '../components/layout-components/messenger-chat-plugin';
+import { FaRectangleAd } from 'react-icons/fa6'
+import FacebookMsg from '../components/layout-components/FacebookMsg';
 
 const Home = () => {
   const { state } = useAppContext()
@@ -198,11 +198,11 @@ const Home = () => {
                   </div>
                 </div>
               ))}
-              
           </div>
         </LoadingLayout>
         <div className='mx-auto'>
           <Button color="failure" className=' mx-auto' size="lg" onClick={() => router.push("/gallery")}>View Gallery</Button>
+          <FacebookMsg/>
         </div>
       </CustomerWrapper>
     </CustomerLayout >
