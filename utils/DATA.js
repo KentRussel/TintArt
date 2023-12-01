@@ -383,10 +383,111 @@ const DATA = {
         { name: 'Order Transactions', link: '/order-history' },
         { name: 'Change password', link: '/password' },
     ],
-    PRIVACY_POLICY: 'PRIVACY POLICY\nLast updated October 18, 2023\nWelcome to Tintart. We understand the importance of privacy and are dedicated to protecting your personal information. This Privacy Policy outlines how we gather, use, share, and safeguard your data when you use our services.\nWe encourage you to review this policy carefully to comprehend our practices regarding your personal information. By using Tintart, you agree to the terms outlined in this Privacy Policy. If you do not agree with any aspect of this policy, please refrain from using our services.\nYou can contact us by phone at [insert phone num here], or email at [insert email address here].\n\n1. Introduction\nWelcome to TintArt, which is run by Tofu Ink (“we”, “us”, “our”). TintArt takes its responsibilities under applicable privacy laws and regulations (\"Privacy Laws\") seriously and is committed to respecting the privacy rights and concerns of all Users of our website (“Services”). \n\n2. Information We Collect\n\n2.1 Information You Provide\nWe may collect personal information that you provide to us, including but not limited to your name, email address, phone number, and any other information you voluntarily submit when using our services.\n\n2.2 Automatically Collected Information\nWe may collect certain information automatically, such as your IP address, device type, browser type, and usage data when you access and use our services.\n\n3. Age Restriction\nTintart is intended for individuals who are 18 years of age or older. By using our services, you confirm that you meet this age requirement.\n\n4. How We Use Your Information\nWe use the information we collect for the following purposes:\n\n4.1 Providing Services\nTo provide the services you request, including account creation, communication, and support.\n\n4.2 Improving Services\nTo enhance and improve our services, troubleshoot issues, and develop new features.\n\n5. Sharing Your Information\nWe may share your information under the following circumstances:\n\n5.1 With Your Consent\nWe may share your information when you provide explicit consent.\n\n5.2 Service Providers \nWe may share your information with trusted third-party service providers who assist us in delivering our services.\n\n5.3 Legal Obligations \nWe may share information when required by law, such as in response to legal requests or to protect our rights.\n\n6. Your Rights\nYou have certain rights regarding your personal data:\n\n6.1 Access\nYou can request access to the personal information we hold about you.\n\n6.2 Rectification\nYou can request that we correct or update your personal information.\n\n6.3 Deletion\nYou can request the deletion of your personal data, subject to applicable legal requirements.\n\n7. Data Security\nWe take reasonable steps to protect your personal information from unauthorized access or disclosure. However, no data transmission over the internet can be guaranteed as 100% secure.\n\n8. Changes to this Privacy Policy\nWe may update this Privacy Policy from time to time to reflect changes in our practices. When we make changes, we will revise the \"Last Updated\" date at the top of this policy.\n\n9. Contact Information\nFor any inquiries or concerns regarding these Privacy Policy, please contact us at [Contact Information].\n\nBy using our services, you acknowledge that you have read, understood, and agreed to our Privacy Policy.'
 
+    PRIVACY_POLICY: `
+    Last updated October 18, 2023
+    Welcome to Tintart. We understand the importance of privacy and are dedicated to protecting your personal information. This Privacy Policy outlines how we gather, use, share, and safeguard your data when you use our services.
+    We encourage you to review this policy carefully to comprehend our practices regarding your personal information. By using Tintart, you agree to the terms outlined in this Privacy Policy. If you do not agree with any aspect of this policy, please refrain from using our services.
+    You can contact us by phone at [insert phone num here], or email at [insert email address here].
+    1. Introduction
+    Welcome to TintArt, which is run by Tofu Ink (“we”, “us”, “our”). TintArt takes its responsibilities under applicable privacy laws and regulations ("Privacy Laws") seriously and is committed to respecting the privacy rights and concerns of all Users of our website (“Services”).
+    
+    2. Information We Collect
+    
+    2.1 Information You Provide
+    We may collect personal information that you provide to us, including but not limited to your name, email address, phone number, and any other information you voluntarily submit when using our services.
+    2.2 Automatically Collected Information
+    We may collect certain information automatically, such as your IP address, device type, browser type, and usage data when you access and use our services.
+    
+    3. Age Restriction
+    Tintart is intended for individuals who are 18 years of age or older. By using our services, you confirm that you meet this age requirement.
+    
+    4. How We Use Your Information
+    We use the information we collect for the following purposes:
+    
+    4.1 Providing Services
+    To provide the services you request, including account creation, communication, and support.
+    
+    4.2 Improving Services
+    To enhance and improve our services, troubleshoot issues, and develop new features.
+    
+    5. Sharing Your Information
+    We may share your information under the following circumstances:
+    5.1 With Your Consent
+    We may share your information when you provide explicit consent.
+    
+    5.2 Service Providers 
+    We may share your information with trusted third-party service providers who assist us in delivering our services.
+    
+    5.3 Legal Obligations 
+    We may share information when required by law, such as in response to legal requests or to protect our rights.
+    
+    6. Your Rights
+    You have certain rights regarding your personal data:
+    
+    6.1 Access
+    You can request access to the personal information we hold about you.
+    
+    6.2 Rectification
+    You can request that we correct or update your personal information.
+    
+    6.3 Deletion
+    You can request the deletion of your personal data, subject to applicable legal requirements.
+    
+    7. Data Security
+    We take reasonable steps to protect your personal information from unauthorized access or disclosure. However, no data transmission over the internet can be guaranteed as 100% secure.
+    
+    8. Changes to this Privacy Policy
+    We may update this Privacy Policy from time to time to reflect changes in our practices. When we make changes, we will revise the "Last Updated" date at the top of this policy.
+    
+    9. Contact Information
+    For any inquiries or concerns regarding these Privacy Policy, please contact us at [Contact Information].
+    By using our services, you acknowledge that you have read, understood, and agreed to our Privacy Policy.`,
 
-
-}
+    TERMS_AND_CONDITIONS: `TERMS AND CONDITIONS
+    Last updated October 18, 2023
+    
+    AGREEMENT TO OUR LEGAL TERMS
+    We are Tofu Ink, doing business as TintArt (“Company”, “we”, “us”, “our”), a company located in the Philippines at [insert address here].
+    We operate the website https://tintart.vercel.app/ (the “Site”), as well as any other related products and services that refer or link to these terms and conditions (the “Legal Terms”) (collectively, the “Services”).
+    We provide a platform where you can customize your own goods, and have it sent to our Facebook page directly through the Messenger plugin of our site. You may also buy ready-made products that we are selling and is posted on our website.
+    You can contact us by phone at [insert phone num here], or email at [insert email address here].
+    1. Acceptance of Terms
+    These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”), and Tofu Ink, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST DISCONTINUE USE IMMEDIATELY.
+    
+    2. Description of Services
+    We provide a variety of products and services such as Print Customization through our eCommerce platform. Descriptions, pricing, and availability is subject to change without notice. We reserve the right to modify or discontinue any product or service at any time.
+    
+    2.1 Customization of Merchandise
+    TintArt allows you to customize designs on merchandise such as t-shirts, photo cards, and sintra boards. By using the customization feature, you grant us permission to use and display your designs on our social media pages  and marketing materials unless otherwise specified.
+    2.2 Purchasing of Products
+    Our website allows you to browse, select and purchase products, wherein we gather information to track your orders and addresses (See Privacy Policy for more information about your data).
+    
+    3. Ordering and Payment
+    Payment terms and fees for Tofu Ink services are determined on a per-order basis and will be specified in a separate agreement or invoice provided to you. Payment is expected upon receipt of the invoice unless otherwise agreed upon.
+    
+    3.1 Orders
+    When you place an order with us, it constitutes an offer to purchase the product(s). We reserve the right to accept or reject any order at our discretion.
+    
+    3.2 Payment
+    The payment options will be available for selection upon checking out the products, but the payment processing is handled by Tofu Ink, the merchant. TintArt is not responsible for the payment processing itself.
+    
+    4. Shipping and Delivery
+    We will make reasonable efforts to deliver the merchandise promptly, but we are not liable for delays due to unforeseen circumstances. The delivery times may also vary based on your location.
+    
+    5. Returns and Refunds
+    The number of revisions and refund policies will be outlined in the project agreement. Tofu Ink maintains a strict "no refunds" policy. Generally, minor revisions are included in the project fee, while significant changes may incur additional charges. Refunds will not be granted under any circumstances.
+    
+    6. Privacy and Data Collection
+    We collect and use your personal information in accordance with our Privacy Policy, which is an integral part of these Terms and Conditions.
+    
+    7. Limitation of Liability
+    Tofu Ink is not liable for any consequential, incidental, special, or indirect damages resulting from the use of our services or any errors or omissions in our work.
+    
+    8. Contact Information
+    For any inquiries or concerns regarding these Terms and Conditions, please contact us at [Contact Information].
+    
+    By using our services, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.`,
+};
 
 export default DATA;
