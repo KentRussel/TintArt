@@ -202,7 +202,6 @@ const Home = () => {
         </LoadingLayout>
         <div className='mx-auto'>
           <Button color="failure" className=' mx-auto' size="lg" onClick={() => router.push("/gallery")}>View Gallery</Button>
-          <FacebookMsg/>
         </div>
       </CustomerWrapper>
     </CustomerLayout >

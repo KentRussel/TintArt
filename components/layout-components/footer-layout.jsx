@@ -3,6 +3,7 @@ import Link from 'next/link';
 import CustomerWrapper from './customer-wrapper';
 import { getAllShop } from '../../services/shop.services';
 import DATA from '../../utils/DATA';
+import FacebookMsg from './FacebookMsg';
 
 const FooterLayout = () => {
   const [shopData, setShopData] = useState(null);
@@ -152,6 +153,7 @@ const FooterLayout = () => {
           </div>
         </div>
         <p className='w-full text-center p-10'>Copyright © 2023 TintArt. All Rights Reserved.</p>
+        <FacebookMsg />
       </div>
 
       {/* Render the Privacy Policy modal component */}
