@@ -3,7 +3,6 @@ import Link from 'next/link';
 import CustomerWrapper from './customer-wrapper';
 import { getAllShop } from '../../services/shop.services';
 import DATA from '../../utils/DATA';
-import FacebookMsg from './FacebookMsg';
 
 const FooterLayout = () => {
   const [shopData, setShopData] = useState(null);
@@ -24,6 +23,32 @@ const FooterLayout = () => {
     // Load shop data
     loadHandler();
   }, []);
+
+  useEffect(() => {
+    // Load Facebook SDK and Messenger Chat Plugin script
+    const script = document.createElement('script');
+    script.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      window.fbAsyncInit = function () {
+        FB.init({
+          xfbml: true,
+          version: 'v18.0',
+        });
+      };
+    };
+
+  }, []);
+
+  useEffect(() => {
+    // Load the Messenger Chat Plugin when shop data is available
+    if (shopData) {
+      window.fbAsyncInit();
+    }
+  }, [shopData]);
 
   const FooterLinks = ({ data, headings }) => {
     return (
@@ -78,7 +103,7 @@ const FooterLayout = () => {
             {/* Open modal when "Privacy Policy" link is clicked */}
             <p>
               <a
-                href="#"
+                href='#'
                 className='text-blue-500 underline'
                 onClick={(e) => {
                   e.preventDefault();
@@ -92,7 +117,7 @@ const FooterLayout = () => {
             {/* Open modal when "Terms and Conditions" link is clicked */}
             <p>
               <a
-                href="#"
+                href='#'
                 className='text-blue-500 underline'
                 onClick={(e) => {
                   e.preventDefault();
@@ -153,7 +178,6 @@ const FooterLayout = () => {
           </div>
         </div>
         <p className='w-full text-center p-10'>Copyright © 2023 TintArt. All Rights Reserved.</p>
-        <FacebookMsg />
       </div>
 
       {/* Render the Privacy Policy modal component */}
