@@ -103,6 +103,7 @@ const About = () => {
                             </div>
                         </LoadingLayout>
                         <ContactLayout title="Contact Us" />
+                        <FacebookMsg/>
                 </div>
             </CustomerWrapper>
         </CustomerLayout>

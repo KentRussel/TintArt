@@ -22,8 +22,8 @@ import toast from 'react-hot-toast';
 import { toastOptions } from '../styles/modalOption';
 import { PiTShirt } from 'react-icons/pi';
 import { IoIdCardOutline } from 'react-icons/io5';
-import { FaRectangleAd } from 'react-icons/fa6';
-import MessengerChatPlugin from '../components/layout-components/messenger-chat-plugin';
+import { FaRectangleAd } from 'react-icons/fa6'
+import FacebookMsg from '../components/layout-components/FacebookMsg';
 
 const Home = () => {
   const { state } = useAppContext()
@@ -46,6 +46,33 @@ const Home = () => {
     setIsLoading(false)
     
   }
+
+  useEffect(() => {
+    // Your Chat Plugin code
+    var chatbox = document.getElementById('fb-customer-chat');
+    
+    if (chatbox) {
+      chatbox.setAttribute("page_id", "113081511298424");
+      chatbox.setAttribute("attribution", "biz_inbox");
+  
+      // Your SDK code
+      window.fbAsyncInit = function() {
+        FB.init({
+          xfbml: true,
+          version: 'v18.0',
+        });
+      };
+  
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, 'script', 'facebook-jssdk');
+    }
+  }, []);
+  
   
   const [hoverActive, setHoverActive] = useState();
   const getLinks = (id) => {
@@ -198,7 +225,6 @@ const Home = () => {
                   </div>
                 </div>
               ))}
-              
           </div>
         </LoadingLayout>
         <div className='mx-auto'>

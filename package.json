@@ -31,9 +31,11 @@
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
+    "react-facebook": "^9.0.12",
     "react-helmet-async": "^2.0.1",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.7.1",
+    "react-native-webview": "^13.6.3",
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5"
   },
