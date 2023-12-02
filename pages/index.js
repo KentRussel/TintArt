@@ -70,7 +70,6 @@ const Home = () => {
     if (name == 'Sintra Board') router.push('/customizer/sintraboard')
   }
 
-
   const messengerRef = useRef(null);
   useEffect(()=>{
     messengerRef.current.setAttribute("page_id", "113081511298424");
