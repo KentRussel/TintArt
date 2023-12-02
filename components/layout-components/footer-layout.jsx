@@ -20,34 +20,29 @@ const FooterLayout = () => {
   };
 
   useEffect(() => {
-    // Load shop data
-    loadHandler();
-  }, []);
-
-  useEffect(() => {
-    // Load Facebook SDK and Messenger Chat Plugin script
+    window.fbAsyncInit = function () {
+      FB.init({
+        xfbml: true,
+        version: 'v18.0',
+      });
+      
+      // Load the Messenger Chat Plugin when shop data is available
+      if (shopData) {
+        FB.CustomerChat.showDialog();
+      }
+    };
+  
+    // Load Facebook SDK script
     const script = document.createElement('script');
     script.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
-
+  
     script.onload = () => {
-      window.fbAsyncInit = function () {
-        FB.init({
-          xfbml: true,
-          version: 'v18.0',
-        });
-      };
-    };
-
-  }, []);
-
-  useEffect(() => {
-    // Load the Messenger Chat Plugin when shop data is available
-    if (shopData) {
+      // Initialize Facebook SDK
       window.fbAsyncInit();
-    }
+    };
   }, [shopData]);
 
   const FooterLinks = ({ data, headings }) => {
