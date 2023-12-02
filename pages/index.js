@@ -23,8 +23,6 @@ import { toastOptions } from '../styles/modalOption';
 import { PiTShirt } from 'react-icons/pi';
 import { IoIdCardOutline } from 'react-icons/io5';
 import { FaRectangleAd } from 'react-icons/fa6'
-import FacebookMsg from '../components/layout-components/FacebookMsg';
-
 const Home = () => {
   const { state } = useAppContext()
   const [galleryData, setGalleryData] = useState([])
@@ -46,33 +44,6 @@ const Home = () => {
     setIsLoading(false)
     
   }
-
-  useEffect(() => {
-    // Your Chat Plugin code
-    var chatbox = document.getElementById('fb-customer-chat');
-    
-    if (chatbox) {
-      chatbox.setAttribute("page_id", "113081511298424");
-      chatbox.setAttribute("attribution", "biz_inbox");
-  
-      // Your SDK code
-      window.fbAsyncInit = function() {
-        FB.init({
-          xfbml: true,
-          version: 'v18.0',
-        });
-      };
-  
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      })(document, 'script', 'facebook-jssdk');
-    }
-  }, []);
-  
   
   const [hoverActive, setHoverActive] = useState();
   const getLinks = (id) => {
@@ -98,6 +69,26 @@ const Home = () => {
     if (name == 'Photocard') router.push('/customizer/photocard')
     if (name == 'Sintra Board') router.push('/customizer/sintraboard')
   }
+  //logic handling for messenger API
+  const messengerRef = useRef(null);
+  useEffect(()=>{
+    messengerRef.current.setAttribute("page_id", "113081511298424");
+    messengerRef.current.setAttribute("attribution", "biz_inbox");
+    window.fbAsyncInit = function() {
+              FB.init({
+                xfbml  : true,
+                version: 'v18.0'
+              });
+            };
+      
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  },[])
   return (
     <CustomerLayout>
       {merchandiseModal &&
@@ -231,6 +222,10 @@ const Home = () => {
           <Button color="failure" className=' mx-auto' size="lg" onClick={() => router.push("/gallery")}>View Gallery</Button>
         </div>
       </CustomerWrapper>
+      {/* messenger divcomp */}
+      <div id="fb-root"></div>
+      <div ref={(e)=>messengerRef.current = e} id="fb-customer-chat" class="fb-customerchat">
+      </div>  
     </CustomerLayout >
   );
 };
