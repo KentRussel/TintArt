@@ -69,7 +69,8 @@ const Home = () => {
     if (name == 'Photocard') router.push('/customizer/photocard')
     if (name == 'Sintra Board') router.push('/customizer/sintraboard')
   }
-  //logic handling for messenger API
+
+
   const messengerRef = useRef(null);
   useEffect(()=>{
     messengerRef.current.setAttribute("page_id", "113081511298424");
