@@ -10,6 +10,7 @@ import { FiEye, FiMoreHorizontal } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import DropdownInput from '../input-components/dropdown-input'
 import { downloadFile } from '../../services/excel.services'
+import { useMemo } from 'react';
 
 const TableLayout = ({
   title,
@@ -24,6 +25,7 @@ const TableLayout = ({
   deleteRequest,
   fieldInputs,
 }) => {
+
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [modal, setModal] = useState(false)
@@ -31,14 +33,37 @@ const TableLayout = ({
   const [isLoading, setIsLoading] = useState(true)
   const [fetchData, setFetchData] = useState([])
   const headerArray = fieldInputs?.map(item => item.name)
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
 
   const searchHandler = array => {
     return array.filter(item =>
       Object.values(item).some(value =>
         value?.toString().toLowerCase().includes(search.toLowerCase())
       )
-    )
-  }
+    );
+  };
+
+  const sortedData = useMemo(() => {
+    const searchFilter = searchHandler(fetchData);
+    return [...searchFilter].sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [search, fetchData, sortConfig]); 
+
+  const sortHandler = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
   const searchFilter = searchHandler(fetchData)
   useEffect(() => {
     loadHandler()
@@ -49,12 +74,6 @@ const TableLayout = ({
   const loadHandler = async () => {
     const result = await loadRequest()
     setFetchData(result?.data)
-    // pillDataRef.current = temp_data
-    // let filtered = temp_data
-    // if (['Colors', 'Sizes','Products'].indexOf(title) > -1) {
-    //   filtered = temp_data?.filter(t => t.merchandise == selectedMerch)
-    // }
-    // setNewSlice(filtered?.slice(0, MAX))
     setIsLoading(false)
   }
 
@@ -107,7 +126,6 @@ const TableLayout = ({
 
   // pagination
   const [page, setPage] = useState(1)
-  // const [newSlice, setNewSlice] = useState([])
   const MAX = 10
   const paginationHandler = item => {
     setPage(item)
@@ -192,10 +210,7 @@ const TableLayout = ({
                 <Button
                   onClick={() => {
                     setSelectedMerch(item)
-                    // let filtered = pillDataRef.current?.filter(t => t.merchandise == item)
-                    // setNewSlice(filtered?.slice(0, MAX))
                     setPage(1)
-                    // setFetchData(filtered)
                   }}
                   color='gray'
                   key={key + item}
@@ -242,19 +257,25 @@ const TableLayout = ({
           </Button>
         </div>
         <Table>
-          <Table.Head>
-            {fieldInputs?.map((item, key) => (
-              <Table.HeadCell key={`fieldInputs-${title.toLowerCase()}-${key}`}>
-                {item?.label}
-              </Table.HeadCell>
-            ))}
-            <Table.HeadCell />
-          </Table.Head>
+        <Table.Head>
+        {fieldInputs?.map((item, key) => (
+          <Table.HeadCell
+            key={`fieldInputs-${title.toLowerCase()}-${key}`}
+            onClick={() => sortHandler(item.name)} // Add this line
+          >
+            {item?.label}
+            {item.name === sortConfig.key && (
+              <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+            )}
+          </Table.HeadCell>
+        ))}
+        <Table.HeadCell />
+      </Table.Head>
           <Table.Body>
             {isLoading ? (
               <RowTemplate label='Fetching...' />
-            ) : finalItems.length > 0 ? (
-              finalItems.map((parentItem, parentKey) => (
+            ) : sortedData.length > 0 ? (
+              sortedData.map((parentItem, parentKey) => (
                 <Table.Row
                   key={`parent-${title.toLowerCase()}-${parentKey}`}
                   className={parentKey % 2 && 'transition-colors bg-zinc-100'}
@@ -342,7 +363,6 @@ const TableLayout = ({
             )}
           </Table.Body>
         </Table>
-
         <div className='flex gap-1 my-5 items-end justify-end'>
           <button
             disabled={page == 1}

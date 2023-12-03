@@ -9,8 +9,8 @@ import { hasBlankValue, imageUploader } from '../services/tools'
 import Link from 'next/link'
 import { FaEye, FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-
 const Gallery = () => {
+
   const [isLoading, setIsLoading] = useState(true)
   const { state, dispatch } = useAppContext();
   const initialData = {
@@ -245,4 +245,4 @@ const Gallery = () => {
   )
 }
 
-export default Gallery
+export default Gallery;
