@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import TextInput from '../input-components/text-input'
-import { Button, Label, Modal, Table } from 'flowbite-react'
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import { AiOutlineEdit } from 'react-icons/ai'
-import moment from 'moment/moment'
-import toast from 'react-hot-toast'
-import { toastOptions } from '../../styles/modalOption'
-import { FiEye, FiMoreHorizontal } from 'react-icons/fi'
-import { useRouter } from 'next/router'
-import DropdownInput from '../input-components/dropdown-input'
-import { downloadFile } from '../../services/excel.services'
-import { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import TextInput from '../input-components/text-input';
+import { Button, Label, Modal, Table } from 'flowbite-react';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { AiOutlineEdit } from 'react-icons/ai';
+import moment from 'moment/moment';
+import toast from 'react-hot-toast';
+import { toastOptions } from '../../styles/modalOption';
+import { FiEye, FiMoreHorizontal } from 'react-icons/fi';
+import { useRouter } from 'next/router';
+import DropdownInput from '../input-components/dropdown-input';
+import { downloadFile } from '../../services/excel.services';
 
 const TableLayout = ({
   title,
@@ -25,14 +24,13 @@ const TableLayout = ({
   deleteRequest,
   fieldInputs,
 }) => {
-
-  const router = useRouter()
-  const [search, setSearch] = useState('')
-  const [modal, setModal] = useState(false)
-  const [modalType, setModalType] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
-  const [fetchData, setFetchData] = useState([])
-  const headerArray = fieldInputs?.map(item => item.name)
+  const router = useRouter();
+  const [search, setSearch] = useState('');
+  const [modal, setModal] = useState(false);
+  const [modalType, setModalType] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchData, setFetchData] = useState([]);
+  const headerArray = fieldInputs?.map(item => item.name);
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
 
   const searchHandler = array => {
@@ -54,9 +52,9 @@ const TableLayout = ({
       }
       return 0;
     });
-  }, [search, fetchData, sortConfig]); 
+  }, [search, fetchData, sortConfig]);
 
-  const sortHandler = (key) => {
+  const sortHandler = key => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
@@ -64,52 +62,53 @@ const TableLayout = ({
     setSortConfig({ key, direction });
   };
 
-  const searchFilter = searchHandler(fetchData)
-  useEffect(() => {
-    loadHandler()
-  }, [])
+  const searchFilter = searchHandler(fetchData);
 
-  const pillDataRef = useRef()
+  useEffect(() => {
+    loadHandler();
+  }, []);
+
+  const pillDataRef = useRef();
   // HANDLERS
   const loadHandler = async () => {
-    const result = await loadRequest()
-    setFetchData(result?.data)
-    setIsLoading(false)
-  }
+    const result = await loadRequest();
+    setFetchData(result?.data);
+    setIsLoading(false);
+  };
 
   const requestHandler = async ({ requestName }) => {
-    if (requestName != 'deleted') {
-      const validation_result = validationHandler(data)
+    if (requestName !== 'deleted') {
+      const validation_result = validationHandler(data);
       if (!validation_result?.success) {
-        return toast.error(validation_result?.message, toastOptions)
+        return toast.error(validation_result?.message, toastOptions);
       }
     }
-    setModal(undefined)
-    let result
+    setModal(undefined);
+    let result;
     switch (requestName) {
       case 'added':
-        result = await postRequest(data)
-        break
+        result = await postRequest(data);
+        break;
       case 'updated':
-        result = await updateRequest(data, data?._id)
-        break
+        result = await updateRequest(data, data?._id);
+        break;
       case 'deleted':
-        result = await deleteRequest(data?._id)
-        break
+        result = await deleteRequest(data?._id);
+        break;
       default:
-        result = null
-        break
+        result = null;
+        break;
     }
     if (await result?.success) {
-      await loadHandler()
+      await loadHandler();
       toast.success(
-        `${title.replace('ie', 'y').slice(0, -1)} has been ${requestName} successfuly!`,
+        `${title.replace('ie', 'y').slice(0, -1)} has been ${requestName} successfully!`,
         toastOptions
-      )
+      );
     } else {
-      toast.error(result?.error || 'Something went wrong!', toastOptions)
+      toast.error(result?.error || 'Something went wrong!', toastOptions);
     }
-  }
+  };
 
   const RowTemplate = ({ label }) => {
     return (
@@ -118,28 +117,35 @@ const TableLayout = ({
           {label}
         </Table.Cell>
       </Table.Row>
-    )
-  }
+    );
+  };
   const booleanCell = value => {
-    return value ? 'YES' : 'NO'
-  }
+    return value ? 'YES' : 'NO';
+  };
 
-  // pagination
-  const [page, setPage] = useState(1)
-  const MAX = 10
+  // Pagination
+  const [page, setPage] = useState(1);
+  const MAX = 10;
   const paginationHandler = item => {
-    setPage(item)
-  }
-  const merchandise_list = ['T-Shirt', 'Photocard', 'Sintra Board']
-  const [selectedMerch, setSelectedMerch] = useState(merchandise_list[0])
+    setPage(item);
+  };
+  const merchandise_list = ['T-Shirt', 'Photocard', 'Sintra Board'];
+  const [selectedMerch, setSelectedMerch] = useState(merchandise_list[0]);
 
-  const finalItems =
-    ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
-      ? searchFilter.filter(t => t.merchandise == selectedMerch).slice(page * MAX - MAX, page * MAX)
-      : searchFilter.slice(page * MAX - MAX, page * MAX)
-  const pageCount =  ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
-  ? searchFilter.filter(t => t.merchandise == selectedMerch)
-  : searchFilter
+  const finalItems = useMemo(() => {
+    return ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
+      ? sortedData
+          .filter(t => t.merchandise === selectedMerch)
+          .slice(page * MAX - MAX, page * MAX)
+      : sortedData.slice(page * MAX - MAX, page * MAX);
+  }, [sortedData, selectedMerch, page]);
+
+  const pageCount = useMemo(() => {
+    return ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
+      ? sortedData.filter(t => t.merchandise === selectedMerch)
+      : sortedData;
+  }, [sortedData, selectedMerch]);
+
   return (
     <>
       {modal && (
@@ -152,7 +158,7 @@ const TableLayout = ({
               {modalType == 'Add' || modalType == 'Edit' ? (
                 <>
                   {fieldInputs
-                    .filter(f => f.name != '_id')
+                    .filter(f => f.name !== '_id')
                     ?.slice(0, -1)
                     .map((item, key) => (
                       <div key={`${key}-${title}-input`}>
@@ -190,7 +196,7 @@ const TableLayout = ({
                   ? requestHandler({ requestName: 'added' })
                   : modalType == 'Edit'
                   ? requestHandler({ requestName: 'updated' })
-                  : requestHandler({ requestName: 'deleted' })
+                  : requestHandler({ requestName: 'deleted' });
               }}
             >
               {modalType == 'Delete' ? 'Proceed' : 'Submit'}
@@ -209,8 +215,8 @@ const TableLayout = ({
               {merchandise_list.map((item, key) => (
                 <Button
                   onClick={() => {
-                    setSelectedMerch(item)
-                    setPage(1)
+                    setSelectedMerch(item);
+                    setPage(1);
                   }}
                   color='gray'
                   key={key + item}
@@ -226,19 +232,19 @@ const TableLayout = ({
           <TextInput
             placeholder='Search here...'
             onChange={e => {
-              setSearch(e.target.value)
+              setSearch(e.target.value);
             }}
           />
-          {title != 'Orders' && (
+          {title !== 'Orders' && (
             <Button
               gradientDuoTone='cyanToBlue'
               onClick={() => {
                 if (nextPage != null) {
-                  return nextPage.addHandler()
+                  return nextPage.addHandler();
                 }
-                setData(initialData)
-                setModalType('Add')
-                setModal('dismissible')
+                setData(initialData);
+                setModalType('Add');
+                setModal('dismissible');
               }}
               className='shrink-0'
             >
@@ -248,7 +254,7 @@ const TableLayout = ({
           <Button
             gradientDuoTone='purpleToBlue'
             onClick={() => {
-              downloadFile(title, searchFilter)
+              downloadFile(title, searchFilter);
             }}
             disabled={!searchFilter?.length}
             className='shrink-0'
@@ -257,25 +263,28 @@ const TableLayout = ({
           </Button>
         </div>
         <Table>
-        <Table.Head>
-        {fieldInputs?.map((item, key) => (
-          <Table.HeadCell
-            key={`fieldInputs-${title.toLowerCase()}-${key}`}
-            onClick={() => sortHandler(item.name)} // Add this line
-          >
-            {item?.label}
-            {item.name === sortConfig.key && (
-              <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
-            )}
-          </Table.HeadCell>
-        ))}
-        <Table.HeadCell />
-      </Table.Head>
+          <Table.Head>
+            {fieldInputs?.map((item, key) => (
+              <Table.HeadCell
+                key={`fieldInputs-${title.toLowerCase()}-${key}`}
+                onClick={() => sortHandler(item.name)}
+              >
+                {item?.label}
+                {item.name === sortConfig.key && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
+                {item.name !== sortConfig.key && (
+                  <span style={{ opacity: 0.5 }}>↑↓</span>
+                )}
+              </Table.HeadCell>
+            ))}
+            <Table.HeadCell />
+          </Table.Head>
           <Table.Body>
             {isLoading ? (
               <RowTemplate label='Fetching...' />
-            ) : sortedData.length > 0 ? (
-              sortedData.map((parentItem, parentKey) => (
+            ) : finalItems.length > 0 ? (
+              finalItems.map((parentItem, parentKey) => (
                 <Table.Row
                   key={`parent-${title.toLowerCase()}-${parentKey}`}
                   className={parentKey % 2 && 'transition-colors bg-zinc-100'}
@@ -313,9 +322,9 @@ const TableLayout = ({
                         <Button
                           gradientDuoTone='greenToBlue'
                           onClick={() => {
-                            setModalType('Edit')
-                            setData(parentItem)
-                            setModal('dismissible')
+                            setModalType('Edit');
+                            setData(parentItem);
+                            setModal('dismissible');
                           }}
                         >
                           <AiOutlineEdit />
@@ -324,9 +333,9 @@ const TableLayout = ({
                           <Button
                             gradientDuoTone='pinkToOrange'
                             onClick={() => {
-                              setData(parentItem)
-                              setModalType('Delete')
-                              setModal('dismissible')
+                              setData(parentItem);
+                              setModalType('Delete');
+                              setModal('dismissible');
                             }}
                           >
                             <RiDeleteBin6Line />
@@ -339,7 +348,7 @@ const TableLayout = ({
                           <Button
                             gradientDuoTone='pinkToOrange'
                             onClick={() => {
-                              router.push(title.toLowerCase() + '/view/' + parentItem?._id)
+                              router.push(title.toLowerCase() + '/view/' + parentItem?._id);
                             }}
                           >
                             <FiEye />
@@ -348,7 +357,7 @@ const TableLayout = ({
                         <Button
                           gradientDuoTone='cyanToBlue'
                           onClick={() => {
-                            router.push(title.toLowerCase() + '/edit/' + parentItem?._id)
+                            router.push(title.toLowerCase() + '/edit/' + parentItem?._id);
                           }}
                         >
                           <FiMoreHorizontal />
@@ -375,7 +384,7 @@ const TableLayout = ({
             (item, index) => (
               <button
                 onClick={() => {
-                  paginationHandler(item)
+                  paginationHandler(item);
                 }}
                 className={`border p-1 px-4 rounded-md ${
                   page == item ? ' text-white bg-zinc-900 ' : ' text-zinc-900 bg-white '
@@ -396,7 +405,7 @@ const TableLayout = ({
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default TableLayout
+export default TableLayout;
