@@ -234,37 +234,39 @@ const Cart = () => {
             <>
                 {modal &&
                     <ModalLayout>
-                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Choose Shipping Address</h3>
-                        </div>
-                        <div className='p-6 w-full'>
-                            {list?.length > 0 && list?.map((item, key) => (
-                                <div key={item?._id} className='flex items-center justify-between border-y p-4 gap-8 text-zinc-500'>
-                                    <div>
-                                        <div className='flex gap-2 lg:flex-row flex-col'>
-                                            <p className='text-black'>{item?.receiver_name}</p>
-                                            <p className=''>{item?.contact_no}</p>
+                        <div className='flex flex-col bg-white rounded-md p-4'>
+                            <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+                                <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Choose Shipping Address</h3>
+                            </div>
+                            <div className='p-6 w-full'>
+                                {list?.length > 0 && list?.map((item, key) => (
+                                    <div key={item?._id} className='flex items-center justify-between border-y p-4 gap-8 text-zinc-500'>
+                                        <div>
+                                            <div className='flex gap-2 lg:flex-row flex-col'>
+                                                <p className='text-black'>{item?.receiver_name}</p>
+                                                <p className=''>{item?.contact_no}</p>
+                                            </div>
+                                            <p className=''>{item?.unit} {item?.street} {item?.region}</p>
+                                            <p className=''>{item?.information}</p>
                                         </div>
-                                        <p className=''>{item?.unit} {item?.street} {item?.region}</p>
-                                        <p className=''>{item?.information}</p>
+                                        {default_id != item?._id &&
+                                            <div className='flex gap-4 flex-col'>
+                                                <Button
+                                                    gradientDuoTone='cyanToBlue'
+                                                    onClick={() => handler(item)}
+                                                >
+                                                    Select Address
+                                                </Button>
+                                            </div>
+                                        }
                                     </div>
-                                    {default_id != item?._id &&
-                                        <div className='flex gap-4 flex-col'>
-                                            <Button
-                                                gradientDuoTone='cyanToBlue'
-                                                onClick={() => handler(item)}
-                                            >
-                                                Select Address
-                                            </Button>
-                                        </div>
-                                    }
-                                </div>
-                            ))}
-                        </div>
-                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <Button color='gray' onClick={() => setModal(false)}>
-                                Close
-                            </Button>
+                                ))}
+                            </div>
+                            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                <Button color='gray' onClick={() => setModal(false)}>
+                                    Close
+                                </Button>
+                            </div>
                         </div>
                     </ModalLayout>
                 }

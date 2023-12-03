@@ -60,9 +60,9 @@ const Home = () => {
   const shirtRef = useRef()
 
   const merchandise_list = [
-    { name: "T-Shirt", icon: <PiTShirt size={40} className='text-zinc-500' /> },
-    { name: "Photocard", icon: <IoIdCardOutline size={40} className='text-zinc-500' /> },
-    { name: "Sintra Board", icon: <FaRectangleAd size={40} className='text-zinc-500' /> }
+    { name: "T-Shirt", icon: <PiTShirt size={40} /> },
+    { name: "Photocard", icon: <IoIdCardOutline size={40} /> },
+    { name: "Sintra Board", icon: <FaRectangleAd size={40} /> }
   ]
   const createDesignHandler = async (name) => {
     if (name == 'T-Shirt') router.push('/customizer/tshirt')
@@ -74,24 +74,26 @@ const Home = () => {
     <CustomerLayout>
       {merchandiseModal &&
         <ModalLayout>
-          <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-            <h3 className='text-xl font-semibold text-gray-900 text-center dark:text-white'>Choose Customizer</h3>
-          </div>
-          <div className='p-6 space-y-6'>
-            <div className='flex items-center flex-col  gap-4 lg:flex-row'>
-              {merchandise_list.map((item, key) => (
-                <div onClick={() => createDesignHandler(item?.name)} className='hover:bg-zinc-900 transition-colors cursor-pointer hover:text-white min-w-[10rem] border rounded-md p-2 flex flex-col justify-center items-center aspect-square h-full' key={key + "merchandise"}>
-                  {item?.icon}
-                  <p className='text-center font-semibold '>{item?.name}</p>
-                </div>
-              ))}
+          <div className='flex flex-col bg-white rounded-md p-4'>
+            <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+              <h3 className='text-xl font-semibold text-gray-900 text-center dark:text-white'>Choose Customizer</h3>
             </div>
-            <Link href='https://tintartcustomize.vercel.app/' target='_blank' ref={shirtRef} />
-          </div>
-          <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-            <Button color='gray' onClick={() => setMerchandiseModal(false)}>
-              Close
-            </Button>
+            <div className='p-6 space-y-6'>
+              <div className='flex items-center flex-col  gap-4 lg:flex-row'>
+                {merchandise_list.map((item, key) => (
+                  <div onClick={() => createDesignHandler(item?.name)} className='hover:bg-zinc-800 transition-colors cursor-pointer hover:text-zinc-200 min-w-[10rem] border-zinc-300 border-2 rounded-md p-2 flex flex-col justify-center items-center aspect-square h-full' key={key + "merchandise"}>
+                    {item?.icon}
+                    <p className='text-center font-semibold '>{item?.name}</p>
+                  </div>
+                ))}
+              </div>
+              <Link href='https://tintartcustomize.vercel.app/' target='_blank' ref={shirtRef} />
+            </div>
+            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+              <Button color='gray' onClick={() => setMerchandiseModal(false)}>
+                Close
+              </Button>
+            </div>
           </div>
         </ModalLayout>
       }
