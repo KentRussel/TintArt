@@ -136,7 +136,7 @@ const Cart = () => {
                 contact_no,
                 address: `${unit} ${street} ${region}`,
                 information,
-                total_price: total + 25,
+                total_price: total,
                 products: result_order_product?.data?.map(data => data._id),
                 mop: paymentMethod,
                 user_id: state?.user?._id
