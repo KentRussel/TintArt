@@ -46,19 +46,30 @@ const ViewOrders = () => {
     }
     setIsLoading({ ...isLoading, fetch: false });
   };
+
   const updateHandler = async (newData) => {
     setIsLoading({ ...isLoading, update: true });
 
-    const result = await updateOrderDetails(newData, id)
-    if (result?.success) {
-      await refetchHandler()
-      toast.success("Order updated successfuly!", toastOptions)
-    } else {
-      toast.error("Something went wrong!", toastOptions)
+    // If the status is changing to "COMPLETED", set is_paid to true
+    if (newData.status === "COMPLETED" && !data?.is_paid) {
+      newData.is_paid = true;
     }
-    setIsLoading({ ...isLoading, update: false });
 
-  }
+        // If the order is already completed, do not update the is_paid field
+        if (data?.status === "COMPLETED") {
+          delete newData.is_paid;
+        }
+
+        const result = await updateOrderDetails(newData, id);
+        if (result?.success) {
+          await refetchHandler();
+          toast.success("Order updated successfully!", toastOptions);
+        } else {
+          toast.error("Something went wrong!", toastOptions);
+        }
+        setIsLoading({ ...isLoading, update: false });
+      };
+
   const table_headers = ["Products", "Price", "Quantity", "Subtotal"];
   useEffect(() => {
     if (id) {
@@ -98,7 +109,6 @@ const ViewOrders = () => {
 
   }
 
-
   const Card = ({ title, children }) => {
     return (
       <div className='rounded-md border w-full flex flex-col'>
@@ -109,6 +119,7 @@ const ViewOrders = () => {
       </div>
     )
   }
+
   return (
 
     <AdminLayout>
@@ -212,7 +223,7 @@ const ViewOrders = () => {
             </div>
           </div>
         </ModalLayout>}
-      <div className='flex-col gap-4 flex'>
+        <div className='flex-col gap-4 flex'>
         <LoadingLayout hasContent={data} loadingState={isLoading?.fetch} message={"Order does not exist!"}>
           <div className='flex flex-col gap-4' id="container-to-download">
             <div className="flex items-center lg:flex-row flex-col gap-2 justify-between">
@@ -267,11 +278,18 @@ const ViewOrders = () => {
                 <p>Payment Status: <span className={`font-semibold  ${data?.is_paid ? "text-emerald-500" : "text-red-500"}`}> {data?.is_paid ? "Paid" : "Not Paid"}</span>
                 </p>
                 {!isPrintDialogOpen &&
-                  <div id="ispaid" className=' items-center gap-2' style={{ display: "flex" }}>
-                    <Label htmlFor='paid'>Paid</Label>
-                    <input id="paid" type='checkbox' onChange={() => updateHandler({ is_paid: !data?.is_paid })} checked={data?.is_paid} />
-                  </div>
-                }
+              <div id="ispaid" className='items-center gap-2' style={{ display: "flex" }}>
+                <Label htmlFor='paid'>Paid</Label>
+                {/* Disable the checkbox when the order is completed */}
+                <input
+                  id="paid"
+                  type='checkbox'
+                  onChange={() => updateHandler({ is_paid: !data?.is_paid })}
+                  checked={data?.is_paid}
+                  disabled={data?.status === "COMPLETED"}
+                />
+              </div>
+            }
               </Card>
               <Card title={"Order Date:"}>
                 <p className='text-center'>{moment(data?.created_at).format("hh:mm A MMMM DD, YYYY")}</p>
