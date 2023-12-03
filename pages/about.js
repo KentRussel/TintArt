@@ -102,7 +102,7 @@ const About = () => {
                                 ))}
                             </div>
                         </LoadingLayout>
-                        <ContactLayout title="Contact Us" />
+                    <ContactLayout title="Contact Us" />
                 </div>
             </CustomerWrapper>
         </CustomerLayout>
