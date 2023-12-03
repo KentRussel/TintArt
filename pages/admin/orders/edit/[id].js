@@ -22,7 +22,6 @@ const ViewOrders = () => {
   const [modalMode, setModalMode] = useState(null)
   const [imageUpload, setImageUpload] = useState([])
 
-
   const refetchHandler = async () => {
     const result1 = await getOneOrderDetails(id);
     if (result1.success) {
@@ -35,6 +34,7 @@ const ViewOrders = () => {
       }
     }
   }
+
   const [shop, setShop] = useState(null)
   const loadHandler = async () => {
     setIsLoading({ ...isLoading, fetch: true });
