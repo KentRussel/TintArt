@@ -47,19 +47,22 @@ const ViewOrders = () => {
     setIsLoading({ ...isLoading, fetch: false });
   };
 
+  // Define manualPaidStatus state variable
+  const [manualPaidStatus, setManualPaidStatus] = useState(data?.is_paid || false);
+
   const updateHandler = async (newData) => {
     setIsLoading({ ...isLoading, update: true });
-  
+
     // If the status is changing to "COMPLETED", set is_paid to true
     if (newData.status === "COMPLETED" && !data?.is_paid) {
       newData.is_paid = true;
     }
-  
+
     // If the order is already completed, do not update the is_paid field
     if (data?.status === "COMPLETED") {
       delete newData.is_paid;
     }
-  
+
     // Update the order details
     const result = await updateOrderDetails(newData, id);
     if (result?.success) {
@@ -67,13 +70,13 @@ const ViewOrders = () => {
       if (!manualPaidStatus) {
         setManualPaidStatus(!!newData.is_paid);
       }
-  
+
       await refetchHandler();
       toast.success("Order updated successfully!", toastOptions);
     } else {
       toast.error("Something went wrong!", toastOptions);
     }
-  
+
     setIsLoading({ ...isLoading, update: false });
   };
 
@@ -126,9 +129,6 @@ const ViewOrders = () => {
       </div>
     )
   }
-
-  // Define manualPaidStatus state variable
-  const [manualPaidStatus, setManualPaidStatus] = useState(false);
 
   return (
 
@@ -295,7 +295,14 @@ const ViewOrders = () => {
         id="paid"
         type='checkbox'
         checked={manualPaidStatus}
-        onChange={() => setManualPaidStatus(!manualPaidStatus)}
+        onChange={() => {
+          // Toggle the manualPaidStatus and update the order status accordingly
+          setManualPaidStatus(!manualPaidStatus);
+          updateHandler({
+            is_paid: !manualPaidStatus,
+            status: data?.status || "PENDING", // Replace "PENDING" with your default status
+          });
+        }}
       />
     </div>
             }
