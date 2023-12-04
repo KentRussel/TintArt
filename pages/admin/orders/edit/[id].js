@@ -49,26 +49,33 @@ const ViewOrders = () => {
 
   const updateHandler = async (newData) => {
     setIsLoading({ ...isLoading, update: true });
-
+  
     // If the status is changing to "COMPLETED", set is_paid to true
     if (newData.status === "COMPLETED" && !data?.is_paid) {
       newData.is_paid = true;
     }
-
-        // If the order is already completed, do not update the is_paid field
-        if (data?.status === "COMPLETED") {
-          delete newData.is_paid;
-        }
-
-        const result = await updateOrderDetails(newData, id);
-        if (result?.success) {
-          await refetchHandler();
-          toast.success("Order updated successfully!", toastOptions);
-        } else {
-          toast.error("Something went wrong!", toastOptions);
-        }
-        setIsLoading({ ...isLoading, update: false });
-      };
+  
+    // If the order is already completed, do not update the is_paid field
+    if (data?.status === "COMPLETED") {
+      delete newData.is_paid;
+    }
+  
+    // Update the order details
+    const result = await updateOrderDetails(newData, id);
+    if (result?.success) {
+      // If the manualPaidStatus is false, update the local state with the new is_paid value
+      if (!manualPaidStatus) {
+        setManualPaidStatus(!!newData.is_paid);
+      }
+  
+      await refetchHandler();
+      toast.success("Order updated successfully!", toastOptions);
+    } else {
+      toast.error("Something went wrong!", toastOptions);
+    }
+  
+    setIsLoading({ ...isLoading, update: false });
+  };
 
   const table_headers = ["Products", "Price", "Quantity", "Subtotal"];
   useEffect(() => {
@@ -119,6 +126,9 @@ const ViewOrders = () => {
       </div>
     )
   }
+
+  // Define manualPaidStatus state variable
+  const [manualPaidStatus, setManualPaidStatus] = useState(false);
 
   return (
 
@@ -278,17 +288,16 @@ const ViewOrders = () => {
                 <p>Payment Status: <span className={`font-semibold  ${data?.is_paid ? "text-emerald-500" : "text-red-500"}`}> {data?.is_paid ? "Paid" : "Not Paid"}</span>
                 </p>
                 {!isPrintDialogOpen &&
-              <div id="ispaid" className='items-center gap-2' style={{ display: "flex" }}>
-                <Label htmlFor='paid'>Paid</Label>
-                {/* Disable the checkbox when the order is completed */}
-                <input
-                  id="paid"
-                  type='checkbox'
-                  onChange={() => updateHandler({ is_paid: !data?.is_paid })}
-                  checked={data?.is_paid}
-                  disabled={data?.status === "COMPLETED"}
-                />
-              </div>
+      <div id="ispaid" className='items-center gap-2' style={{ display: "flex" }}>
+      <Label htmlFor='paid'>Paid</Label>
+      {/* Use manualPaidStatus to control the checkbox */}
+      <input
+        id="paid"
+        type='checkbox'
+        checked={manualPaidStatus}
+        onChange={() => setManualPaidStatus(!manualPaidStatus)}
+      />
+    </div>
             }
               </Card>
               <Card title={"Order Date:"}>
@@ -347,7 +356,8 @@ const ViewOrders = () => {
         </LoadingLayout>
       </div>
     </AdminLayout >
-  )
-}
+  );
+};
 
-export default ViewOrders
+
+export default ViewOrders;
