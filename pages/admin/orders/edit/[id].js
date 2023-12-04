@@ -22,6 +22,7 @@ const ViewOrders = () => {
   const [modalMode, setModalMode] = useState(null)
   const [imageUpload, setImageUpload] = useState([])
 
+
   const refetchHandler = async () => {
     const result1 = await getOneOrderDetails(id);
     if (result1.success) {
@@ -34,7 +35,6 @@ const ViewOrders = () => {
       }
     }
   }
-
   const [shop, setShop] = useState(null)
   const loadHandler = async () => {
     setIsLoading({ ...isLoading, fetch: true });
@@ -47,38 +47,18 @@ const ViewOrders = () => {
     setIsLoading({ ...isLoading, fetch: false });
   };
 
-  // Define manualPaidStatus state variable
-  const [manualPaidStatus, setManualPaidStatus] = useState(data?.is_paid || false);
-
   const updateHandler = async (newData) => {
     setIsLoading({ ...isLoading, update: true });
 
-    // If the status is changing to "COMPLETED", set is_paid to true
-    if (newData.status === "COMPLETED" && !data?.is_paid) {
-      newData.is_paid = true;
-    }
-
-    // If the order is already completed, do not update the is_paid field
-    if (data?.status === "COMPLETED") {
-      delete newData.is_paid;
-    }
-
-    // Update the order details
-    const result = await updateOrderDetails(newData, id);
+    const result = await updateOrderDetails(newData, id)
     if (result?.success) {
-      // If the manualPaidStatus is false, update the local state with the new is_paid value
-      if (!manualPaidStatus) {
-        setManualPaidStatus(!!newData.is_paid);
-      }
-
-      await refetchHandler();
-      toast.success("Order updated successfully!", toastOptions);
+      await refetchHandler()
+      toast.success("Order updated successfuly!", toastOptions)
     } else {
-      toast.error("Something went wrong!", toastOptions);
+      toast.error("Something went wrong!", toastOptions)
     }
-
     setIsLoading({ ...isLoading, update: false });
-  };
+  }
 
   const table_headers = ["Products", "Price", "Quantity", "Subtotal"];
   useEffect(() => {
@@ -119,6 +99,7 @@ const ViewOrders = () => {
 
   }
 
+
   const Card = ({ title, children }) => {
     return (
       <div className='rounded-md border w-full flex flex-col'>
@@ -129,7 +110,6 @@ const ViewOrders = () => {
       </div>
     )
   }
-
   return (
 
     <AdminLayout>
@@ -154,86 +134,88 @@ const ViewOrders = () => {
       </div>
       {modalMode &&
         <ModalLayout>
-          <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Upload Payment Proof</h3>
-          </div>
-          <div className='p-6'>
-            <>
-              {modalMode != "view" &&
-                <Label className='capitalize mb-2 block'>Upload Image:</Label>
-              }
-              <div className='flex items-center gap-4'>
-                <input
-                  ref={uploadRef}
-                  type='file'
-                  onChange={e => {
-                    try {
-                      if (e.target?.files[0].size > 2000000)
-                        return toast.error('File must be less than 2mb.', toastOptions)
-                      setImageUpload([
-                        ...imageUpload,
-                        {
-                          url: URL?.createObjectURL(e.target?.files[0]),
-                          file: e.target?.files[0],
-                          size: e.target?.files[0].size,
-                        },
-                      ])
-                    } catch (e) { }
-                  }}
-                  accept='image/*'
-                  className='hidden my-2 rounded-md border border-zinc-300 px-4 py-3'
-                />
-              </div>
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
-                {imageUpload.map((item, key) => (
-                  <div className='relative cursor-pointer' key={key + 'image-upload'}>
-                    <img
-                      src={item?.url || item}
-                      key={key + 'product-image'}
-                      className='border w-full aspect-square object-cover'
-                    />
-                    <span
-                      onClick={() => {
-                        setImageUpload([...imageUpload.filter((sup, i) => i != key)])
-                      }}
-                      className='cursor-pointer absolute  rounded-full  top-2 right-2 bg-white z-10'
-                    >
-                      <AiFillCloseCircle size={20} className='text-red-600' />
-                    </span>
-                  </div>
-                ))}
-                {imageUpload.length < 4 && (
-                  <img
-                    onClick={() => uploadRef.current.click()}
-                    src='/images/camera.png'
-                    className='cursor-pointer border w-full aspect-square'
+          <div className='flex flex-col bg-white rounded-md p-4 m-auto max-w-[40rem]'>
+            <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Upload Payment Proof</h3>
+            </div>
+            <div className='p-6'>
+              <>
+                {modalMode != "view" &&
+                  <Label className='capitalize mb-2 block'>Upload Image:</Label>
+                }
+                <div className='flex items-center gap-4'>
+                  <input
+                    ref={uploadRef}
+                    type='file'
+                    onChange={e => {
+                      try {
+                        if (e.target?.files[0].size > 2000000)
+                          return toast.error('File must be less than 2mb.', toastOptions)
+                        setImageUpload([
+                          ...imageUpload,
+                          {
+                            url: URL?.createObjectURL(e.target?.files[0]),
+                            file: e.target?.files[0],
+                            size: e.target?.files[0].size,
+                          },
+                        ])
+                      } catch (e) { }
+                    }}
+                    accept='image/*'
+                    className='hidden my-2 rounded-md border border-zinc-300 px-4 py-3'
                   />
-                )}
-              </div>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+                  {imageUpload.map((item, key) => (
+                    <div className='relative cursor-pointer' key={key + 'image-upload'}>
+                      <img
+                        src={item?.url || item}
+                        key={key + 'product-image'}
+                        className='border w-full aspect-square object-cover'
+                      />
+                      <span
+                        onClick={() => {
+                          setImageUpload([...imageUpload.filter((sup, i) => i != key)])
+                        }}
+                        className='cursor-pointer absolute  rounded-full  top-2 right-2 bg-white z-10'
+                      >
+                        <AiFillCloseCircle size={20} className='text-red-600' />
+                      </span>
+                    </div>
+                  ))}
+                  {imageUpload.length < 4 && (
+                    <img
+                      onClick={() => uploadRef.current.click()}
+                      src='/images/camera.png'
+                      className='cursor-pointer border w-full aspect-square'
+                    />
+                  )}
+                </div>
 
-            </>
-            <div className='flex gap-4 justify-end mt-4 sm:flex-row flex-col'>
-              <Button
-                disabled={isLoading?.update}
-                gradientDuoTone={'cyanToBlue'}
-                onClick={validationHandler}
-              >
-                Submit
-              </Button>
-              <Button
-                disabled={isLoading?.update}
-                color="light"
-                onClick={() => {
-                  setImageUpload(data?.proof_image)
-                  setModalMode(null)
-                }}
-              >
-                Close
-              </Button>
+              </>
+              <div className='flex gap-4 justify-end mt-4 sm:flex-row flex-col'>
+                <Button
+                  disabled={isLoading?.update}
+                  gradientDuoTone={'cyanToBlue'}
+                  onClick={validationHandler}
+                >
+                  Submit
+                </Button>
+                <Button
+                  disabled={isLoading?.update}
+                  color="light"
+                  onClick={() => {
+                    setImageUpload(data?.proof_image)
+                    setModalMode(null)
+                  }}
+                >
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
         </ModalLayout>}
-        <div className='flex-col gap-4 flex'>
+      <div className='flex-col gap-4 flex'>
         <LoadingLayout hasContent={data} loadingState={isLoading?.fetch} message={"Order does not exist!"}>
           <div className='flex flex-col gap-4' id="container-to-download">
             <div className="flex items-center lg:flex-row flex-col gap-2 justify-between">
@@ -241,7 +223,17 @@ const ViewOrders = () => {
               {!isPrintDialogOpen &&
                 <div className='flex items-center flex-col md:flex-row gap-4 justify-between'>
                   <div id="topButton" className='flex gap-4 flex-col md:flex-row w-full'>
-                    <DropdownInput name="order-status" item={DATA.ORDER_STATUS} handler={(e) => { updateHandler({ is_paid: e == "COMPLETED", status: e }) }} selected={data?.status?.replaceAll("_", " ").toUpperCase()} disabled={isLoading?.fetch || isLoading?.update} className="w-full md:w-auto" />
+                    <DropdownInput 
+                      name="order-status" 
+                      item={DATA.ORDER_STATUS} 
+                      handler={(e) => { 
+                        updateHandler({ 
+                          status: e 
+                        }) 
+                      }} 
+                      selected={data?.status?.replaceAll("_", " ").toUpperCase()} 
+                      disabled={isLoading?.fetch || isLoading?.update} 
+                      className="w-full md:w-auto" />
                     <Button color="dark" onClick={async () => {
                       document.getElementById('header').style.display = 'none';
                       document.getElementById('topButton').style.display = 'none';
@@ -288,24 +280,15 @@ const ViewOrders = () => {
                 <p>Payment Status: <span className={`font-semibold  ${data?.is_paid ? "text-emerald-500" : "text-red-500"}`}> {data?.is_paid ? "Paid" : "Not Paid"}</span>
                 </p>
                 {!isPrintDialogOpen &&
-      <div id="ispaid" className='items-center gap-2' style={{ display: "flex" }}>
-      <Label htmlFor='paid'>Paid</Label>
-      {/* Use manualPaidStatus to control the checkbox */}
-      <input
-        id="paid"
-        type='checkbox'
-        checked={manualPaidStatus}
-        onChange={() => {
-          // Toggle the manualPaidStatus and update the order status accordingly
-          setManualPaidStatus(!manualPaidStatus);
-          updateHandler({
-            is_paid: !manualPaidStatus,
-            status: data?.status || "PENDING", // Replace "PENDING" with your default status
-          });
-        }}
-      />
-    </div>
-            }
+                  <div id="ispaid" className=' items-center gap-2' style={{ display: "flex" }}>
+                    <Label htmlFor='paid'>Paid</Label>
+                    <input 
+                      id="paid" 
+                      type='checkbox' 
+                      onChange={() => updateHandler({ is_paid: !data?.is_paid })} 
+                      checked={data?.is_paid} />
+                  </div>
+                }
               </Card>
               <Card title={"Order Date:"}>
                 <p className='text-center'>{moment(data?.created_at).format("hh:mm A MMMM DD, YYYY")}</p>
@@ -363,8 +346,7 @@ const ViewOrders = () => {
         </LoadingLayout>
       </div>
     </AdminLayout >
-  );
-};
+  )
+}
 
-
-export default ViewOrders;
+export default ViewOrders
