@@ -165,27 +165,31 @@ const Login = () => {
                 type={item?.type}
             />
             {loginMode === "admin-login" && (
-                <p className='text-left absolute bottom-[-6.4rem] w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>
-                    Forgot Password?
-                </p>
+                <p
+  className='text-left absolute bottom-[-6.8rem] w-full underline cursor-pointer'
+  style={{ fontSize: 'small' }}
+  onClick={() => router.push("/forgot-password")}
+>
+  Forgot Password?
+</p>
             )}
         </div>
     )}
 </div>
-
                         ))}
                     </div>
                     {loginMode == "login" &&
                         <p className='text-left w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>Forgot Password?</p>
                     }
-                    <Button disabled={isLoading} color="failure" className='w-full' onClick={submitHandler}>{!isLoading ? "Sign In" : "Signing In..."}</Button>
+<Button disabled={isLoading} color="failure" className='w-full mt-5' onClick={submitHandler}>
+  {!isLoading ? "Sign In" : "Signing In..."}
+</Button>
                     {loginMode == "login" ?
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("register")}>Don't have an account? <span className='underline cursor-pointer'>Create Account</span></p>
                         : loginMode == "register" &&
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("login")}>Already have an account? <span className='underline cursor-pointer'>Click here</span></p>
                     }
                     <Button disabled={isLoading} color="light" className='w-full' onClick={() => router.push('/')}><FaArrowLeftLong className='mr-4' />Go back to home page</Button>
-
                 </div>
 
             </div>
