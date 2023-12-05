@@ -16,6 +16,7 @@
     "firebase": "^9.18.0",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.3.8",
+    "fs": "^0.0.1-security",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
     "jose": "^4.13.1",

@@ -14,6 +14,7 @@ const ForgotPassword = () => {
     const { seconds, start, isRunning } = useCountdown(2, () => {
         console.log('Countdown reached zero!');
     });
+    
     const [isLoading, setIsLoading] = useState(false)
     const [disabled, setDisabled] = useState(false)
     const [nextPage, setNextPage] = useState(false)

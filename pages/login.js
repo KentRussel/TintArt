@@ -148,23 +148,31 @@ const Login = () => {
                     <p className='font-semibold text-2xl'>{loginMode == "register" ? "Create account" : "Welcome Back"}</p>
                     <div className={`grid grid-cols-1 ${loginMode == "register" && "lg:grid-cols-2"} w-full gap-4`}>
                         {filterFields.map((item, key) => (
-                            <div key={'login-' + key} className='col-span-1'>
-                                <Label className=''>{item.label}</Label>
-                                {["password", "confirm_password"].indexOf(item.name) > -1 ?
-                                    <PasswordInput
-                                        isLoading={isLoading}
-                                        value={item?.value}
-                                        setValue={item?.setValue}
-                                    />
-                                    :
-                                    <TextInput
-                                        disabled={isLoading}
-                                        value={item?.value}
-                                        onChange={e => item?.setValue(e)}
-                                        type={item?.type}
-                                    />
-                                }
-                            </div>
+                            <div key={'login-' + key} className='col-span-1 relative'>
+    <Label className=''>{item.label}</Label>
+    {["password", "confirm_password"].indexOf(item.name) > -1 ? (
+        <PasswordInput
+            isLoading={isLoading}
+            value={item?.value}
+            setValue={item?.setValue}
+        />
+    ) : (
+        <div className="relative">
+            <TextInput
+                disabled={isLoading}
+                value={item?.value}
+                onChange={e => item?.setValue(e)}
+                type={item?.type}
+            />
+            {loginMode === "admin-login" && (
+                <p className='text-left absolute bottom-[-6.4rem] w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>
+                    Forgot Password?
+                </p>
+            )}
+        </div>
+    )}
+</div>
+
                         ))}
                     </div>
                     {loginMode == "login" &&
@@ -183,7 +191,7 @@ const Login = () => {
             </div>
             <div className={`w-full h-[100vh] lg:relative  ${loginMode == "admin-login" ? "hidden" : "lg:block hidden"} `}>
                 <img src="/images/about1.png" className='w-full h-full object-cover' />
-                <img onClick={() => !isLoading && setLoginMode("admin-login")} className='absolute bottom-10 right-10 max-h-[2rem]' src='/images/logo-dark.png' />
+                <img onClick={() => !isLoading && setLoginMode("admin-login")} className='absolute bottom-5 right-80 max-h-[2rem]' src='/images/logo-dark.png' />
             </div>
         </div>
     )
