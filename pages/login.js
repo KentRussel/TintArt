@@ -149,41 +149,41 @@ const Login = () => {
                     <div className={`grid grid-cols-1 ${loginMode == "register" && "lg:grid-cols-2"} w-full gap-4`}>
                         {filterFields.map((item, key) => (
                             <div key={'login-' + key} className='col-span-1 relative'>
-    <Label className=''>{item.label}</Label>
-    {["password", "confirm_password"].indexOf(item.name) > -1 ? (
-        <PasswordInput
-            isLoading={isLoading}
-            value={item?.value}
-            setValue={item?.setValue}
-        />
-    ) : (
-        <div className="relative">
-            <TextInput
-                disabled={isLoading}
-                value={item?.value}
-                onChange={e => item?.setValue(e)}
-                type={item?.type}
-            />
-            {loginMode === "admin-login" && (
-                <p
-  className='text-left absolute bottom-[-6.8rem] w-full underline cursor-pointer'
-  style={{ fontSize: 'small' }}
-  onClick={() => router.push("/forgot-password")}
->
-  Forgot Password?
-</p>
-            )}
-        </div>
-    )}
-</div>
+                                <Label className=''>{item.label}</Label>
+                                {["password", "confirm_password"].indexOf(item.name) > -1 ? (
+                                    <PasswordInput
+                                        isLoading={isLoading}
+                                        value={item?.value}
+                                        setValue={item?.setValue}
+                                    />
+                                ) : (
+                                    <div className="relative">
+                                        <TextInput
+                                            disabled={isLoading}
+                                            value={item?.value}
+                                            onChange={e => item?.setValue(e)}
+                                            type={item?.type}
+                                        />
+                                        {loginMode === "admin-login" && (
+                                            <p
+                                                className='text-left absolute bottom-[-6.8rem] w-full underline cursor-pointer'
+                                                style={{ fontSize: 'small' }}
+                                                onClick={() => router.push("/forgot-password")}
+                                            >
+                                                Forgot Password?
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         ))}
                     </div>
                     {loginMode == "login" &&
                         <p className='text-left w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>Forgot Password?</p>
                     }
-<Button disabled={isLoading} color="failure" className='w-full mt-5' onClick={submitHandler}>
-  {!isLoading ? "Sign In" : "Signing In..."}
-</Button>
+                    <Button disabled={isLoading} color="failure" className='w-full mt-5' onClick={submitHandler}>
+                        {!isLoading ? "Sign In" : "Signing In..."}
+                    </Button>
                     {loginMode == "login" ?
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("register")}>Don't have an account? <span className='underline cursor-pointer'>Create Account</span></p>
                         : loginMode == "register" &&
