@@ -8,6 +8,7 @@ import { IoChevronBack } from "react-icons/io5";
 import { LuSave } from "react-icons/lu";
 import { MdDoNotDisturbAlt, MdOutlineColorLens } from "react-icons/md";
 
+
 import domtoimage from 'dom-to-image';
 import { addCanvas, getUserCanvas } from '../../services/canvas.services';
 import { useAppContext } from '../../context/AppContext';
@@ -20,7 +21,6 @@ import moment from 'moment';
 import { ChromePicker } from 'react-color';
 import { translateAliases } from '../../models/Artwork';
 import { imageUploader } from '../../services/tools';
-
 const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler, setFontSizes, fontSizes, position, setPosition }) => {
   return (
     <ModalComponent closeHandler={closeHandler}>
@@ -32,11 +32,11 @@ const TextComponent = ({ setCanvas, canvas, location, setLocation, closeHandler,
       <TextInput type='number' value={fontSizes[location]} onChange={(e) => setFontSizes({ ...fontSizes, [location]: e.target.value })} />
       <TextInput placeholder='Enter text here...' className="mt-4 w-full" value={canvas[location]} onChange={(e) => { setCanvas({ ...canvas, [location]: e.target.value }) }} />
       <div className='mx-auto max-w-[10rem]'>
-        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Move left & right</label>
+        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">X Position</label>
         <input id="default-range" min={-100} max={100} type="range" onChange={(e) => setPosition({ ...position, [location + "_x"]: e.target.value })} value={position[location + "_x"]} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
       </div>
       <div className='mx-auto max-w-[10rem]'>
-        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Move up & down</label>
+        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Y Position</label>
         <input id="default-range" min={-100} max={100} type="range" onChange={(e) => setPosition({ ...position, [location + "_y"]: e.target.value })} value={position[location + "_y"]} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
       </div>
     </ModalComponent >
@@ -49,6 +49,7 @@ const ModalComponent = ({ children, closeHandler }) => {
       <div className='m-auto max-w-[40rem] w-full'>
         <div className='relative bg-white/40 w-full rounded-lg shadow dark:bg-gray-700 p-4'>
           <span onClick={closeHandler} className='absolute top-4 right-4 cursor-pointer'><AiOutlineClose /></span>
+
           {children}</div>
       </div>
     </div>
@@ -56,7 +57,9 @@ const ModalComponent = ({ children, closeHandler }) => {
 }
 
 const PictureComponent = ({ refetch, state, images, setCanvas, canvas, location, setLocation, closeHandler, scale, setScale, position, setPosition }) => {
+
   const addHandler = async (imageUpload) => {
+
     await imageUploader([imageUpload], async (postImage) => {
       if (postImage[0] != null) {
         const newData = {
@@ -83,11 +86,11 @@ const PictureComponent = ({ refetch, state, images, setCanvas, canvas, location,
         <input id="default-range" min={10} max={100} type="range" onChange={(e) => setScale({ ...scale, [location]: e.target.value })} value={scale[location]} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
       </div>
       <div className='mx-auto max-w-[10rem]'>
-        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Move left & right</label>
+        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">X Position</label>
         <input id="default-range" min={-100} max={100} type="range" onChange={(e) => setPosition({ ...position, [location + "_x"]: e.target.value })} value={position[location + "_x"]} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
       </div>
       <div className='mx-auto max-w-[10rem]'>
-        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Move up & down</label>
+        <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-center text-gray-900 dark:text-white">Y Position</label>
         <input id="default-range" min={-100} max={100} type="range" onChange={(e) => setPosition({ ...position, [location + "_y"]: e.target.value })} value={position[location + "_y"]} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
       </div>
       <Label>Upload Photo</Label>
@@ -122,12 +125,14 @@ const PictureComponent = ({ refetch, state, images, setCanvas, canvas, location,
   )
 }
 
+
 const ArtworkComponent = ({ data, deleteHandler, closeHandler, artworkRef, customizerHandler }) => {
   const scale = 50
   const canvasScaledWidth = 400 * (scale / 100);
   const canvasScaledHeight = 600 * (scale / 100);
   const fs = 20
   const [deleteSelected, setDeleteSelected] = useState(null)
+
 
   const calculateTransform = (item, scale) => {
     if (item?.length > 0) {
@@ -297,7 +302,12 @@ const ColorComponent = ({ colors, setColors, closeHandler }) => {
   )
 }
 
+
+
+
 const Customizer = () => {
+
+
 
   const [modal, setModal] = useState({
     picture: false,
@@ -341,7 +351,6 @@ const Customizer = () => {
             image_list.push(l);
         }
       }
-      // console.log(filter_merch)
       setImages(image_list)
     }
     await refetchArtworkHandler()
@@ -469,7 +478,6 @@ const Customizer = () => {
       front_image_size: imageSize.front,
       back_image_size: imageSize.back
     }
-    // return console.log(newData)
     let result = null
     if (!artworkRef.current) {
       result = await addArtwork(newData)
@@ -486,6 +494,7 @@ const Customizer = () => {
     toast.error("Something went wrong!", toastOptions)
 
   }
+
 
   const customizerHandler = (data) => {
     if (!data) {
@@ -546,7 +555,6 @@ const Customizer = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
   };
-  console.log(artworkRef)
   return (
     <>
       {/* MODALS  */}
@@ -605,6 +613,8 @@ const Customizer = () => {
           </Link>
         </Button>
 
+
+
         <div className='fixed left-1 top-[40%] z-10 rounded-md p-4 flex flex-col gap-4 bg-white/50 shadow-md'>
           {LEFT_BUTTON.map((item, key) => (
             <ButtonComponent data={item} key={"left" + key} />
@@ -633,9 +643,9 @@ const Customizer = () => {
         </div>
         {/* end of control */}
         <div style={centerDivStyle} className='mx-auto fixed flex items-center justify-center gap-4'>
-          <p className="absolute -left-14 top-12">Front</p>
+          <p className="absolute -left-14 top-12 text-slate-500">Front</p>
 
-          <p className="absolute -right-14 top-12">Back</p>
+          <p className="absolute -right-14 top-12 text-slate-500">Back</p>
 
           <div id="contentToCapture" className='relative flex gap-4 ' >
 

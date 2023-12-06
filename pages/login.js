@@ -2,7 +2,7 @@ import { Button, Label } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { toastOptions } from '../styles/modalOption'
-import { authLogin } from '../services/auth.services'
+import { authLogin, authLogout } from '../services/auth.services'
 import { hasBlankValue, isValidEmail, isValidPassword, isValidPhoneNumber } from '../services/tools'
 import { useAppContext } from '../context/AppContext'
 import { addUser } from '../services/user.services'
@@ -59,6 +59,11 @@ const Login = () => {
                 } else {
                     let path = (([0, 1].indexOf(data.role) > -1 && loginMode == "login") ? "/" :
                         (data.role >= 2 && loginMode == "admin-login") && "/admin/dashboard")
+                    if (path == false) {
+                        await authLogout()
+                        setIsLoading(false)
+                        return toast.error('Wrong email or password, Please try again!', toastOptions)
+                    }
                     dispatch({ type: 'LOGIN_SUCCESS', value: data })
                     router.push(path)
                     toast.success('Login Succesfuly!', toastOptions)
@@ -148,54 +153,42 @@ const Login = () => {
                     <p className='font-semibold text-2xl'>{loginMode == "register" ? "Create account" : "Welcome Back"}</p>
                     <div className={`grid grid-cols-1 ${loginMode == "register" && "lg:grid-cols-2"} w-full gap-4`}>
                         {filterFields.map((item, key) => (
-                            <div key={'login-' + key} className='col-span-1 relative'>
+                            <div key={'login-' + key} className='col-span-1'>
                                 <Label className=''>{item.label}</Label>
-                                {["password", "confirm_password"].indexOf(item.name) > -1 ? (
+                                {["password", "confirm_password"].indexOf(item.name) > -1 ?
                                     <PasswordInput
                                         isLoading={isLoading}
                                         value={item?.value}
                                         setValue={item?.setValue}
                                     />
-                                ) : (
-                                    <div className="relative">
-                                        <TextInput
-                                            disabled={isLoading}
-                                            value={item?.value}
-                                            onChange={e => item?.setValue(e)}
-                                            type={item?.type}
-                                        />
-                                        {loginMode === "admin-login" && (
-                                            <p
-                                                className='text-left absolute bottom-[-6.8rem] w-full underline cursor-pointer'
-                                                style={{ fontSize: 'small' }}
-                                                onClick={() => router.push("/forgot-password")}
-                                            >
-                                                Forgot Password?
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
+                                    :
+                                    <TextInput
+                                        disabled={isLoading}
+                                        value={item?.value}
+                                        onChange={e => item?.setValue(e)}
+                                        type={item?.type}
+                                    />
+                                }
                             </div>
                         ))}
                     </div>
                     {loginMode == "login" &&
                         <p className='text-left w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>Forgot Password?</p>
                     }
-                    <Button disabled={isLoading} color="failure" className='w-full mt-5' onClick={submitHandler}>
-                        {!isLoading ? "Sign In" : "Signing In..."}
-                    </Button>
+                    <Button disabled={isLoading} color="failure" className='w-full' onClick={submitHandler}>{!isLoading ? "Sign In" : "Signing In..."}</Button>
                     {loginMode == "login" ?
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("register")}>Don't have an account? <span className='underline cursor-pointer'>Create Account</span></p>
                         : loginMode == "register" &&
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("login")}>Already have an account? <span className='underline cursor-pointer'>Click here</span></p>
                     }
                     <Button disabled={isLoading} color="light" className='w-full' onClick={() => router.push('/')}><FaArrowLeftLong className='mr-4' />Go back to home page</Button>
+
                 </div>
 
             </div>
             <div className={`w-full h-[100vh] lg:relative  ${loginMode == "admin-login" ? "hidden" : "lg:block hidden"} `}>
                 <img src="/images/about1.png" className='w-full h-full object-cover' />
-                <img onClick={() => !isLoading && setLoginMode("admin-login")} className='absolute bottom-5 right-80 max-h-[2rem]' src='/images/logo-dark.png' />
+                <img onClick={() => !isLoading && setLoginMode("admin-login")} className='absolute bottom-10 right-10 max-h-[2rem]' src='/images/logo-dark.png' />
             </div>
         </div>
     )

@@ -15,6 +15,7 @@ import { addOrderDetails } from '../services/order_details.services'
 import { addOrderProduct } from '../services/order_product.services'
 import Link from 'next/link'
 import { sendMessage } from '../services/email.services'
+import { FaBoxOpen, FaHome } from 'react-icons/fa'
 const Cart = () => {
     const { state } = useAppContext()
     const [products, setProducts] = useState([])
@@ -118,6 +119,7 @@ const Cart = () => {
                 quantity: Number(p?.quantity),
                 sub_total: Number(p?.product_id?.price) * Number(p?.quantity),
                 image: p?.product_id?.images[0],
+                product_id: p?.product_id?._id
             })
         }
         const result_order_product = await addOrderProduct({ products: tmp_order_data })
@@ -184,22 +186,20 @@ const Cart = () => {
             <>
                 {modal &&
                     <ModalLayout>
-                    <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-[90%] max-w-[40rem] fixed'>
-                      <div className='p-6 border-b rounded-t dark:border-gray-600 sticky'>
-                          <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
-                      </div>
-                      <div className='p-6 space-y-6 overflow-auto'>
-                          <p
-                              dangerouslySetInnerHTML={{ __html: content?.terms?.replace(/\n/g, '<br>') }}
-                          ></p>
-                      </div>
-                      <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                          <Button color='gray' onClick={() => setModal(false)}>
-                              Close
-                          </Button>
-                      </div>
-                    </div>
-                </ModalLayout>
+                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
+                        </div>
+                        <div className='p-6 space-y-6'>
+                            <p
+                                dangerouslySetInnerHTML={{ __html: content?.terms?.replace(/\n/g, '<br>') }}
+                            ></p>
+                        </div>
+                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <Button color='gray' onClick={() => setModal(false)}>
+                                Close
+                            </Button>
+                        </div>
+                    </ModalLayout>
                 }
             </>
         )
@@ -209,22 +209,20 @@ const Cart = () => {
             <>
                 {modal &&
                     <ModalLayout>
-                    <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-[90%] max-w-[40rem] fixed'>
-                      <div className='p-6 border-b rounded-t dark:border-gray-600 sticky'>
-                          <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Privacy Policy</h3>
-                      </div>
-                      <div className='p-6 space-y-6 overflow-auto'>
-                          <p
-                              dangerouslySetInnerHTML={{ __html: content?.privacy?.replace(/\n/g, '<br>') }}
-                          ></p>
-                      </div>
-                      <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                          <Button color='gray' onClick={() => setModal(false)}>
-                              Close
-                          </Button>
-                      </div>
-                    </div>
-                  </ModalLayout>
+                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
+                        </div>
+                        <div className='p-6 space-y-6'>
+                            <p
+                                dangerouslySetInnerHTML={{ __html: content?.privacy?.replace(/\n/g, '<br>') }}
+                            ></p>
+                        </div>
+                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <Button color='gray' onClick={() => setModal(false)}>
+                                Close
+                            </Button>
+                        </div>
+                    </ModalLayout>
                 }
             </>
         )
@@ -234,39 +232,37 @@ const Cart = () => {
             <>
                 {modal &&
                     <ModalLayout>
-                        <div className='flex flex-col bg-white rounded-md p-4'>
-                            <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-                                <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Choose Shipping Address</h3>
-                            </div>
-                            <div className='p-6 w-full'>
-                                {list?.length > 0 && list?.map((item, key) => (
-                                    <div key={item?._id} className='flex items-center justify-between border-y p-4 gap-8 text-zinc-500'>
-                                        <div>
-                                            <div className='flex gap-2 lg:flex-row flex-col'>
-                                                <p className='text-black'>{item?.receiver_name}</p>
-                                                <p className=''>{item?.contact_no}</p>
-                                            </div>
-                                            <p className=''>{item?.unit} {item?.street} {item?.region}</p>
-                                            <p className=''>{item?.information}</p>
+                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Choose Shipping Address</h3>
+                        </div>
+                        <div className='p-6 w-full'>
+                            {list?.length > 0 && list?.map((item, key) => (
+                                <div key={item?._id} className='flex items-center justify-between border-y p-4 gap-8 text-zinc-500'>
+                                    <div>
+                                        <div className='flex gap-2 lg:flex-row flex-col'>
+                                            <p className='text-black'>{item?.receiver_name}</p>
+                                            <p className=''>{item?.contact_no}</p>
                                         </div>
-                                        {default_id != item?._id &&
-                                            <div className='flex gap-4 flex-col'>
-                                                <Button
-                                                    gradientDuoTone='cyanToBlue'
-                                                    onClick={() => handler(item)}
-                                                >
-                                                    Select Address
-                                                </Button>
-                                            </div>
-                                        }
+                                        <p className=''>{item?.unit} {item?.street} {item?.region}</p>
+                                        <p className=''>{item?.information}</p>
                                     </div>
-                                ))}
-                            </div>
-                            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                <Button color='gray' onClick={() => setModal(false)}>
-                                    Close
-                                </Button>
-                            </div>
+                                    {default_id != item?._id &&
+                                        <div className='flex gap-4 flex-col'>
+                                            <Button
+                                                gradientDuoTone='cyanToBlue'
+                                                onClick={() => handler(item)}
+                                            >
+                                                Select Address
+                                            </Button>
+                                        </div>
+                                    }
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <Button color='gray' onClick={() => setModal(false)}>
+                                Close
+                            </Button>
                         </div>
                     </ModalLayout>
                 }
@@ -340,15 +336,15 @@ const Cart = () => {
                                             <Table.Cell className='flex flex-shrink-0 items-center gap-4 flex-row'>
                                                 <div className='relative'>
                                                     <img src={item?.product_id?.images[0]} alt='pic' className='lg:w-20 w-10 aspect-square object-contain' />
-                                                    {isCheckOut &&
-                                                        <span className='px-2 font-semibold absolute -top-2 py-1 -right-2 rounded-full text-white bg-red-500'>{item?.quantity}</span>
-                                                    }
                                                 </div>
                                                 <div className=''>
                                                     <p className=' font-semibold'>{item?.product_id?.product_name}</p>
                                                     <p>Size: {item?.size}</p>
                                                     {item?.color &&
                                                         <p className='flex gap-2'>Color: {item?.color}</p>
+                                                    }
+                                                    {isCheckOut &&
+                                                        <p className=''>x{item?.quantity}</p>
                                                     }
                                                 </div>
                                             </Table.Cell>
@@ -412,7 +408,7 @@ const Cart = () => {
                                     </div>}
                                 <div className='flex items-center justify-between'>
                                     <p>Total</p>
-                                    <p className='text-red-700 font-semibold'>{DATA.PESO} {formatNumberWithCommas(total + (total ? 0 : 0))}</p>
+                                    <p className='text-red-700 font-semibold'>{DATA.PESO} {formatNumberWithCommas(total)}</p>
                                 </div>
                                 {total != 0 &&
                                     <div className='flex items-center justify-between'>
@@ -446,9 +442,18 @@ const Cart = () => {
                         <BsFillCheckCircleFill size={30} className='text-emerald-400' />
                         <p className='font-semibold text-2xl'>Checkout Successful!</p>
                         <p>Please check your email for the order and the payment details.</p>
-                        <Link href={"/"}>
-                            <p className='font-semibold uppercase'>Back to HomePage</p>
-                        </Link>
+                        <div className='flex gap-4 items-center '>
+                            <Link href={"/"}>
+                                <Button color="light" className='font-semibold uppercase'>
+                                    <FaHome className="mr-1" />
+                                    Back to HomePage</Button>
+                            </Link>
+                            <Link href={"/order-history"}>
+                                <Button className='font-semibold uppercase'>
+                                    <FaBoxOpen className="mr-1" />
+                                    Back to Orders</Button>
+                            </Link>
+                        </div>
                     </div>
                 }
             </CustomerWrapper>
@@ -456,4 +461,4 @@ const Cart = () => {
     )
 }
 
-export default Cart;
+export default Cart

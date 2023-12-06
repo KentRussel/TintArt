@@ -170,4 +170,4 @@ const Shop = () => {
   </CustomerLayout>
 }
 
-export default Shop;
+export default Shop

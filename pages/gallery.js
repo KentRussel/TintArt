@@ -9,8 +9,8 @@ import { hasBlankValue, imageUploader } from '../services/tools'
 import Link from 'next/link'
 import { FaEye, FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-const Gallery = () => {
 
+const Gallery = () => {
   const [isLoading, setIsLoading] = useState(true)
   const { state, dispatch } = useAppContext();
   const initialData = {
@@ -185,16 +185,16 @@ const Gallery = () => {
         <CustomerWrapper>
           <div className='flex flex-col lg:flex-row p-4 pb-0'>
             <div className='w-full flex items-center justify-between'>
-              <p className='text-2xl font-semibold my-4'>TintArt Gallery</p>
+              <p className='text-2xl font-semibold my-4 cursor-pointer' onClick={() => setMyGallery(false)}>TintArt Gallery</p>
               {state?.user?.role == 1 &&
                 <Button color="dark" onClick={() => { setModal("dismissible"); setFormData(initialData) }}>Upload your Artwork</Button>
               }
             </div>
           </div>
           <div className="flex items-center gap-4 px-4">
-            <p onClick={() => setMyGallery(false)} className='font-semibold underline cursor-pointer'>TintArt Gallery</p>
+            {/* <p onClick={() => setMyGallery(false)} className={`font-semibold cursor-pointer ${myGallery == false && state?.user?.role == 1  ? "underline": ""}`}>TintArt Gallery</p> */}
             {state?.user?.role == 1 &&
-              <p onClick={() => setMyGallery(true)} className='font-semibold underline cursor-pointer'>My Gallery</p>
+              <p onClick={() => setMyGallery(true)} className={`font-semibold cursor-pointer ${myGallery == true  ? "underline": ""}`}>My Gallery</p>
             }
           </div>
           <LoadingLayout message="Gallery is Empty." loadingState={isLoading} hasContent={filteredData?.length > 0}>
@@ -245,4 +245,4 @@ const Gallery = () => {
   )
 }
 
-export default Gallery;
+export default Gallery

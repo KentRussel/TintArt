@@ -46,7 +46,6 @@ const ViewOrders = () => {
     }
     setIsLoading({ ...isLoading, fetch: false });
   };
-
   const updateHandler = async (newData) => {
     setIsLoading({ ...isLoading, update: true });
 
@@ -58,8 +57,8 @@ const ViewOrders = () => {
       toast.error("Something went wrong!", toastOptions)
     }
     setIsLoading({ ...isLoading, update: false });
-  }
 
+  }
   const table_headers = ["Products", "Price", "Quantity", "Subtotal"];
   useEffect(() => {
     if (id) {
@@ -134,45 +133,45 @@ const ViewOrders = () => {
       </div>
       {modalMode &&
         <ModalLayout>
-          <div className='flex flex-col bg-white rounded-md p-4 m-auto max-w-[40rem]'>
-            <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Upload Payment Proof</h3>
-            </div>
-            <div className='p-6'>
-              <>
-                {modalMode != "view" &&
-                  <Label className='capitalize mb-2 block'>Upload Image:</Label>
-                }
-                <div className='flex items-center gap-4'>
-                  <input
-                    ref={uploadRef}
-                    type='file'
-                    onChange={e => {
-                      try {
-                        if (e.target?.files[0].size > 2000000)
-                          return toast.error('File must be less than 2mb.', toastOptions)
-                        setImageUpload([
-                          ...imageUpload,
-                          {
-                            url: URL?.createObjectURL(e.target?.files[0]),
-                            file: e.target?.files[0],
-                            size: e.target?.files[0].size,
-                          },
-                        ])
-                      } catch (e) { }
-                    }}
-                    accept='image/*'
-                    className='hidden my-2 rounded-md border border-zinc-300 px-4 py-3'
-                  />
-                </div>
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
-                  {imageUpload.map((item, key) => (
-                    <div className='relative cursor-pointer' key={key + 'image-upload'}>
-                      <img
-                        src={item?.url || item}
-                        key={key + 'product-image'}
-                        className='border w-full aspect-square object-cover'
-                      />
+          <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>{data?.status == "COMPLETED" ? "" : "Upload"} Payment Proof</h3>
+          </div>
+          <div className='p-6'>
+            <>
+              {modalMode != "view" &&
+                <Label className='capitalize mb-2 block'>Upload Image:</Label>
+              }
+              <div className='flex items-center gap-4'>
+                <input
+                  ref={uploadRef}
+                  type='file'
+                  onChange={e => {
+                    try {
+                      if (e.target?.files[0].size > 2000000)
+                        return toast.error('File must be less than 2mb.', toastOptions)
+                      setImageUpload([
+                        ...imageUpload,
+                        {
+                          url: URL?.createObjectURL(e.target?.files[0]),
+                          file: e.target?.files[0],
+                          size: e.target?.files[0].size,
+                        },
+                      ])
+                    } catch (e) { }
+                  }}
+                  accept='image/*'
+                  className='hidden my-2 rounded-md border border-zinc-300 px-4 py-3'
+                />
+              </div>
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+                {imageUpload.map((item, key) => (
+                  <div className='relative cursor-pointer' key={key + 'image-upload'}>
+                    <img
+                      src={item?.url || item}
+                      key={key + 'product-image'}
+                      className='border w-full aspect-square object-cover'
+                    />
+                    {data?.status != "COMPLETED" &&
                       <span
                         onClick={() => {
                           setImageUpload([...imageUpload.filter((sup, i) => i != key)])
@@ -181,19 +180,22 @@ const ViewOrders = () => {
                       >
                         <AiFillCloseCircle size={20} className='text-red-600' />
                       </span>
-                    </div>
-                  ))}
-                  {imageUpload.length < 4 && (
+                    }
+                  </div>
+                ))}
+                {(data?.status != "COMPLETED" &&
+                  imageUpload.length < 4) && (
                     <img
                       onClick={() => uploadRef.current.click()}
                       src='/images/camera.png'
                       className='cursor-pointer border w-full aspect-square'
                     />
                   )}
-                </div>
+              </div>
 
-              </>
-              <div className='flex gap-4 justify-end mt-4 sm:flex-row flex-col'>
+            </>
+            <div className='flex gap-4 justify-end mt-4 sm:flex-row flex-col'>
+              {data?.status != "COMPLETED" &&
                 <Button
                   disabled={isLoading?.update}
                   gradientDuoTone={'cyanToBlue'}
@@ -201,17 +203,17 @@ const ViewOrders = () => {
                 >
                   Submit
                 </Button>
-                <Button
-                  disabled={isLoading?.update}
-                  color="light"
-                  onClick={() => {
-                    setImageUpload(data?.proof_image)
-                    setModalMode(null)
-                  }}
-                >
-                  Close
-                </Button>
-              </div>
+              }
+              <Button
+                disabled={isLoading?.update}
+                color="light"
+                onClick={() => {
+                  setImageUpload(data?.proof_image)
+                  setModalMode(null)
+                }}
+              >
+                Close
+              </Button>
             </div>
           </div>
         </ModalLayout>}
@@ -223,17 +225,7 @@ const ViewOrders = () => {
               {!isPrintDialogOpen &&
                 <div className='flex items-center flex-col md:flex-row gap-4 justify-between'>
                   <div id="topButton" className='flex gap-4 flex-col md:flex-row w-full'>
-                    <DropdownInput 
-                      name="order-status" 
-                      item={DATA.ORDER_STATUS} 
-                      handler={(e) => { 
-                        updateHandler({ 
-                          status: e 
-                        }) 
-                      }} 
-                      selected={data?.status?.replaceAll("_", " ").toUpperCase()} 
-                      disabled={isLoading?.fetch || isLoading?.update} 
-                      className="w-full md:w-auto" />
+                    <DropdownInput name="order-status" item={DATA.ORDER_STATUS} handler={(e) => { updateHandler({ is_paid: e == "COMPLETED", status: e }) }} selected={data?.status?.replaceAll("_", " ").toUpperCase()} disabled={isLoading?.fetch || isLoading?.update} className="w-full md:w-auto" />
                     <Button color="dark" onClick={async () => {
                       document.getElementById('header').style.display = 'none';
                       document.getElementById('topButton').style.display = 'none';
@@ -267,7 +259,7 @@ const ViewOrders = () => {
               </Card>
               <Card title={"Payment Details:"}>
                 <p className='text-center'>Mode of Payment: {data?.mop == "credit" ? "Credit/Debit Card" : data?.mop == "gcash" ? "Gcash" : data?.mop == "cod" && "Cash on Delivery"}</p>
-                {!isPrintDialogOpen &&
+                {(!isPrintDialogOpen && data?.mop != "cod") &&
                   <p id="proof_of_payment" >Proof of Payment:
                     {data?.proof_image.length > 0 ?
                       <span onClick={() => setModalMode("view")} className="undeline cursor-pointer underline text-blue-500 font-semibold">View</span>
@@ -279,14 +271,10 @@ const ViewOrders = () => {
 
                 <p>Payment Status: <span className={`font-semibold  ${data?.is_paid ? "text-emerald-500" : "text-red-500"}`}> {data?.is_paid ? "Paid" : "Not Paid"}</span>
                 </p>
-                {!isPrintDialogOpen &&
+                {(!isPrintDialogOpen && data?.status != "COMPLETED") &&
                   <div id="ispaid" className=' items-center gap-2' style={{ display: "flex" }}>
                     <Label htmlFor='paid'>Paid</Label>
-                    <input 
-                      id="paid" 
-                      type='checkbox' 
-                      onChange={() => updateHandler({ is_paid: !data?.is_paid })} 
-                      checked={data?.is_paid} />
+                    <input id="paid" type='checkbox' onChange={() => updateHandler({ is_paid: !data?.is_paid })} checked={data?.is_paid} />
                   </div>
                 }
               </Card>

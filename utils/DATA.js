@@ -36,8 +36,8 @@ const DATA = {
     ],
     FOOTER:
     {
-        ADDRESS: "37 Magiliw St. Lena Subdivision, Dalandanan, Valenzuela City",
-        CONTACT: "(+63) 9682190203",
+        ADDRESS: "37 Magiliw St.Lena Subdivision, Dalandanan, Valenzuela City",
+        CONTACT: "(+63) 9123456789",
         EMAIL: "tintartofficial@gmail.com",
         LINKS: [
             { name: 'home', link: '/' },
@@ -50,7 +50,6 @@ const DATA = {
             [
                 { name: 'Facebook', link: '/about' },
                 { name: 'TikTok', link: '/about' },
-                { name: 'Instagram', link: '/about'}
             ]
     },
     ABOUT: [
@@ -127,7 +126,7 @@ const DATA = {
             { label: "Date Added", name: "created_at" }
         ],
     },
-    DROPDOWN_GRAPH: ["Daily", "Weekly", "Monthly"],
+    DROPDOWN_GRAPH: ["Daily", "Weekly", "Yearly"],
     FAQS: [{
         topic: "Orders",
         sub_topic: [
