@@ -16,6 +16,7 @@ import { addOrderProduct } from '../services/order_product.services'
 import Link from 'next/link'
 import { sendMessage } from '../services/email.services'
 import { FaBoxOpen, FaHome } from 'react-icons/fa'
+
 const Cart = () => {
     const { state } = useAppContext()
     const [products, setProducts] = useState([])
@@ -335,17 +336,23 @@ const Cart = () => {
                                             }
                                             <Table.Cell className='flex flex-shrink-0 items-center gap-4 flex-row'>
                                                 <div className='relative'>
-                                                    <img src={item?.product_id?.images[0]} alt='pic' className='lg:w-20 w-10 aspect-square object-contain' />
+                                                    <Link href={`/shop/${item?.product_id?._id}`}>
+                                                        
+                                                            <img src={item?.product_id?.images[0]} alt='pic' className='lg:w-20 w-10 aspect-square object-contain' />
+                                                        
+                                                    </Link>
                                                 </div>
                                                 <div className=''>
-                                                    <p className=' font-semibold'>{item?.product_id?.product_name}</p>
+                                                    <Link href={`/shop/${item?.product_id}`}>
+                                                            <p className=' font-semibold'>{item?.product_id?.product_name}</p>
+                                                    </Link>
                                                     <p>Size: {item?.size}</p>
-                                                    {item?.color &&
+                                                    {item?.color && (
                                                         <p className='flex gap-2'>Color: {item?.color}</p>
-                                                    }
-                                                    {isCheckOut &&
+                                                    )}
+                                                    {isCheckOut && (
                                                         <p className=''>x{item?.quantity}</p>
-                                                    }
+                                                    )}
                                                 </div>
                                             </Table.Cell>
                                             {!isCheckOut &&
@@ -395,6 +402,11 @@ const Cart = () => {
                                             </div>
                                         ))}
                                     </div>
+                                    <div style={{ marginTop: '20px' }}>
+                                        <p className='text-black-500 font-semibold'>
+                                            <span className='bg-yellow-100 px-2 py-1 rounded'>IMPORTANT:</span>Please send your payment to the information that will be provided in the email sent after placing your order.
+                                        </p>
+                                    </div>
                                 </>
                             }
                         </div>
@@ -441,17 +453,19 @@ const Cart = () => {
                     <div className='min-h-[60vh] 2xl:min-h-[100vh] justify-center flex items-center gap-4 p-4 flex-col w-full'>
                         <BsFillCheckCircleFill size={30} className='text-emerald-400' />
                         <p className='font-semibold text-2xl'>Checkout Successful!</p>
-                        <p>Please check your email for the order and the payment details.</p>
+                        <p>Please check your email for the order and payment details.</p>
                         <div className='flex gap-4 items-center '>
                             <Link href={"/"}>
                                 <Button color="light" className='font-semibold uppercase'>
                                     <FaHome className="mr-1" />
-                                    Back to HomePage</Button>
+                                    Back to HomePage
+                                </Button>
                             </Link>
                             <Link href={"/order-history"}>
                                 <Button className='font-semibold uppercase'>
                                     <FaBoxOpen className="mr-1" />
-                                    Back to Orders</Button>
+                                    Back to Orders
+                                </Button>
                             </Link>
                         </div>
                     </div>

@@ -155,27 +155,38 @@ const Login = () => {
                         {filterFields.map((item, key) => (
                             <div key={'login-' + key} className='col-span-1'>
                                 <Label className=''>{item.label}</Label>
-                                {["password", "confirm_password"].indexOf(item.name) > -1 ?
+                                {["password", "confirm_password"].indexOf(item.name) > -1 ? (
                                     <PasswordInput
-                                        isLoading={isLoading}
-                                        value={item?.value}
-                                        setValue={item?.setValue}
-                                    />
-                                    :
+                                    isLoading={isLoading}
+                                    value={item?.value}
+                                    setValue={item?.setValue}
+                                />
+                            ) : (
+                                <div className="relative">
                                     <TextInput
                                         disabled={isLoading}
                                         value={item?.value}
                                         onChange={e => item?.setValue(e)}
                                         type={item?.type}
                                     />
-                                }
+                                    {loginMode === "admin-login" && (
+                                        <p
+                                            className='text-left absolute bottom-[-6.8rem] w-full underline cursor-pointer'
+                                            style={{ fontSize: 'small' }}
+                                            onClick={() => router.push("/forgot-password")}
+                                        >
+                                            Forgot Password?
+                                        </p>
+                                    )}
+                                </div>
+                            )}
                             </div>
                         ))}
                     </div>
                     {loginMode == "login" &&
                         <p className='text-left w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>Forgot Password?</p>
                     }
-                    <Button disabled={isLoading} color="failure" className='w-full' onClick={submitHandler}>{!isLoading ? "Sign In" : "Signing In..."}</Button>
+                    <Button disabled={isLoading} color="failure" className='w-full mt-5' onClick={submitHandler}>{!isLoading ? "Sign In" : "Signing In..."}</Button>
                     {loginMode == "login" ?
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("register")}>Don't have an account? <span className='underline cursor-pointer'>Create Account</span></p>
                         : loginMode == "register" &&
@@ -184,11 +195,10 @@ const Login = () => {
                     <Button disabled={isLoading} color="light" className='w-full' onClick={() => router.push('/')}><FaArrowLeftLong className='mr-4' />Go back to home page</Button>
 
                 </div>
-
             </div>
             <div className={`w-full h-[100vh] lg:relative  ${loginMode == "admin-login" ? "hidden" : "lg:block hidden"} `}>
                 <img src="/images/about1.png" className='w-full h-full object-cover' />
-                <img onClick={() => !isLoading && setLoginMode("admin-login")} className='absolute bottom-10 right-10 max-h-[2rem]' src='/images/logo-dark.png' />
+                <img onClick={() => !isLoading && setLoginMode("admin-login")} className='absolute bottom-5 right-80 max-h-[2rem]' src='/images/logo-dark.png' />
             </div>
         </div>
     )

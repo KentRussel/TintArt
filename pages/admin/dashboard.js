@@ -53,9 +53,9 @@ const Dashboard = () => {
     },
   ]
   const MERCHANDISE_DATA = [
-    { label: "T-Shirt", bg: "bg-violet-100 text-violet-500 border border-violet-200", value: merchandiseData?.t_shirt },
-    { label: "Sintra Board", bg: "bg-sky-100 text-sky-500 border border-sky-200", value: merchandiseData?.sintra_board },
-    { label: "Photocard", bg: "bg-rose-100 text-rose-500 border border-rose-200", value: merchandiseData?.photo_card }
+    { label: "T-Shirt", bg: "bg-violet-100 text-violet-500 border border-violet-300", value: merchandiseData?.t_shirt },
+    { label: "Sintra Board", bg: "bg-sky-100 text-sky-500 border border-sky-300", value: merchandiseData?.sintra_board },
+    { label: "Photocard", bg: "bg-rose-100 text-rose-500 border border-rose-300", value: merchandiseData?.photo_card }
   ]
 
   return (
@@ -107,7 +107,7 @@ const Dashboard = () => {
             )}
           </>
           :
-          <p className="flex w-full items-center justify-center error-graphs text-center shadow-md text-slate-700 rounded-md min-h-[10rem]">Fetching Graphs...</p>
+          <p className="flex w-full items-center justify-center error-graphs text-center shadow-md text-slate-700 rounded-md min-h-[10rem]">Loading Graphs...</p>
         }
       </div>
       <div className='my-8'>
