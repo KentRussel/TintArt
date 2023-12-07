@@ -94,7 +94,6 @@ const About = () => {
                                         <p className='text-xl'>{item?.name}</p>
                                         <div className='flex gap-4 my-4'>
                                             <Link target='_blank' className='p-2 rounded-full bg-zinc-500 text-white' href={item?.instagram_link || ""}><FaInstagram /></Link>
-                                            <Link target='_blank' className='p-2 rounded-full bg-zinc-500 text-white' href={item?.tiktok_link || ""}><FaTiktok /></Link>
                                             <Link target='_blank' className='p-2 rounded-full bg-zinc-500 text-white' href={item?.facebook_link || ""}><FaFacebook /></Link>
                                         </div>
                                         <img src={item?.image || item?.logo} className='max-w-[15rem] w-full rounded-md aspect-square object-cover' />

@@ -37,7 +37,9 @@ const DATA = {
     FOOTER:
     {
         ADDRESS: "37 Magiliw St.Lena Subdivision, Dalandanan, Valenzuela City",
-        CONTACT: "(+63) 9123456789",
+        CONTACT: "(+63) 9682190203",
+        CONTACT2: "(+63) 9959205731",
+        EMAIL2: "inktofu12@gmail.com",
         EMAIL: "tintartofficial@gmail.com",
         LINKS: [
             { name: 'home', link: '/' },
@@ -385,7 +387,7 @@ const DATA = {
     ORDER_STATUS: [
         "PENDING PAYMENT",
         "PREPARING ORDER",
-        "OUT OF DELIVERY",
+        "OUT FOR DELIVERY",
         "COMPLETED",
         "CANCELLED"
     ],
