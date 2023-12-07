@@ -230,7 +230,7 @@ const ViewOrders = () => {
                     <DropdownInput name="order-status" 
                     item={DATA.ORDER_STATUS} 
                     handler={(e) => { 
-                      updateHandler(data?.mop == ("cod" || "credit" || "gcash") ? { status: e } : { is_paid: e == "COMPLETED",  status: e })}} 
+                      updateHandler(data?.mop != "cod" ? { status: e } : { is_paid: e == "COMPLETED",  status: e })}} 
                     selected={data?.status?.replaceAll("_", " ").toUpperCase()} 
                     disabled={isLoading?.fetch || isLoading?.update} 
                     className="w-full md:w-auto" />
@@ -270,9 +270,9 @@ const ViewOrders = () => {
                 {(!isPrintDialogOpen) && (data?.status == "COMPLETED" && data?.mop == "cod") &&
                   <p id="proof_of_payment" >Proof of Payment:
                     {data?.proof_image.length > 0 ?
-                      <span onClick={() => setModalMode("view")} className="undeline cursor-pointer underline text-blue-500 font-semibold">View</span>
+                      <span onClick={() => setModalMode("view")} className="cursor-pointer underline text-blue-500 font-semibold">View</span>
                       :
-                      <span onClick={() => setModalMode("upload")} className="undeline cursor-pointer underline text-blue-500 font-semibold">Upload</span>
+                      <span onClick={() => setModalMode("upload")} className="cursor-pointer underline text-blue-500 font-semibold">Upload</span>
                     }
                   </p>
                 }
@@ -280,9 +280,9 @@ const ViewOrders = () => {
                 {(!isPrintDialogOpen) && (data?.mop != "cod") &&
                   <p id="proof_of_payment" >Proof of Payment:
                     {data?.proof_image.length > 0 ?
-                      <span onClick={() => setModalMode("view")} className="undeline cursor-pointer underline text-blue-500 font-semibold">View</span>
+                      <span onClick={() => setModalMode("view")} className="cursor-pointer underline text-blue-500 font-semibold">View</span>
                       :
-                      <span onClick={() => setModalMode("upload")} className="undeline cursor-pointer underline text-blue-500 font-semibold">Upload</span>
+                      <span onClick={() => setModalMode("upload")} className="cursor-pointer underline text-blue-500 font-semibold">Upload</span>
                     }
                   </p>
                 }
