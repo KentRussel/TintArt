@@ -1,8 +1,15 @@
 "use client";
 import React, { Component, useEffect, useRef } from 'react';
+import { useAppContext } from '../../context/AppContext';
 
 const FacebookMsg = () => {
-//logic handling for messenger API
+  const {state} = useAppContext();
+  if(state.isAuth){
+    if(state?.user?.role == 3 || state?.user?.role == 2){
+      return;
+    }
+  }
+  //logic handling for messenger API
 const messengerRef = useRef(null);
 useEffect(()=>{
   messengerRef.current.setAttribute("page_id", "113081511298424");
@@ -24,9 +31,13 @@ useEffect(()=>{
 },[])
   return (
   <>
-      <div id="fb-root"></div>
-      <div ref={(e)=>messengerRef.current = e} id="fb-customer-chat" class="fb-customerchat">
-      </div>  
+      {/* { state?.user?.role == 0 &&
+        <> */}
+          <div id="fb-root"></div>
+            <div ref={(e)=>messengerRef.current = e} id="fb-customer-chat" class="fb-customerchat">
+          </div>  
+        {/* </>
+      } */}
   </>
   )
   }

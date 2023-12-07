@@ -50,8 +50,9 @@ const DATA = {
         ],
         FOLLOWUS:
             [
-                { name: 'Facebook', link: '/about' },
-                { name: 'TikTok', link: '/about' },
+                { name: 'Facebook', link: 'https://www.facebook.com/tofuinkofficial' },
+                { name: 'TikTok', link: 'https://www.tiktok.com/@tofuinkofficial?lang=en' },
+                { name: 'Instagram', link: 'https://www.instagram.com/tofu.inkk/' },
             ]
     },
     ABOUT: [

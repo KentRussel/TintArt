@@ -117,6 +117,10 @@ const FooterLayout = () => {
           </div>
           <div className='flex gap-10 lg:flex-row flex-col w-full'>
             <FooterLinks data={DATA.FOOTER.LINKS} headings='Links' />
+            <FooterLinks
+              data={DATA.FOOTER.FOLLOWUS}
+              headings='Follow Tofu Ink'
+            />
           </div>
         </div>
         <p className='w-full text-center p-10'>Copyright © 2023 TintArt. All Rights Reserved.</p>
