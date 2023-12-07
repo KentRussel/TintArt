@@ -10,7 +10,7 @@ import { FiEye, FiMoreHorizontal } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import DropdownInput from '../input-components/dropdown-input'
 import { downloadFile } from '../../services/excel.services'
-import { useMemo } from 'react';
+import DATA from '../../utils/DATA'
 
 const TableLayout = ({
   title,
@@ -25,7 +25,6 @@ const TableLayout = ({
   deleteRequest,
   fieldInputs,
 }) => {
-
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [modal, setModal] = useState(false)
@@ -33,37 +32,14 @@ const TableLayout = ({
   const [isLoading, setIsLoading] = useState(true)
   const [fetchData, setFetchData] = useState([])
   const headerArray = fieldInputs?.map(item => item.name)
-  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
 
   const searchHandler = array => {
     return array.filter(item =>
       Object.values(item).some(value =>
         value?.toString().toLowerCase().includes(search.toLowerCase())
       )
-    );
-  };
-
-  const sortedData = useMemo(() => {
-    const searchFilter = searchHandler(fetchData);
-    return [...searchFilter].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
-  }, [search, fetchData, sortConfig]); 
-
-  const sortHandler = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
+    )
+  }
   const searchFilter = searchHandler(fetchData)
   useEffect(() => {
     loadHandler()
@@ -126,22 +102,28 @@ const TableLayout = ({
 
   // pagination
   const [page, setPage] = useState(1)
+  // const [newSlice, setNewSlice] = useState([])
   const MAX = 10
   const paginationHandler = item => {
     setPage(item)
   }
   const merchandise_list = ['T-Shirt', 'Photocard', 'Sintra Board']
-  const [selectedMerch, setSelectedMerch] = useState(merchandise_list[0])
+  const [selectedMerch, setSelectedMerch] = useState(
+    title == 'Orders' ? DATA.ORDER_STATUS[0] : merchandise_list[0]
+  )
 
   const finalItems =
     ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
       ? searchFilter.filter(t => t.merchandise == selectedMerch).slice(page * MAX - MAX, page * MAX)
+      : title == 'Orders'
+      ? searchFilter.filter(t => t.status == selectedMerch).slice(page * MAX - MAX, page * MAX)
       : searchFilter.slice(page * MAX - MAX, page * MAX)
-      
-  const pageCount =  ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
-  ? searchFilter.filter(t => t.merchandise == selectedMerch)
-  : searchFilter
-
+  const pageCount =
+    ['Colors', 'Sizes', 'Products'].indexOf(title) > -1
+      ? searchFilter.filter(t => t.merchandise == selectedMerch)
+      : title == 'Orders'
+      ? searchFilter.filter(t => t.status == selectedMerch)
+      : searchFilter
   return (
     <>
       {modal && (
@@ -212,11 +194,33 @@ const TableLayout = ({
                 <Button
                   onClick={() => {
                     setSelectedMerch(item)
+                    // let filtered = pillDataRef.current?.filter(t => t.merchandise == item)
+                    // setNewSlice(filtered?.slice(0, MAX))
                     setPage(1)
+                    // setFetchData(filtered)
                   }}
-                  color='gray'
+                  color={item != selectedMerch ? 'light' : "purple"}
                   key={key + item}
-                  className={item == selectedMerch ? 'text-blue-400' : ''}
+                >
+                  {item}
+                </Button>
+              ))}
+            </Button.Group>
+          )}
+          {title == 'Orders' && (
+            <Button.Group>
+              {DATA.ORDER_STATUS.map((item, key) => (
+                <Button
+                  onClick={() => {
+                    setSelectedMerch(item)
+                    // let filtered = pillDataRef.current?.filter(t => t.merchandise == item)
+                    // setNewSlice(filtered?.slice(0, MAX))
+                    setPage(1)
+                    // setFetchData(filtered)
+                  }}
+                  color={item != selectedMerch ? 'light' : "purple"}
+                  key={key + item}
+                  // className={item == selectedMerch ? 'bg-blue-600 text-white' : '' }
                 >
                   {item}
                 </Button>
@@ -259,20 +263,14 @@ const TableLayout = ({
           </Button>
         </div>
         <Table>
-        <Table.Head>
-        {fieldInputs?.map((item, key) => (
-          <Table.HeadCell
-            key={`fieldInputs-${title.toLowerCase()}-${key}`}
-            onClick={() => sortHandler(item.name)} // Add this line
-          >
-            {item?.label}
-            {item.name === sortConfig.key && (
-              <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
-            )}
-          </Table.HeadCell>
-        ))}
-        <Table.HeadCell />
-      </Table.Head>
+          <Table.Head>
+            {fieldInputs?.map((item, key) => (
+              <Table.HeadCell key={`fieldInputs-${title.toLowerCase()}-${key}`}>
+                {item?.label}
+              </Table.HeadCell>
+            ))}
+            <Table.HeadCell />
+          </Table.Head>
           <Table.Body>
             {isLoading ? (
               <RowTemplate label='Fetching...' />
@@ -353,7 +351,7 @@ const TableLayout = ({
                             router.push(title.toLowerCase() + '/edit/' + parentItem?._id)
                           }}
                         >
-                          <AiOutlineEdit />
+                          <FiMoreHorizontal />
                         </Button>
                       </>
                     )}
@@ -365,6 +363,7 @@ const TableLayout = ({
             )}
           </Table.Body>
         </Table>
+
         <div className='flex gap-1 my-5 items-end justify-end'>
           <button
             disabled={page == 1}

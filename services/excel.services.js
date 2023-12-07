@@ -1,5 +1,6 @@
 import moment from "moment";
 import * as XLSX from 'xlsx';
+
 export const downloadFile = (title, data_items) => {
     let newArr = null;
     switch (title?.toLowerCase()) {
@@ -138,9 +139,26 @@ export const downloadFile = (title, data_items) => {
     }
     var myFile = `${title?.toLowerCase().replace(" ", "_")}_${moment().format(
         "YYYY-MM-DD hh:mm:ss"
-    )}.xlsx`;
+    )}.csv`;
+    
+    // Convert JSON to worksheet
     var myWorkSheet = XLSX.utils.json_to_sheet(newArr);
-    var myWorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(myWorkBook, myWorkSheet, "myWorkSheet");
-    XLSX.writeFile(myWorkBook, myFile);
+
+    // Convert worksheet to CSV
+    var csvContent = XLSX.utils.sheet_to_csv(myWorkSheet);
+
+    // Create a Blob from the CSV content
+    var blob = new Blob([csvContent], { type: 'text/csv' });
+
+    // Create a download link
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = myFile;
+
+    // Append the link to the body and trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Remove the link from the body
+    document.body.removeChild(link);
 };

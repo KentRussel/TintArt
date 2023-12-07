@@ -477,7 +477,6 @@ const Customizer = () => {
       front_image_size: imageSize.front,
       back_image_size: imageSize.back
     }
-    // return console.log(newData)
     let result = null
     if (!artworkRef.current) {
       result = await addArtwork(newData)
@@ -555,7 +554,6 @@ const Customizer = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
   };
-  console.log(artworkRef)
   return (
     <>
       {/* MODALS  */}
@@ -645,9 +643,8 @@ const Customizer = () => {
         </div>
         {/* end of control */}
         <div style={centerDivStyle} className='mx-auto fixed flex items-center justify-center gap-4'>
-          <p className="absolute -left-14 top-12">Front</p>
-
-          <p className="absolute -right-14 top-12">Back</p>
+          <p className="absolute -left-14 top-12 text-slate-500">Front</p>
+          <p className="absolute -right-14 top-12 text-slate-500">Back</p>
 
           <div id="contentToCapture" className='relative flex gap-4 ' >
 

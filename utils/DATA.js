@@ -36,8 +36,8 @@ const DATA = {
     ],
     FOOTER:
     {
-        ADDRESS: "37 Magiliw St. Lena Subdivision, Dalandanan, Valenzuela City",
-        CONTACT: "(+63) 9682190203",
+        ADDRESS: "37 Magiliw St.Lena Subdivision, Dalandanan, Valenzuela City",
+        CONTACT: "(+63) 9123456789",
         EMAIL: "tintartofficial@gmail.com",
         LINKS: [
             { name: 'home', link: '/' },
@@ -50,7 +50,6 @@ const DATA = {
             [
                 { name: 'Facebook', link: '/about' },
                 { name: 'TikTok', link: '/about' },
-                { name: 'Instagram', link: '/about'}
             ]
     },
     ABOUT: [
@@ -127,7 +126,7 @@ const DATA = {
             { label: "Date Added", name: "created_at" }
         ],
     },
-    DROPDOWN_GRAPH: ["Daily", "Weekly", "Monthly"],
+    DROPDOWN_GRAPH: ["Daily", "Weekly", "Yearly"],
     FAQS: [{
         topic: "Orders",
         sub_topic: [
@@ -345,13 +344,26 @@ const DATA = {
         ORDER: {
             SUBJECT: (order_number) => `Order ${order_number} confirmed`,
             BODY: ({ name, order_number, date, item, payment_method, amount }) => {
-                const items = `${item?.map((i) => `\nName: ${i?.product_id?.product_name} \nQuantity: ${i?.quantity} \nPrice: ${i?.product_id?.price}`).join('\n\n') || ''}`;
-
+                const itemsList = item?.map(i => `- ${i?.product_id?.product_name}\n`).join('');
+        
                 return (
-                    `Dear ${name},\n\nWe hope this message finds you well. Thank you for your purchase! Here are the details of your order:\n\nOrder Number: ${order_number}\nDate of Purchase: ${moment(date).format("MMMM DD, YYYY")}\nItems Ordered:\n${items}\n\nPayment Details:\nTotal Amount: ${amount}\nPayment Method: ${payment_method}\n\nYou may send your payment to:\nGcash: [Gcash of Tofu Ink], K*** S****\nDebit/Credit: [Card of Tofu Ink]\n\nPlease review the information above and ensure that all details are accurate. If you have any questions or concerns, feel free to reply to this email, and our customer support team will be happy to assist you.\n\nWe appreciate your business and look forward to serving you again.\n\nBest regards,\nTintArt Customer Support Team`
-                )
+                    `Dear ${name},\n\n` +
+                    `We hope this message finds you well. Thank you for choosing our system for your recent purchase. Here are the details of your order:\n\n` +
+                    `Order Number: ${order_number}\n` +
+                    `Date of Purchase: ${moment(date).format("MMMM DD, YYYY")}\n\n` +
+                    `Items Ordered:\n${itemsList}\n` +
+                    `Payment Details:\nTotal Amount: ${amount}\nPayment Method: ${payment_method}\n\n` +
+                    `You may send your payment to:\n` +
+                    `Gcash: [Gcash of Tofu Ink]\n` +
+                    `Debit/Credit: [Card of Tofu Ink]\n\n` +
+                    `Take note that you need to take a “screenshot” of your proof of payment if you paid through Gcash or Debit/Credit Card and send it through the “Messenger Plugin” built in the system.\n\n` +
+                    `Please review the information above and ensure that all details are accurate. If you have any questions or concerns, feel free to reply to this email, and our customer support team will be happy to assist you.\n\n` +
+                    `We appreciate your business and look forward to serving you again.\n\n` +
+                    `Best regards,\nTintArt Customer Support Team`
+                );
             }
         },
+        
         CANCELATION: {
             SUBJECT: "Order Cancellation Notification",
             BODY: ({ admin, order_id, customer_name, item, reason }) => {
