@@ -1,42 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import { AdminLayout, GraphLayout } from '../../components'
-import { FaPesoSign } from 'react-icons/fa6'
-import { BsFillCartCheckFill } from 'react-icons/bs'
-import { formatNumberWithCommas } from '../../services/tools'
-import { Dropdown } from 'flowbite-react'
-import DATA from "../../utils/DATA"
-import { getAllProduct } from '../../services/product.services'
-import { getDashboardData } from '../../services/order_details.services'
+import React, { useEffect, useState } from 'react';
+import { AdminLayout, GraphLayout } from '../../components';
+import { FaPesoSign } from 'react-icons/fa6';
+import { BsFillCartCheckFill } from 'react-icons/bs';
+import { formatNumberWithCommas } from '../../services/tools';
+import { Dropdown } from 'flowbite-react';
+import DATA from "../../utils/DATA";
+import { getAllProduct } from '../../services/product.services';
+import { getDashboardData } from '../../services/order_details.services';
+
 const Dashboard = () => {
-  const [graph, setGraph] = useState({ orders: {}, sales: {} })
-  const [isLoading, setIsLoading] = useState(false)
+  const [graph, setGraph] = useState({ orders: {}, sales: {} });
+  const [isLoading, setIsLoading] = useState(false);
   const [merchandiseData, setMerchandiseData] = useState({
     sintra_board: 0,
     t_shirt: 0,
     photo_card: 0
-  })
+  });
+
   const loadHandler = async () => {
-    setIsLoading(true)
-    const result1 = await getDashboardData(sort)
+    setIsLoading(true);
+
+    const result1 = await getDashboardData(sort);
     if (result1.success) {
-      setGraph(result1.data)
+      setGraph(result1.data);
     }
+
     const result2 = await getAllProduct();
     if (result2.success) {
-      const available_products = result2.data.filter(d => !d.is_sold_out && !d.is_archived)
+      const available_products = result2.data.filter(d => !d.is_sold_out && !d.is_archived);
       setMerchandiseData({
-        sintra_board: available_products.filter(d => d.merchandise == "Sintra Board").length,
-        t_shirt: available_products.filter(d => d.merchandise == "T-Shirt").length,
-        photo_card: available_products.filter(d => d.merchandise == "Photocard").length
-      })
+        sintra_board: available_products.filter(d => d.merchandise === "Sintra Board").length,
+        t_shirt: available_products.filter(d => d.merchandise === "T-Shirt").length,
+        photo_card: available_products.filter(d => d.merchandise === "Photocard").length
+      });
     }
-    setIsLoading(false)
 
-  }
-  const [sort, setSort] = useState("Daily")
+    setIsLoading(false);
+  };
+
+  const [sort, setSort] = useState("Daily");
+
   useEffect(() => {
     loadHandler();
-  }, [sort])
+  }, [sort]);
+
   const data = [
     {
       label: "Sales",
@@ -51,12 +58,13 @@ const Dashboard = () => {
         .reduce((acc, curr) => acc + curr, 0),
       data: graph?.orders
     },
-  ]
+  ];
+
   const MERCHANDISE_DATA = [
     { label: "T-Shirt", bg: "bg-violet-100 text-violet-500 border border-violet-300", value: merchandiseData?.t_shirt },
     { label: "Sintra Board", bg: "bg-sky-100 text-sky-500 border border-sky-300", value: merchandiseData?.sintra_board },
     { label: "Photocard", bg: "bg-rose-100 text-rose-500 border border-rose-300", value: merchandiseData?.photo_card }
-  ]
+  ];
 
   return (
     <AdminLayout>
@@ -68,27 +76,27 @@ const Dashboard = () => {
           ))}
         </Dropdown>
       </div>
-      <div className="flex lg:flex-row flex-col gap-8">
-        {!isLoading ?
-          <>
 
+      <div className="flex lg:flex-row flex-col gap-8">
+        {!isLoading ? (
+          <>
             {data.length > 0 ? (
               data.map((d, index) => (
                 <div key={index} className='lg:w-[calc(50vw-48px)] shadow-md rounded-md p-4'>
                   <div className='flex items-center justify-between'>
                     <div>
-
                       <p className='text-lg font-semibold'>Total {d?.label}</p>
-                      <p className='text-2xl font-semibold'>{formatNumberWithCommas(d?.price)}</p>
+                      <p className='text-2xl font-semibold'>
+                        {d?.label === 'Sales' && '₱'}
+                        {formatNumberWithCommas(d?.price)}
+                      </p>
                     </div>
-                    {d?.label == "Sales" ?
+                    {d?.label === "Sales" ? (
                       <FaPesoSign size="50" className='text-violet-300' />
-                      :
+                    ) : (
                       <BsFillCartCheckFill size='50' className='text-rose-300' />
-                    }
+                    )}
                   </div>
-
-
                   <div className="" >
                     <GraphLayout
                       sort={sort}
@@ -100,16 +108,16 @@ const Dashboard = () => {
                     />
                   </div>
                 </div>
-
               ))
             ) : (
               <p className="error-graphs">Can't Load Graphs</p>
             )}
           </>
-          :
+        ) : (
           <p className="flex w-full items-center justify-center error-graphs text-center shadow-md text-slate-700 rounded-md min-h-[10rem]">Loading Graphs...</p>
-        }
+        )}
       </div>
+
       <div className='my-8'>
         <p className='font-semibold text-xl'>Merchandise</p>
 
@@ -125,7 +133,7 @@ const Dashboard = () => {
         </div>
       </div>
     </AdminLayout>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
