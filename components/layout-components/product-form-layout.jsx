@@ -372,7 +372,7 @@ const ProductFormLayout = ({ title, oldData }) => {
           />
         </div>
         <div className='lg:col-span-3'>
-          <Label className='capitalize mb-2 block'>Logo's</Label>
+          <Label className='capitalize mb-2 block'>Logo</Label>
           <div className='flex gap-4'>
             {logoUpload.map((item, key) => (
               <div className='relative' key={key + 'logo-upload'}>

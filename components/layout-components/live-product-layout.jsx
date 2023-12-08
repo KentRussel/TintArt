@@ -316,7 +316,7 @@ const LiveProductLayout = props => {
         <CustomerWrapper>
           <div className='p-4'>
             <div className='border-b-4 py-2 border-red-600'>
-              <p className='text-2xl font-semibold'>Review's: {review?.length}</p>
+              <p className='text-2xl font-semibold'>Reviews: {review?.length}</p>
             </div>
 
             {/* review form  */}
