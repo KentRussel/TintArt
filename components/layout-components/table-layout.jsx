@@ -32,14 +32,6 @@ const TableLayout = ({
   const [isLoading, setIsLoading] = useState(true)
   const [fetchData, setFetchData] = useState([])
   const headerArray = fieldInputs?.map(item => item.name)
-  const [sortOrder, setSortOrder] = useState({ field: '', order: 'asc' });
-
-  const toggleSortOrder = (field) => {
-    setSortOrder((prevSortORder) => ({
-      field,
-      order: prevSortORder.order === 'asc' ? 'desc' : 'asc',
-    }));
-    };
 
   const searchHandler = array => {
     return array.filter(item =>

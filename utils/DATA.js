@@ -372,10 +372,42 @@ const DATA = {
             BODY: ({ admin, order_id, customer_name, item, reason }) => {
                 const items = `${item?.map((i) => `\nName: ${i?.product_id?.product_name} \nQuantity: ${i?.quantity} \nPrice: ${i?.product_id?.price}`).join('\n\n') || ''}`;
                 return (
-                    `Dear ${admin},\n\nWe regret to inform you that an order has been canceled by customer. Below are the details of the canceled order:\n\n- Order ID: ${order_id}\n- Customer Name: ${customer_name}\n- Product(s): ${items}\n- Reason for Cancellation: ${reason}\n\nPlease take the necessary steps to update the inventory accordingly, and if there are any issues or questions regarding this cancellation, feel free to reach out to the customer or our customer support team.\n\nThank you for your prompt attention to this matter.\n\nBest regards,\nTintArt`
+                    `Dear ${admin},\n\nWe regret to inform you that an order has been canceled by a customer. Below are the details of the canceled order:\n\n- Order ID: ${order_id}\n- Customer Name: ${customer_name}\n- Product(s): ${items}\n- Reason for Cancellation: ${reason}\n\nPlease take the necessary steps to update the inventory accordingly, and if there are any issues or questions regarding this cancellation, feel free to reach out to the customer or our customer support team.\n\nThank you for your prompt attention to this matter.\n\nBest regards,\nTintArt`
                 )
             }
         },
+
+        CANCELLATION_NOTIFICATION: {
+            SUBJECT: "Order Cancellation Confirmation",
+            BODY: ({ customer_name, order_id, items, reason }) => {
+              const itemList = items
+                .map(
+                  (item) =>
+                    `\nName: ${item.product_id.product_name} \nQuantity: ${item.quantity} \nPrice: ${item.product_id.price}`
+                )
+                .join('\n\n');
+          
+              return `
+                Dear ${customer_name},
+          
+                We hope this email finds you well. 
+          
+                We would like to inform you that your order with Order ID ${order_id} has been successfully canceled. Below are the details of the canceled items:
+          
+                ${itemList}
+          
+                Reason for Cancellation: ${reason}
+          
+                If you have any further questions or concerns, please feel free to reach out to our customer support team at support@example.com. 
+          
+                We appreciate your understanding and look forward to serving you in the future.
+          
+                Best regards,
+                [Your Company Name]
+              `
+            }
+          },
+
         INQUIRY: {
             SUBJECT: "Acknowledgment of Your Inquiry",
             BODY: ({ customer_name }) => {
