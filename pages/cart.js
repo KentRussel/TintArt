@@ -237,6 +237,7 @@ const Cart = () => {
             <>
                 {modal &&
                     <ModalLayout>
+                        <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-auto max-w-auto fixed'>
                         <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
                             <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Choose Shipping Address</h3>
                         </div>
@@ -269,6 +270,7 @@ const Cart = () => {
                                 Close
                             </Button>
                         </div>
+                    </div>
                     </ModalLayout>
                 }
             </>
