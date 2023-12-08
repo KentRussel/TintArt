@@ -143,27 +143,40 @@ const ViewOrders = () => {
                   <Label className='capitalize mb-2 block'>Upload Image (Maximum of 2 MB):</Label>
                 }
                 <div className='flex items-center gap-4'>
-                  <input
-                    ref={uploadRef}
-                    type='file'
-                    onChange={e => {
-                      try {
-                        if (e.target?.files[0].size > 2000000)
-                          return toast.error('File must be less than 2mb.', toastOptions)
-                        setImageUpload([
-                          ...imageUpload,
-                          {
-                            url: URL?.createObjectURL(e.target?.files[0]),
-                            file: e.target?.files[0],
-                            size: e.target?.files[0].size,
-                          },
-                        ])
-                      } catch (e) { }
-                    }}
-                    accept='image/*'
-                    className='hidden my-2 rounded-md border border-zinc-300 px-4 py-3'
-                  />
-                </div>
+  <input
+    ref={uploadRef}
+    type='file'
+    onChange={e => {
+      try {
+        const selectedFile = e.target?.files[0];
+
+        // Check file size
+        if (selectedFile.size > 2000000) {
+          return toast.error('File must be less than 2mb.', toastOptions);
+        }
+
+        // Check file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(selectedFile.type)) {
+          return toast.error('Invalid file type. Please upload JPG, JPEG, or PNG.', toastOptions);
+        }
+
+        setImageUpload([
+          ...imageUpload,
+          {
+            url: URL?.createObjectURL(selectedFile),
+            file: selectedFile,
+            size: selectedFile.size,
+          },
+        ]);
+      } catch (e) {
+        console.error(e);
+      }
+    }}
+    accept='image/jpeg, image/jpg, image/png'
+    className='hidden my-2 rounded-md border border-zinc-300 px-4 py-3'
+  />
+</div>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
                   {imageUpload.map((item, key) => (
                     <div className='relative cursor-pointer' key={key + 'image-upload'}>

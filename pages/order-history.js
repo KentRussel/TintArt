@@ -28,10 +28,13 @@ const OrderHistory = () => {
 
     const [selectedFilter, setSelectedFilter] = useState('All');
     useEffect(() => {
-        if (state?.user?._id) loadHandler();
+        if (state?.user?._id) {
+            loadHandler();
+            autoCancelOrders(); // Call the autoCancelOrders function when the component mounts
+        }
     }, [state?.isAuth]);
 
-    const filtered = orderData?.filter((o) => o.status == selectedFilter || selectedFilter == 'All');
+    const filtered = orderData?.filter((o) => o.status === selectedFilter || selectedFilter === 'All');
 
     const cancelOrderHandler = async (id) => {
         setIsLoading({ ...isLoading, update: true });
@@ -43,6 +46,23 @@ const OrderHistory = () => {
             toast.error('Something went wrong!', toastOptions);
         }
         setIsLoading({ ...isLoading, update: false });
+    };
+
+    const autoCancelOrders = async () => {
+        const currentDate = moment();
+        const updatedOrderData = orderData.map((item) => {
+            const orderDate = moment(item.created_at);
+            const daysDifference = currentDate.diff(orderDate, 'days');
+
+            if (daysDifference >= 3 && item.status !== 'CANCELLED') {
+                // Automatically cancel the order if it's older than 3 days and not already cancelled
+                cancelOrderHandler(item._id);
+            }
+
+            return item;
+        });
+
+        setOrderData(updatedOrderData);
     };
 
     return (
@@ -101,5 +121,6 @@ const OrderHistory = () => {
         </CustomerLayout>
     );
 };
+
 
 export default OrderHistory;

@@ -4,7 +4,7 @@ const useQuantity = (initialValue) => {
     const [quantity, setQuantity] = useState(initialValue);
 
     const increment = () => {
-        if (quantity < 100)
+        if (quantity < 20)
             setQuantity((prevQuantity) => prevQuantity + 1);
     };
 

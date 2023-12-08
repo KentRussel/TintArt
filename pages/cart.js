@@ -368,7 +368,7 @@ const Cart = () => {
                                                         <p className='font-semibold'>
                                                             {item.quantity}
                                                         </p>
-                                                        <Button size="xs" onClick={() => quantityHandler(key, item?.quantity < 100 ? Number(item.quantity) + 1 : 100)} color="light">+</Button>
+                                                        <Button size="xs" onClick={() => quantityHandler(key, item?.quantity < 20 ? Number(item.quantity) + 1 : 20)} color="light">+</Button>
                                                     </div>
                                                 </Table.Cell>
                                             }

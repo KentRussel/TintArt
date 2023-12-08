@@ -110,11 +110,11 @@ const Gallery = () => {
           setModal={setImageModal} />
       }
       <DeleteModalLayout
-        title='Image'
+        title='Artwork'
         modal={deleteModal}
         setModal={setDeleteModal}
         id={targetRef?.current?._id}
-        itemName={`${targetRef.current?.name}`}
+        itemName={`${targetRef.current?.artwork_title}`}
         handler={deleteGallery}
         preHandler={() => { setDeleteModal(null); loadHandler(); }}
       />

@@ -94,20 +94,43 @@ const PictureComponent = ({ refetch, state, images, setCanvas, canvas, location,
         <input id="default-range" min={-100} max={100} type="range" onChange={(e) => setPosition({ ...position, [location + "_y"]: e.target.value })} value={position[location + "_y"]} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
       </div>
       <Label>Upload Photo</Label>
-      <FileInput className='w-full'
-        onChange={e => {
-          try {
-            if (e.target?.files[0].size > 2000000)
-              return toast.error('File must be less than 2mb.', toastOptions)
-            addHandler({
-              url: URL?.createObjectURL(e.target?.files[0]),
-              file: e.target?.files[0],
-              size: e.target?.files[0].size,
-            })
-          } catch (e) { }
-        }}
-        accept='image/*'
-      />
+      <FileInput
+  className='w-full'
+  onChange={async (e) => {
+    try {
+      const selectedFile = e.target?.files[0];
+
+      // Check if a file is selected
+      if (!selectedFile) {
+        return;
+      }
+
+      // Check file type
+      const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedFileTypes.includes(selectedFile.type)) {
+        toast.error('Only JPG, JPEG, and PNG files are allowed.', toastOptions);
+        return;
+      }
+
+      // Check file size
+      if (selectedFile.size > 2000000) {
+        toast.error('File must be less than 2mb.', toastOptions);
+        return;
+      }
+
+      // Continue with the upload process
+      await addHandler({
+        url: URL?.createObjectURL(selectedFile),
+        file: selectedFile,
+        size: selectedFile.size,
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+  }}
+  accept='.jpg, .jpeg, .png'  // Add this line to limit file types in the file dialog
+/>
       <div className='mt-4 grid lg:grid-cols-3 grid-cols-2 gap-4'>
         <div
           onClick={() => setCanvas({ ...canvas, [location]: "" })}
