@@ -9,8 +9,9 @@ import {
   LinearScale,
   LineElement,
   Filler,
+  BarElement,
 } from 'chart.js'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2';
 import moment from 'moment'
 import DATA from '../../utils/DATA'
 ChartJS.register(
@@ -21,7 +22,8 @@ ChartJS.register(
   LinearScale,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  BarElement
 )
 
 export default function ChartData({ label, data, sort }) {
@@ -117,19 +119,18 @@ export default function ChartData({ label, data, sort }) {
   }
 
   return (
-    <Line
+    <Bar
       data={
-        label == 'Sales'
+        label === 'Sales'
           ? {
               labels: Object.keys(formattedSalesData()),
               datasets: [
                 {
                   label,
                   data: formattedSalesData(),
-                  borderColor: label === 'Sales' ? 'rgb(123, 51, 239)' : 'rgb(239, 51, 60)',
-                  backgroundColor:
-                    label === 'Sales' ? 'rgba(123, 51, 239,.3)' : 'rgba(239, 51, 60,.3)',
-                  fill: 'start',
+                  backgroundColor: 'rgba(123, 51, 239, 0.3)',
+                  borderColor: 'rgb(123, 51, 239)',
+                  borderWidth: 1,
                 },
               ],
             }
@@ -139,38 +140,37 @@ export default function ChartData({ label, data, sort }) {
                 {
                   label: 'Completed',
                   data: sumValuesByStatus('COMPLETED'),
+                  backgroundColor: 'rgba(34,197,94, 0.3)',
                   borderColor: 'rgb(34,197,94)',
-                  backgroundColor: 'rgb(34,197,94,.3)',
-                  fill: 'start',
+                  borderWidth: 1,
                 },
                 {
                   label: 'Pending Payment',
                   data: sumValuesByStatus('PENDING PAYMENT'),
+                  backgroundColor: 'rgba(63,63,70, 0.3)',
                   borderColor: 'rgb(63,63,70)',
-                  backgroundColor: 'rgb(63,63,70,.3)',
-                  fill: 'start',
+                  borderWidth: 1,
                 },
                 {
                   label: 'Preparing Order',
                   data: sumValuesByStatus('PREPARING ORDER'),
+                  backgroundColor: 'rgba(234,179,8, 0.3)',
                   borderColor: 'rgb(234,179,8)',
-                  backgroundColor: 'rgb(234,179,8,.3)',
-                  fill: 'start',
+                  borderWidth: 1,
                 },
                 {
                   label: 'Out of Delivery',
                   data: sumValuesByStatus('OUT OF DELIVERY'),
+                  backgroundColor: 'rgba(6, 182, 212, 0.3)',
                   borderColor: 'rgb(6, 182, 212)',
-                  backgroundColor: 'rgb(6,182,212,.3)',
-                  fill: 'start',
+                  borderWidth: 1,
                 },
                 {
                   label: 'Cancelled',
                   data: sumValuesByStatus('CANCELLED'),
-                  borderColor: label === 'Sales' ? 'rgb(123, 51, 239)' : 'rgb(239, 51, 60)',
-                  backgroundColor:
-                    label === 'Sales' ? 'rgba(123, 51, 239,.3)' : 'rgba(239, 51, 60,.3)',
-                  fill: 'start',
+                  backgroundColor: 'rgba(123, 51, 239, 0.3)',
+                  borderColor: 'rgb(123, 51, 239)',
+                  borderWidth: 1,
                 },
               ],
             }
@@ -193,7 +193,7 @@ export default function ChartData({ label, data, sort }) {
             ticks: {
               precision: 0,
               callback: function (value, index, values) {
-                return label === 'Sales' ? '₱ ' + value : value // Prepend peso sign to the label
+                return label === 'Sales' ? '₱ ' + value : value;
               },
             },
           },
@@ -209,5 +209,5 @@ export default function ChartData({ label, data, sort }) {
         },
       }}
     />
-  )
+  );
 }
