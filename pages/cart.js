@@ -186,21 +186,23 @@ const Cart = () => {
         return (
             <>
                 {modal &&
-                    <ModalLayout>
-                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
-                        </div>
-                        <div className='p-6 space-y-6'>
-                            <p
-                                dangerouslySetInnerHTML={{ __html: content?.terms?.replace(/\n/g, '<br>') }}
-                            ></p>
-                        </div>
-                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <Button color='gray' onClick={() => setModal(false)}>
-                                Close
-                            </Button>
-                        </div>
-                    </ModalLayout>
+          <ModalLayout>
+          <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-[90%] max-w-[40rem] fixed'>
+            <div className='p-6 border-b rounded-t dark:border-gray-600 sticky'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
+            </div>
+            <div className='p-6 space-y-6 overflow-auto'>
+              <p
+                dangerouslySetInnerHTML={{ __html: content?.terms?.replace(/\n/g, '<br>') }}
+              ></p>
+            </div>
+            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+              <Button color='gray' onClick={() => setModal(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </ModalLayout>
                 }
             </>
         )
@@ -209,21 +211,23 @@ const Cart = () => {
         return (
             <>
                 {modal &&
-                    <ModalLayout>
-                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
-                        </div>
-                        <div className='p-6 space-y-6'>
-                            <p
-                                dangerouslySetInnerHTML={{ __html: content?.privacy?.replace(/\n/g, '<br>') }}
-                            ></p>
-                        </div>
-                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <Button color='gray' onClick={() => setModal(false)}>
-                                Close
-                            </Button>
-                        </div>
-                    </ModalLayout>
+          <ModalLayout>
+          <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-[90%] max-w-[40rem] fixed'>
+            <div className='p-6 border-b rounded-t dark:border-gray-600 sticky'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Privacy Policy</h3>
+            </div>
+            <div className='p-6 space-y-6 overflow-auto'>
+              <p
+                dangerouslySetInnerHTML={{ __html: content?.privacy?.replace(/\n/g, '<br>') }}
+              ></p>
+            </div>
+            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+              <Button color='gray' onClick={() => setModal(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </ModalLayout>
                 }
             </>
         )
