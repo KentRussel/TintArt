@@ -15,7 +15,6 @@ export const AppReducer = (state, action) => {
         isLoading: false,
       }
     }
-
     case 'REGISTER_REQUEST':
     case 'LOGIN_REQUEST': {
       return {
@@ -24,7 +23,6 @@ export const AppReducer = (state, action) => {
         error: [],
       }
     }
-
     case 'LOGIN_SUCCESS': {
       localStorage.setItem('access_id', action.value._id)
       return {
@@ -35,7 +33,6 @@ export const AppReducer = (state, action) => {
         isLoading: false,
       }
     }
-
     case 'REGISTER_ERROR':
     case 'LOGIN_ERROR': {
       return {
@@ -44,7 +41,6 @@ export const AppReducer = (state, action) => {
         isLoading: false,
       }
     }
-
     case 'LOGOUT': {
       localStorage.removeItem('access_id')
       return {
@@ -55,7 +51,6 @@ export const AppReducer = (state, action) => {
         user: {},
       }
     }
-    
     case 'SET_USER': {
       return {
         ...state,

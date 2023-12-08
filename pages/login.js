@@ -183,7 +183,7 @@ const Login = () => {
                             </div>
                         ))}
                     </div>
-                    {loginMode == "login" &&
+{loginMode == "login" &&
                         <p className='text-left w-full underline cursor-pointer' onClick={() => router.push("/forgot-password")}>Forgot Password?</p>
                     }
                     <Button disabled={isLoading} color="failure" className='w-full mt-5' onClick={submitHandler}>{!isLoading ? "Sign In" : "Signing In..."}</Button>
@@ -193,7 +193,6 @@ const Login = () => {
                         <p className='text-center ' onClick={() => !isLoading && setLoginMode("login")}>Already have an account? <span className='underline cursor-pointer'>Click here</span></p>
                     }
                     <Button disabled={isLoading} color="light" className='w-full' onClick={() => router.push('/')}><FaArrowLeftLong className='mr-4' />Go back to home page</Button>
-
                 </div>
             </div>
             <div className={`w-full h-[100vh] lg:relative  ${loginMode == "admin-login" ? "hidden" : "lg:block hidden"} `}>
