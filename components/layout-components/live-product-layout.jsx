@@ -24,6 +24,7 @@ import { addReview, getProductReview } from '../../services/review.services'
 import { hasBlankValue } from '../../services/tools'
 import { addCanvas } from '../../services/canvas.services'
 import { getUserOrderDetails } from '../../services/order_details.services'
+import { FaShoppingCart } from 'react-icons/fa'
 
 const LiveProductLayout = props => {
   const router = useRouter()
@@ -58,6 +59,7 @@ const LiveProductLayout = props => {
       user: state?.user?._id,
       comment: formData?.comment,
       product_id: id,
+      created_at: formData?.created_at
     }
     const result = await addReview(newData)
     if (result?.success) {
@@ -180,6 +182,20 @@ const LiveProductLayout = props => {
     if (wishlist_result.success) setWishListData(wishlist_result?.data)
   }
 
+  const buyNowHandler = async () => {
+    // Add logic to check if size and color are selected
+    if (!(size && color)) {
+      return toast.error('Please select the size and color!', toastOptions);
+    }
+  
+    // Add logic to handle the "Buy Now" functionality
+    const result = await addToCartHandler();
+  
+    // Redirect to the cart page
+    router.push('/cart');
+  };
+  
+
   return (
     <CustomerLayout hasFetch={true}>
       <LoadingLayout
@@ -280,23 +296,30 @@ const LiveProductLayout = props => {
                     Add to Cart
                   </Button>
                 )}
-                <Button
-                  className={`flex items-center gap-4 w-full uppercase  font-semibold `}
-                  color={'light'}
-                  onClick={() => heartHandler(data)}
-                >
-                  {!wishListData.filter(d => d.product_id?._id == data?._id).length > 0 ? (
-                    <>
-                      <AiOutlineHeart className='text-2xl text-red-600 mr-1' size={20} />
-                      Add to Wishlist
-                    </>
-                  ) : (
-                    <>
-                      <AiFillHeart className='text-2xl text-red-600 mr-1' size={20} />
-                      {'  '}Remove to Wishlist
-                    </>
-                  )}
-                </Button>
+<Button
+  className={`flex items-center gap-4 w-full uppercase  font-semibold `}
+  color={'success'} // Change the color as per your design
+  onClick={buyNowHandler}>
+    <Link href='/cart' passHref></Link>
+  Buy Now
+  </Button>
+<Button
+  className={`flex items-center gap-4 w-full uppercase  font-semibold `}
+  color={'light'}
+  onClick={() => heartHandler(data)}
+>
+  {!wishListData.filter(d => d.product_id?._id == data?._id).length > 0 ? (
+    <>
+      <AiOutlineHeart className='text-2xl text-red-600 mr-1' size={20} />
+      Add to Wishlist
+    </>
+  ) : (
+    <>
+      <AiFillHeart className='text-2xl text-red-600 mr-1' size={20} />
+      {'  '}Remove to Wishlist
+    </>
+  )}
+</Button>
               </div>
               <p className='font-semibold'>
                 You may create your own design and sent it to the Merchant:
@@ -321,25 +344,32 @@ const LiveProductLayout = props => {
 
             {/* review form  */}
             <LoadingLayout hasContent={true} loadingState={isLoading?.review}>
-              {review?.length == 0 ? (
-                <p className='py-4'>There are no reviews yet.</p>
-              ) : (
-                review.map(({ user, comment, rating, _id }) => (
-                  <div key={_id} className='flex items-start gap-4 flex-col border my-4 p-4'>
-                    <div className='flex gap-4 items-center font-semibold'>
-                      <img
-                        src={user?.profile_image || '/images/no-profile.png'}
-                        className='h-10 w-10 rounded-full object-cover'
-                      />
-                      <p className='text-lg'>
-                        {user?.first_name} {user?.last_name}
-                      </p>
-                    </div>
-                    <StarLayout rating={rating} />
-                    <p>{comment}</p>
-                  </div>
-                ))
-              )}
+            {review?.length == 0 ? (
+  <p className='py-4'>There are no reviews yet.</p>
+) : (
+  review.map(({ user, comment, rating, _id, created_at }) => (
+    <div key={_id} className='flex items-start gap-4 flex-col border my-4 p-4'>
+      <div className='flex gap-4 items-center font-semibold'>
+        <img
+          src={user?.profile_image || '/images/no-profile.png'}
+          className='h-10 w-10 rounded-full object-cover'
+        />
+        <p className='text-lg'>
+          {user?.first_name} {user?.last_name}
+        </p>
+      </div>
+      <StarLayout rating={rating} />
+      <p>{comment}</p>
+      <p className='text-gray-500 mt-2'>
+        Submitted on: {new Intl.DateTimeFormat('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }).format(new Date(created_at))}
+      </p>
+    </div>
+  ))
+)}
               {ratingAllowed && (
                 <div className='flex flex-col w-full gap-4 p-4 border-2 border-yellow-500'>
                   {review?.length == 0 && (

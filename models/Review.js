@@ -19,6 +19,7 @@ const ReviewSchema = new mongoose.Schema({
     },
     created_at: {
         type: Date,
+        required: [true, 'Product Id must not be empty'],
         default: Date.now,
     },
 })
