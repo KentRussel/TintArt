@@ -351,7 +351,7 @@ const TableLayout = ({
                             router.push(title.toLowerCase() + '/edit/' + parentItem?._id)
                           }}
                         >
-                          <FiMoreHorizontal />
+                          <AiOutlineEdit/>
                         </Button>
                       </>
                     )}
