@@ -181,21 +181,7 @@ const LiveProductLayout = props => {
     const wishlist_result = await getUserWishList(state?.user?._id)
     if (wishlist_result.success) setWishListData(wishlist_result?.data)
   }
-
-  const buyNowHandler = async () => {
-    // Add logic to check if size and color are selected
-    if (!(size && color)) {
-      return toast.error('Please select the size and color!', toastOptions);
-    }
   
-    // Add logic to handle the "Buy Now" functionality
-    const result = await addToCartHandler();
-  
-    // Redirect to the cart page
-    router.push('/cart');
-  };
-  
-
   return (
     <CustomerLayout hasFetch={true}>
       <LoadingLayout
@@ -296,13 +282,6 @@ const LiveProductLayout = props => {
                     Add to Cart
                   </Button>
                 )}
-<Button
-  className={`flex items-center gap-4 w-full uppercase  font-semibold `}
-  color={'success'} // Change the color as per your design
-  onClick={buyNowHandler}>
-    <Link href='/cart' passHref></Link>
-  Buy Now
-  </Button>
 <Button
   className={`flex items-center gap-4 w-full uppercase  font-semibold `}
   color={'light'}
