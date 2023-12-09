@@ -11,37 +11,36 @@ const DeleteModalLayout = ({ title, path, modal, setModal, id, itemName, handler
     <>
       {modal && (
         <ModalLayout>
-          <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-auto max-w-auto fixed'>
-            <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
-              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Delete {title}</h3>
-            </div>
-            <div className='p-6 space-y-6'>
-              <p>
-                Are you sure you want to delete this {title.toLowerCase()} "{itemName}"?{' '}
-              </p>
-            </div>
-            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-              <Button
-                gradientDuoTone={'pinkToOrange'}
-                onClick={async () => {
-                  const result = await handler(id)
-                  if (await result?.success) {
-                    if (path) router.push(path)
-                    else preHandler()
-                    toast.success(`${title} has been deleted successfuly!`, toastOptions)
-                  } else {
-                    toast.error('Something went wrong!', toastOptions)
-                  }
-                }}
-              >
-                Proceed
-              </Button>
-              <Button color='gray' onClick={() => setModal(undefined)}>
-                Cancel
-              </Button>
-            </div>
+          <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Delete {title}</h3>
           </div>
-        </ModalLayout>      )}
+          <div className='p-6 space-y-6'>
+            <p>
+              Are you sure you want to delete this {title.toLowerCase()} "{itemName}"?{' '}
+            </p>
+          </div>
+          <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+            <Button
+              gradientDuoTone={'pinkToOrange'}
+              onClick={async () => {
+                const result = await handler(id)
+                if (await result?.success) {
+                  if (path) router.push(path)
+                  else preHandler()
+                  toast.success(`${title} has been deleted successfuly!`, toastOptions)
+                } else {
+                  toast.error('Something went wrong!', toastOptions)
+                }
+              }}
+            >
+              Proceed
+            </Button>
+            <Button color='gray' onClick={() => setModal(undefined)}>
+              Cancel
+            </Button>
+          </div>
+        </ModalLayout>
+      )}
     </>
   )
 }
