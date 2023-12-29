@@ -11,7 +11,7 @@ import {
   Filler,
   BarElement,
 } from 'chart.js'
-import { Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2'
 import moment from 'moment'
 import DATA from '../../utils/DATA'
 ChartJS.register(
@@ -27,14 +27,23 @@ ChartJS.register(
 )
 
 export default function ChartData({ label, data, sort }) {
+  console.log(data)
   const formattedSalesData = () => {
     let temp = {}
     switch (sort) {
       case 'Daily':
-        let sortedKeys1 = Object.keys(data).sort()
-        sortedKeys1.forEach(key => {
-          temp[moment(key).format('ddd (MM-DD)')] = data[key]
-        })
+        const currentDate = moment() // Get the current date
+        const startOfWeek = currentDate.clone().startOf('week').day(0) // Start from Sunday of the current week
+        const endOfWeek = currentDate.clone().endOf('day') // End at the current day
+
+        // Filter the data for the current week
+        for (let i = 0; i <= 6; i++) {
+          const date = startOfWeek.clone().add(i, 'day')
+          if (date.isSameOrBefore(endOfWeek)) {
+            const formattedDate = date.format('ddd (MM-DD)')
+            temp[formattedDate] = data[date.format('YYYY-MM-DD')] || 0
+          }
+        }
         break
       case 'Weekly':
         function weeksInYearToMonthWeeks(yearWeeks) {
@@ -63,7 +72,28 @@ export default function ChartData({ label, data, sort }) {
         })
         break
       case 'Yearly':
-        temp = Object.fromEntries(Object.entries(data).reverse())
+        const currentYear = moment().year()
+        const monthsInYear = 12
+
+        // Initialize sales for each month with a default value of 0
+        for (let month = 0; month < monthsInYear; month++) {
+          const monthLabel = moment().month(month).format('MMMM')
+          temp[monthLabel] = 0
+        }
+
+        // Assign sales values to respective months
+        for (const key in data) {
+          const dataDate = moment(key)
+          const dataYear = dataDate.year()
+          const dataMonth = dataDate.month()
+
+          // Check if the data date belongs to the current year
+          if (dataYear === currentYear) {
+            const monthLabel = dataDate.format('MMMM')
+            temp[monthLabel] += data[key]
+          }
+        }
+        break
     }
     return temp
   }
@@ -71,10 +101,18 @@ export default function ChartData({ label, data, sort }) {
     let temp = {}
     switch (sort) {
       case 'Daily':
-        let sortedKeys1 = Object.keys(data).sort()
-        sortedKeys1.forEach(key => {
-          temp[moment(key).format('ddd (MM-DD)')] = data[key]
-        })
+        const currentDate = moment() // Get the current date
+        const startOfWeek = currentDate.clone().startOf('week').day(0) // Start from Sunday of the current week
+        const endOfWeek = currentDate.clone().endOf('day') // End at the current day
+
+        // Filter the data for the current week
+        for (let i = 0; i <= 6; i++) {
+          const date = startOfWeek.clone().add(i, 'day')
+          if (date.isSameOrBefore(endOfWeek)) {
+            const formattedDate = date.format('ddd (MM-DD)')
+            temp[formattedDate] = data[date.format('YYYY-MM-DD')] || 0
+          }
+        }
         break
       case 'Weekly':
         function weeksInYearToMonthWeeks(yearWeeks) {
@@ -102,8 +140,53 @@ export default function ChartData({ label, data, sort }) {
           temp[weekLabel] = data[key]
         })
         break
+
+        // Populating missing weeks with default values
+        const totalWeeksInMonth = moment().daysInMonth()
+        for (let i = 1; i <= totalWeeksInMonth; i++) {
+          const weekLabel = getWeekLabel(moment().date(i))
+          if (!weeklySummary[weekLabel]) {
+            weeklySummary[weekLabel] = {
+              'PENDING PAYMENT': 0,
+              'PREPARING ORDER': 0,
+              'OUT OF DELIVERY': 0,
+              COMPLETED: 0,
+              CANCELLED: 0,
+            }
+          }
+        }
+
+        temp = weeklySummary
+        break
+
       case 'Yearly':
-        temp = Object.fromEntries(Object.entries(data).reverse())
+        const currentYear = moment().year()
+        const monthsInYear = 12
+
+        // Initialize data for each month with a default value of 0
+        for (let month = 0; month < monthsInYear; month++) {
+          const monthLabel = moment().month(month).format('YYYY MMMM')
+          temp[monthLabel] = {
+            'PENDING PAYMENT': 0,
+            'PREPARING ORDER': 0,
+            'OUT OF DELIVERY': 0,
+            COMPLETED: 0,
+            CANCELLED: 0,
+          }
+        }
+
+        // Assign data values to respective months
+        for (const key in data) {
+          const [year, monthName] = key.split(' ')
+          const dataYear = parseInt(year)
+
+          // Check if the data date belongs to the current year
+          if (dataYear === currentYear) {
+            const monthLabel = moment(monthName, 'MMMM').format('YYYY MMMM')
+            temp[monthLabel] = data[key]
+          }
+        }
+        break
     }
     return temp
   }
@@ -119,18 +202,19 @@ export default function ChartData({ label, data, sort }) {
   }
 
   return (
-    <Bar
+    <Line
       data={
-        label === 'Sales'
+        label == 'Sales'
           ? {
               labels: Object.keys(formattedSalesData()),
               datasets: [
                 {
                   label,
                   data: formattedSalesData(),
-                  backgroundColor: 'rgba(123, 51, 239, 0.3)',
-                  borderColor: 'rgb(123, 51, 239)',
-                  borderWidth: 1,
+                  borderColor: label === 'Sales' ? 'rgb(123, 51, 239)' : 'rgb(239, 51, 60)',
+                  backgroundColor:
+                    label === 'Sales' ? 'rgba(123, 51, 239,.3)' : 'rgba(239, 51, 60,.3)',
+                  fill: 'start',
                 },
               ],
             }
@@ -140,37 +224,38 @@ export default function ChartData({ label, data, sort }) {
                 {
                   label: 'Completed',
                   data: sumValuesByStatus('COMPLETED'),
-                  backgroundColor: 'rgba(34,197,94, 0.3)',
                   borderColor: 'rgb(34,197,94)',
-                  borderWidth: 1,
+                  backgroundColor: 'rgb(34,197,94,.3)',
+                  fill: 'start',
                 },
                 {
                   label: 'Pending Payment',
                   data: sumValuesByStatus('PENDING PAYMENT'),
-                  backgroundColor: 'rgba(63,63,70, 0.3)',
                   borderColor: 'rgb(63,63,70)',
-                  borderWidth: 1,
+                  backgroundColor: 'rgb(63,63,70,.3)',
+                  fill: 'start',
                 },
                 {
                   label: 'Preparing Order',
                   data: sumValuesByStatus('PREPARING ORDER'),
-                  backgroundColor: 'rgba(234,179,8, 0.3)',
                   borderColor: 'rgb(234,179,8)',
-                  borderWidth: 1,
+                  backgroundColor: 'rgb(234,179,8,.3)',
+                  fill: 'start',
                 },
                 {
                   label: 'Out of Delivery',
                   data: sumValuesByStatus('OUT OF DELIVERY'),
-                  backgroundColor: 'rgba(6, 182, 212, 0.3)',
                   borderColor: 'rgb(6, 182, 212)',
-                  borderWidth: 1,
+                  backgroundColor: 'rgb(6,182,212,.3)',
+                  fill: 'start',
                 },
                 {
                   label: 'Cancelled',
                   data: sumValuesByStatus('CANCELLED'),
-                  backgroundColor: 'rgba(123, 51, 239, 0.3)',
-                  borderColor: 'rgb(123, 51, 239)',
-                  borderWidth: 1,
+                  borderColor: label === 'Sales' ? 'rgb(123, 51, 239)' : 'rgb(239, 51, 60)',
+                  backgroundColor:
+                    label === 'Sales' ? 'rgba(123, 51, 239,.3)' : 'rgba(239, 51, 60,.3)',
+                  fill: 'start',
                 },
               ],
             }
@@ -193,7 +278,7 @@ export default function ChartData({ label, data, sort }) {
             ticks: {
               precision: 0,
               callback: function (value, index, values) {
-                return label === 'Sales' ? '₱ ' + value : value;
+                return label === 'Sales' ? '₱ ' + value : value // Prepend peso sign to the label
               },
             },
           },
@@ -209,5 +294,5 @@ export default function ChartData({ label, data, sort }) {
         },
       }}
     />
-  );
+  )
 }

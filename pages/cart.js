@@ -16,7 +16,6 @@ import { addOrderProduct } from '../services/order_product.services'
 import Link from 'next/link'
 import { sendMessage } from '../services/email.services'
 import { FaBoxOpen, FaHome } from 'react-icons/fa'
-
 const Cart = () => {
     const { state } = useAppContext()
     const [products, setProducts] = useState([])
@@ -32,7 +31,7 @@ const Cart = () => {
         "Quantity",
         "Price"
     ]
-
+    const allProductsRef = useRef()
     const [orderSuccess, setOrderSuccess] = useState(false)
     const loadHandler = async () => {
         const result_shipping = await getUserShipping(state?.user?._id)
@@ -45,7 +44,8 @@ const Cart = () => {
         }
         const result = await getUserCart(state?.user?._id)
         if (result?.success)
-            setProducts(result?.data.filter(d => d?.product_id != null))
+            allProductsRef.current = result?.data
+        setProducts(result?.data)
         const result_shop = await getAllShop()
         if (result_shop?.success) {
             if (result_shop?.data.length > 0)
@@ -65,15 +65,17 @@ const Cart = () => {
         }
         setProducts([...temp])
     }
+    const [selectAll, setSelectAll] = useState(false)
     const selectAllRef = useRef(false)
     const selectAllHandler = () => {
-        let temp = products;
+        let temp = !selectAllRef.current ? products.filter(p => p.product_id != null) : allProductsRef.current
         for (let p in temp)
             temp[p] = {
                 ...temp[p],
                 is_selected: !selectAllRef.current
             }
         selectAllRef.current = !selectAllRef.current
+        setSelectAll(!selectAll)
         setProducts([...temp])
     }
 
@@ -139,7 +141,7 @@ const Cart = () => {
                 contact_no,
                 address: `${unit} ${street} ${region}`,
                 information,
-                total_price: total,
+                total_price: total + 25,
                 products: result_order_product?.data?.map(data => data._id),
                 mop: paymentMethod,
                 user_id: state?.user?._id
@@ -186,23 +188,21 @@ const Cart = () => {
         return (
             <>
                 {modal &&
-          <ModalLayout>
-          <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-[90%] max-w-[40rem] fixed'>
-            <div className='p-6 border-b rounded-t dark:border-gray-600 sticky'>
-              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
-            </div>
-            <div className='p-6 space-y-6 overflow-auto'>
-              <p
-                dangerouslySetInnerHTML={{ __html: content?.terms?.replace(/\n/g, '<br>') }}
-              ></p>
-            </div>
-            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-              <Button color='gray' onClick={() => setModal(false)}>
-                Close
-              </Button>
-            </div>
-          </div>
-        </ModalLayout>
+                    <ModalLayout>
+                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
+                        </div>
+                        <div className='p-6 space-y-6'>
+                            <p
+                                dangerouslySetInnerHTML={{ __html: content?.terms?.replace(/\n/g, '<br>') }}
+                            ></p>
+                        </div>
+                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <Button color='gray' onClick={() => setModal(false)}>
+                                Close
+                            </Button>
+                        </div>
+                    </ModalLayout>
                 }
             </>
         )
@@ -211,23 +211,21 @@ const Cart = () => {
         return (
             <>
                 {modal &&
-          <ModalLayout>
-          <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-[90%] max-w-[40rem] fixed'>
-            <div className='p-6 border-b rounded-t dark:border-gray-600 sticky'>
-              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Privacy Policy</h3>
-            </div>
-            <div className='p-6 space-y-6 overflow-auto'>
-              <p
-                dangerouslySetInnerHTML={{ __html: content?.privacy?.replace(/\n/g, '<br>') }}
-              ></p>
-            </div>
-            <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-              <Button color='gray' onClick={() => setModal(false)}>
-                Close
-              </Button>
-            </div>
-          </div>
-        </ModalLayout>
+                    <ModalLayout>
+                        <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
+                            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Terms and Conditions</h3>
+                        </div>
+                        <div className='p-6 space-y-6'>
+                            <p
+                                dangerouslySetInnerHTML={{ __html: content?.privacy?.replace(/\n/g, '<br>') }}
+                            ></p>
+                        </div>
+                        <div className="flex justify-end items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <Button color='gray' onClick={() => setModal(false)}>
+                                Close
+                            </Button>
+                        </div>
+                    </ModalLayout>
                 }
             </>
         )
@@ -237,7 +235,6 @@ const Cart = () => {
             <>
                 {modal &&
                     <ModalLayout>
-                        <div className='flex flex-col z-[100] bg-white text-gray-700 rounded-lg shadow dark:bg-gray-700 h-auto max-w-auto fixed'>
                         <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
                             <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>Choose Shipping Address</h3>
                         </div>
@@ -270,7 +267,6 @@ const Cart = () => {
                                 Close
                             </Button>
                         </div>
-                    </div>
                     </ModalLayout>
                 }
             </>
@@ -317,7 +313,7 @@ const Cart = () => {
                                     <Table.Head>
                                         <Table.HeadCell align='center'>
                                             <div className=''>
-                                                Select <input className='ml-2' type="checkbox" onChange={selectAllHandler} />
+                                                Select <input className='ml-2' type="checkbox" checked={selectAll} onChange={selectAllHandler} />
                                             </div>
                                         </Table.HeadCell>
                                         {
@@ -337,44 +333,59 @@ const Cart = () => {
                                         <Table.Row key={`row-${item?._id}`}>
                                             {!isCheckOut &&
                                                 <Table.Cell align='center'>
-                                                    <input type='checkbox' checked={item?.is_selected || false} onChange={() => selectHandler(key, !item?.is_selected)} />
+                                                    {item?.product_id != null &&
+                                                        <input type='checkbox' checked={item?.is_selected || false} onChange={() => selectHandler(key, !item?.is_selected)} />
+                                                    }
                                                 </Table.Cell>
                                             }
-                                            <Table.Cell className='flex flex-shrink-0 items-center gap-4 flex-row'>
-                                                <div className='relative'>
-                                                    <Link href={`/shop/${item?.product_id?._id}`}>
-                                                        
-                                                            <img src={item?.product_id?.images[0]} alt='pic' className='lg:w-20 w-10 aspect-square object-contain' />
-                                                        
-                                                    </Link>
-                                                </div>
-                                                <div className=''>
-                                                    <Link href={`/shop/${item?.product_id}`}>
-                                                            <p className=' font-semibold'>{item?.product_id?.product_name}</p>
-                                                    </Link>
-                                                    <p>Size: {item?.size}</p>
-                                                    {item?.color && (
-                                                        <p className='flex gap-2'>Color: {item?.color}</p>
-                                                    )}
-                                                    {isCheckOut && (
-                                                        <p className=''>x{item?.quantity}</p>
-                                                    )}
-                                                </div>
-                                            </Table.Cell>
+                                            {item?.product_id == null ?
+                                                <Table.Cell className='flex flex-shrink-0 items-center gap-4 flex-row'>
+                                                    <div className=''>
+                                                        <p className='font-semibold'>Product Not available</p>
+                                                        <p>Size: {item?.size}</p>
+                                                        {item?.color &&
+                                                            <p className='flex gap-2'>Color: {item?.color}</p>
+                                                        }
+                                                        {isCheckOut &&
+                                                            <p className=''>x{item?.quantity}</p>
+                                                        }
+                                                    </div>
+                                                </Table.Cell>
+                                                :
+                                                <Table.Cell className='flex flex-shrink-0 items-center gap-4 flex-row'>
+                                                    <div className='relative'>
+                                                        <img src={item?.product_id?.images[0]} alt='pic' className='lg:w-20 w-10 aspect-square object-contain' />
+                                                    </div>
+                                                    <div className=''>
+                                                        <p className=' font-semibold'>{item?.product_id?.product_name}</p>
+                                                        <p>Size: {item?.size}</p>
+                                                        {item?.color &&
+                                                            <p className='flex gap-2'>Color: {item?.color}</p>
+                                                        }
+                                                        {isCheckOut &&
+                                                            <p className=''>x{item?.quantity}</p>
+                                                        }
+                                                    </div>
+                                                </Table.Cell>
+                                            }
                                             {!isCheckOut &&
                                                 <Table.Cell align='center'>
-                                                    <div className='flex gap-4 justify-center items-center'>
-                                                        <Button size="xs" onClick={() => quantityHandler(key, item?.quantity > 1 ? item.quantity - 1 : 1)} color="light">-</Button>
-                                                        <p className='font-semibold'>
-                                                            {item.quantity}
-                                                        </p>
-                                                        <Button size="xs" onClick={() => quantityHandler(key, item?.quantity < 20 ? Number(item.quantity) + 1 : 20)} color="light">+</Button>
-                                                    </div>
+                                                    {item?.product_id != null &&
+                                                        <div className='flex gap-4 justify-center items-center'>
+                                                            <Button size="xs" onClick={() => quantityHandler(key, item?.quantity > 1 ? item.quantity - 1 : 1)} color="light">-</Button>
+                                                            <p className='font-semibold'>
+                                                                {item.quantity}
+                                                            </p>
+                                                            <Button size="xs" onClick={() => quantityHandler(key, item?.quantity < 100 ? Number(item.quantity) + 1 : 100)} color="light">+</Button>
+                                                        </div>
+                                                    }
                                                 </Table.Cell>
                                             }
                                             <Table.Cell align='center'>
                                                 <p className='font-semibold text-lg whitespace-nowrap'>
-                                                    {DATA.PESO} {formatNumberWithCommas(!isCheckOut ? item?.product_id?.price : item?.product_id?.price * item?.quantity)}
+                                                    {item?.product_id != null &&
+                                                        `${DATA.PESO} ${formatNumberWithCommas(!isCheckOut ? item?.product_id?.price : item?.product_id?.price * item?.quantity)}`
+                                                    }
                                                 </p>
                                             </Table.Cell>
                                             {!isCheckOut &&
@@ -459,19 +470,17 @@ const Cart = () => {
                     <div className='min-h-[60vh] 2xl:min-h-[100vh] justify-center flex items-center gap-4 p-4 flex-col w-full'>
                         <BsFillCheckCircleFill size={30} className='text-emerald-400' />
                         <p className='font-semibold text-2xl'>Checkout Successful!</p>
-                        <p>Please check your email for the order and payment details.</p>
+                        <p>Please check your email for the order and the payment details.</p>
                         <div className='flex gap-4 items-center '>
                             <Link href={"/"}>
                                 <Button color="light" className='font-semibold uppercase'>
                                     <FaHome className="mr-1" />
-                                    Back to HomePage
-                                </Button>
+                                    Back to HomePage</Button>
                             </Link>
                             <Link href={"/order-history"}>
                                 <Button className='font-semibold uppercase'>
                                     <FaBoxOpen className="mr-1" />
-                                    Back to Orders
-                                </Button>
+                                    Back to Orders</Button>
                             </Link>
                         </div>
                     </div>
