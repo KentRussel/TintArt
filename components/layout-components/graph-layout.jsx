@@ -202,7 +202,7 @@ export default function ChartData({ label, data, sort }) {
   }
 
   return (
-    <Line
+    <Bar
       data={
         label == 'Sales'
           ? {
