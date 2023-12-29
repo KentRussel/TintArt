@@ -52,7 +52,7 @@ const ViewOrders = () => {
     const result = await updateOrderDetails(newData, id)
     if (result?.success) {
       await refetchHandler()
-      toast.success("Order updated successfuly!", toastOptions)
+      toast.success("Order updated successfully!", toastOptions)
     } else {
       toast.error("Something went wrong!", toastOptions)
     }

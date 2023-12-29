@@ -89,7 +89,7 @@ const Gallery = () => {
 
       const result = await addGallery(newData)
       if (await result?.success) {
-        toast.success(`Uploaded successfuly!`, toastOptions)
+        toast.success(`Uploaded successfully!`, toastOptions)
         setFormData(initialData)
         setImageUpload(null)
         setModal(null)

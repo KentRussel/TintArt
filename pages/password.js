@@ -31,7 +31,7 @@ const Password = () => {
         const result = await changePassword(passwordData, state?.user?._id)
         if (result?.success) {
             setPasswordData(initialPasswordData)
-            toast.success(`Password has been updated successfuly!`, toastOptions)
+            toast.success(`Password has been updated successfully!`, toastOptions)
         } else {
             toast.error(`${result?.errors?.oldPasswordError || result?.errors?.newPasswordError || result?.errors?.confirmPasswordError}`, toastOptions)
         }

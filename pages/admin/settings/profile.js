@@ -55,7 +55,7 @@ const Profile = () => {
     const result = await updateUser(data, data?._id)
     if (await result?.success) {
       loadHandler()
-      toast.success(`Profile has been updated successfuly!`, toastOptions)
+      toast.success(`Profile has been updated successfully!`, toastOptions)
     } else {
       toast.error(result?.errors || 'Something went wrong!', toastOptions)
     }

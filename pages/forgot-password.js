@@ -94,7 +94,7 @@ const ForgotPassword = () => {
             }, formData?.email)
 
             setDisabled(true)
-            toast.success("Password changed successfuly.", toastOptions)
+            toast.success("Password changed successfully.", toastOptions)
             router.push("login")
         } else {
             toast.error("Something went wrong!.", toastOptions)

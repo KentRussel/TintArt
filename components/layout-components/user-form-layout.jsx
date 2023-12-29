@@ -103,14 +103,14 @@ const UserFormLayout = ({ title, oldData }) => {
     if (oldData) {
       const result = await updateUser(newData, oldData?._id)
       if (await result?.success) {
-        toast.success(`User has been updated successfuly!`, toastOptions)
+        toast.success(`User has been updated successfully!`, toastOptions)
       } else {
         toast.error(result?.errors || 'Something went wrong!', toastOptions)
       }
     } else {
       const result = await addUser(newData)
       if (await result?.success) {
-        toast.success(`User has been added successfuly!`, toastOptions)
+        toast.success(`User has been added successfully!`, toastOptions)
         setImageUpload(null)
         setData(initialData)
       } else {

@@ -62,7 +62,7 @@ const ProfileEdit = () => {
         if (await result?.success) {
             router.push("/profile")
             dispatch({ type: 'LOGIN_SUCCESS', value: result.data })
-            toast.success(`Profile has been updated successfuly!`, toastOptions)
+            toast.success(`Profile has been updated successfully!`, toastOptions)
         } else {
             toast.error(result?.errors || 'Something went wrong!', toastOptions)
         }

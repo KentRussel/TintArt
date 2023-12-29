@@ -82,7 +82,7 @@ const Login = () => {
                     })
                     setLoginMode("login")
                     setCredentials(initial_credentials)
-                    toast.success(`Registered successfuly!`, toastOptions)
+                    toast.success(`Registered successfully!`, toastOptions)
                 } else {
                     toast.error(errors || 'Something went wrong!', toastOptions)
                 }

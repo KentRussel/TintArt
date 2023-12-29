@@ -170,7 +170,7 @@ const Cart = () => {
                         }
                     )
                 })
-                toast.success("Successfuly place an order.", toastOptions)
+                toast.success("Successfully place an order.", toastOptions)
                 setOrderSuccess(true)
             } else {
                 toast.error("Something went wrong!", toastOptions)

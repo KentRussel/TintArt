@@ -108,7 +108,7 @@ const ProductFormLayout = ({ title, oldData }) => {
     if (oldData) {
       const result = await updateProduct(newData, oldData?._id)
       if (await result?.success) {
-        toast.success(`Product has been updated successfuly!`, toastOptions)
+        toast.success(`Product has been updated successfully!`, toastOptions)
         router?.push('/admin/products')
       } else {
         toast.error('Something went wrong!', toastOptions)
@@ -116,7 +116,7 @@ const ProductFormLayout = ({ title, oldData }) => {
     } else {
       const result = await addProduct(newData)
       if (await result?.success) {
-        toast.success(`Product has been added successfuly!`, toastOptions)
+        toast.success(`Product has been added successfully!`, toastOptions)
         router?.push('/admin/products')
       } else {
         toast.error('Something went wrong!', toastOptions)

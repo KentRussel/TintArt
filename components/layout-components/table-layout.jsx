@@ -79,7 +79,7 @@ const TableLayout = ({
     if (await result?.success) {
       await loadHandler()
       toast.success(
-        `${title.replace('ie', 'y').slice(0, -1)} has been ${requestName} successfuly!`,
+        `${title.replace('ie', 'y').slice(0, -1)} has been ${requestName} successfully!`,
         toastOptions
       )
     } else {

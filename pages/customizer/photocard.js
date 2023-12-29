@@ -68,7 +68,7 @@ const PictureComponent = ({ refetch, state, images, setCanvas, canvas, location,
         const result = await addCanvas(newData)
         if (await result?.success) {
           refetch()
-          return toast.success(`Uploaded successfuly!`, toastOptions)
+          return toast.success(`Uploaded successfully!`, toastOptions)
         }
       }
       toast.error('Something went wrong!', toastOptions)

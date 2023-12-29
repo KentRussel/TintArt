@@ -124,14 +124,14 @@ const Shop = () => {
     if (dataRowRef.current > 0) {
       const result = await updateShop(newData, data?._id)
       if (await result?.success) {
-        toast.success(`Shop has been updated successfuly!`, toastOptions)
+        toast.success(`Shop has been updated successfully!`, toastOptions)
       } else {
         toast.error(result?.errors || 'Something went wrong!', toastOptions)
       }
     } else {
       const result = await addShop(newData)
       if (await result?.success) {
-        toast.success(`Shop has been added successfuly!`, toastOptions)
+        toast.success(`Shop has been added successfully!`, toastOptions)
         setLogo(null)
         setData(initialData)
       } else {

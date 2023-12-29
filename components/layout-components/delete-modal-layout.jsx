@@ -27,7 +27,7 @@ const DeleteModalLayout = ({ title, path, modal, setModal, id, itemName, handler
                 if (await result?.success) {
                   if (path) router.push(path)
                   else preHandler()
-                  toast.success(`${title} has been deleted successfuly!`, toastOptions)
+                  toast.success(`${title} has been deleted successfully!`, toastOptions)
                 } else {
                   toast.error('Something went wrong!', toastOptions)
                 }

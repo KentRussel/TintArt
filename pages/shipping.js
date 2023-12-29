@@ -121,7 +121,7 @@ const Shipping = () => {
 
             await loadHandler()
             toast.success(
-                `Shipping Address has been ${requestName} successfuly!`,
+                `Shipping Address has been ${requestName} successfully!`,
                 toastOptions
             )
             setModalType('')
